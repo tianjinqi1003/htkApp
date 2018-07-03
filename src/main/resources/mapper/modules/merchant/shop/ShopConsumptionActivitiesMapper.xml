@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopConsumptionActivitiesMapper">
+
+    <sql id="Base_Column_List">
+        id, content, shop_id
+    </sql>
+
+    <!-- ===================接口开始====================== -->
+    <select id="getShopConsumptionActivityListByIdDAO" resultType="ShopConsumptionActivities">
+        select 
+        <include refid="Base_Column_List" />
+        from shop_consumption_activities
+        where shop_id = #{shopId}
+    </select>
+
+
+    <!-- ===================接口结束====================== -->
+
+</mapper>

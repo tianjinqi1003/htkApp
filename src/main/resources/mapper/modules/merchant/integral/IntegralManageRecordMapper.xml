@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.IntegralManageRecordMapper">
+    <sql id="Base_Column_List">
+        trade_id, trade_description, sponsor, passive, integral_value, state, gmt_create, gmt_modifiedn
+    </sql>
+
+
+    <insert id="insertRecordByTokenDAO" parameterType="IntegralManageRecord">
+        insert into integral_manage_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeDescription != null">
+                trade_description,
+            </if>
+            <if test="sponsor != null">
+                sponsor,
+            </if>
+            <if test="passive != null">
+                passive,
+            </if>
+            <if test="integralValue != null">
+                integral_value,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeDescription != null">
+                #{tradeDescription},
+            </if>
+            <if test="sponsor != null">
+                #{sponsor},
+            </if>
+            <if test="passive != null">
+                #{passive},
+            </if>
+            <if test="integralValue != null">
+                #{integralValue},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+        </trim>
+    </insert>
+</mapper>

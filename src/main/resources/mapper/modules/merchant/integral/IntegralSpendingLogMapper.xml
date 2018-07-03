@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.IntegralSpendingLogMapper">
+
+    <sql id="Base_Column_List">
+        id, goods_name, goods_count, spending_integral, shop_id, account_id, activity_id, spending_description, spending_type,
+        gmt_create, gmt_modifiedn
+    </sql>
+
+    <insert id="insertById" parameterType="com.htkapp.modules.merchant.integral.entity.IntegralSpendingLog">
+        insert into integral_spending_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="goodsName != null">
+                goods_name,
+            </if>
+            <if test="goodsCount != null">
+                goods_count,
+            </if>
+            <if test="spendingIntegral != null">
+                spending_integral,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="spendingDescription != null">
+                spending_description,
+            </if>
+            <if test="spendingType != null">
+                spending_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="goodsName != null">
+                #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsCount != null">
+                #{goodsCount,jdbcType=INTEGER},
+            </if>
+            <if test="spendingIntegral != null">
+                #{spendingIntegral,jdbcType=INTEGER},
+            </if>
+            <if test="shopId != null">
+                #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="accountId != null">
+                #{accountId,jdbcType=INTEGER},
+            </if>
+            <if test="activityId != null">
+                #{activityId,jdbcType=INTEGER},
+            </if>
+            <if test="spendingDescription != null">
+                #{spendingDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="spendingType != null">
+                #{spendingType,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <select id="findSpendingLogById" parameterType="com.htkapp.modules.merchant.integral.entity.IntegralSpendingLog" resultType="IntegralSpendingLog" >
+        select
+        <include refid="Base_Column_List" />
+        from integral_spending_log
+        where shop_id = #{shopId,jdbcType=BIGINT} and account_id = #{accountId,jdbcType=BIGINT}
+    </select>
+     <select id="findSpendingIntegralValue" parameterType="com.htkapp.modules.merchant.integral.entity.IntegralSpendingLog" resultType="java.lang.Integer">
+         select SUM(spending_integral)
+         from integral_spending_log
+         where shop_id = #{shopId} and account_id = #{accountId};
+     </select>
+</mapper>

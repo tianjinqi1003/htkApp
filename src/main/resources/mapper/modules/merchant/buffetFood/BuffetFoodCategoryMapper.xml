@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodCategoryMapper">
+
+    <sql id="Base_Column_List">
+        id, category_name, sort_number, shop_id
+    </sql>
+
+    <!-- =====================接口开始====================== -->
+    <select id="getBuffetFoodCategoryListByShopIdDAO" resultType="BuffetFoodCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        buffet_food_category
+        where shop_id = #{shopId}
+    </select>
+    <select id="getBuffetFoodCategoryByCategoryIdDAO" resultType="com.htkapp.modules.API.dto.ReturnHaveSomeList">
+        select
+        id as categoryId, category_name, sort_number, shop_id
+        from
+        buffet_food_category
+        where id = #{0}
+    </select>
+    <select id="matchSearchingByCategoryNameDAO" resultType="BuffetFoodCategory">
+        select
+        <include refid="Base_Column_List" />
+        from buffet_food_category
+        where category_name like concat('%',#{0},'%')
+    </select>
+    <!-- ====================接口结束====================== -->
+
+    <!-- ====================JSP页面 接口开始======================= -->
+    <select id="getBuffetFoodCategoryListByAccountShopIdDAO" resultType="BuffetFoodCategory">
+        select
+        buffet_food_category.*
+        from
+        buffet_food_category
+        left join shop on buffet_food_category.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId}
+    </select>
+    <update id="editCategoryNameByIdDAO">
+        update buffet_food_category
+        set buffet_food_category.category_name = #{categoryName}
+        where buffet_food_category.id = #{id}
+    </update>
+    <insert id="addCategoryByIdDAO">
+        insert into buffet_food_category(category_name,shop_id)
+        values(#{0},
+        (select shop_id from shop
+        left join account_shop on shop.account_shop_id = account_shop.id where account_shop.id=#{1} and mark=#{2}))
+    </insert>
+    <select id="getCategoryByIdDAO" resultType="BuffetFoodCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from buffet_food_category
+        where id = #{0}
+    </select>
+    <delete id="delCategoryByIdDAO">
+        delete from buffet_food_category
+        where id = #{0}
+    </delete>
+    <!-- ====================JSP页面 接口结束======================= -->
+
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.BillRecordMapper">
+
+    <sql id="Base_Column_List">
+        id,  order_number, order_income, spending_on_order, amount, status, account_shop_token, serial_number, total_serial_number, gmt_create, gmt_modified
+    </sql>
+
+    <!-- =======================接口开始========================= -->
+
+    <update id="updateBillStatus">
+        update bill_record
+        set status = #{status}
+        where order_number = #{orderNumber} and account_shop_token=#{accountShopToken}
+    </update>
+
+
+    <insert id="insertBillRecordByTokenDA0">
+        insert into bill_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="orderIncome != null">
+                order_income,
+            </if>
+            <if test="spendingOnOrder != null">
+                spending_on_order,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="serialNumber != null">
+                serial_number,
+            </if>
+            <if test="totalSerialNumber != null">
+                total_serial_number,
+            </if>
+            <if test="accountShopToken != null">
+                account_shop_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                #{orderNumber},
+            </if>
+            <if test="orderIncome != null">
+                #{orderIncome},
+            </if>
+            <if test="spendingOnOrder != null">
+                #{spendingOnOrder},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="serialNumber != null">
+                #{serialNumber},
+            </if>
+            <if test="totalSerialNumber != null">
+                #{totalSerialNumber},
+            </if>
+            <if test="accountShopToken != null">
+                #{accountShopToken},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateBillRecordByIdDA0">
+        update bill_record
+        <set>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="orderIncome != null">
+                order_income = #{orderIncome},
+            </if>
+            <if test="spendingOnOrder != null">
+                spending_on_order = #{spendingOnOrder},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getAmountToBeAccountedByTypeDAO" resultType="Double">
+        select
+        sum(amount)
+        from bill_record
+        where account_shop_token = #{accountShopToken}
+        and status = #{type}
+    </select>
+
+    <select id="getBillRecordListByTokenDAO" resultType="BillRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_record
+        where account_shop_token = #{accountShopToken}
+        and gmt_create between #{startTime} and #{endTime}
+        <if test="type != 0">
+            and status = #{type}
+        </if>
+        order by ${descStr}
+    </select>
+    <!--<update id="changeRecordStatusByOrderNumberDAO">-->
+        <!--update bill_record-->
+        <!--set status = #{status}-->
+        <!--where order_number = #{orderNumber}-->
+    <!--</update>-->
+    <select id="getTodayIncomeByDateDAO" resultType="Double">
+        select
+        sum(amount)
+        from bill_record
+        where gmt_create between #{1} and #{2}
+        and account_shop_token = #{0} and status = '2'
+    </select>
+    <select id="getTodayOrderIncomeByDateDAO" resultType="Double">
+        select
+        sum(order_income)
+        from bill_record
+        where gmt_create between #{1} and #{2}
+        and account_shop_token = #{0}
+    </select>
+    <select id="getSpendingOnOrderByDateDAO" resultType="Double">
+        select
+        sum(spending_on_order)
+        from bill_record
+        where gmt_create between #{1} and #{2}
+        and account_shop_token = #{0}
+    </select>
+    <select id="getBillRecordListByDateDAO" resultType="BillRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_record
+        where gmt_create between #{1} and #{2}
+        and account_shop_token = #{0}
+    </select>
+    <delete id="deleteRecordByOrderNumberAndDateDAO">
+        delete from
+        bill_record
+        where account_shop_token = #{0}
+        and order_number = #{1}
+    </delete>
+    <select id="getBillRecordByDateAndTokenDAO" resultType="BillRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_record
+        where account_shop_token = #{0}
+        and gmt_create between #{1} and #{2}
+        order by gmt_create desc limit 1
+    </select>
+    <!-- ========================接口结束======================== -->
+</mapper>

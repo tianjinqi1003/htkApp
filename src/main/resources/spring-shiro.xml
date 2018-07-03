@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- 会话Session ID生成器 -->
+	<bean id="sessionIdGenerator"
+		class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+
+	<!-- 会话Cookie模板 -->
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg name="name" value="hui_tou_ke" />
+		<property name="httpOnly" value="true" />
+		<!--cookie的有效时间,-1为关闭浏览器失效 -->
+		<property name="maxAge" value="-1" />
+	</bean>
+
+	<!-- 自定义ShiroSession监听 -->
+	<bean id="customSessionListener"
+		class="com.htkapp.core.shiro.core.shiro.listenter.CustomSessionListener">
+		<property name="shiroSessionRepository" ref="jedisShiroSessionRepository" />
+	</bean>
+
+	<!-- 用户信息记住我功能的相关配置 -->
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="v_v-re-htk" />
+		<property name="httpOnly" value="true" />
+		<!-- 30天时间，记住我30天 -->
+		<property name="maxAge" value="2592000" />
+	</bean>
+
+	<!-- rememberMe管理器 -->
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<!-- rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位） -->
+		<property name="cipherKey"
+			value="#{T(org.apache.shiro.codec.Base64).decode('3AvVhmFLUs0KTA3Kprsdag==')}" />
+		<property name="cookie" ref="rememberMeCookie" />
+	</bean>
+
+	<!-- 自定义shrio session 监听器 -->
+	<bean id="customShiroSessionDAO" class="com.htkapp.core.shiro.core.shiro.CustomShiroSessionDAO">
+		<property name="shiroSessionRepository" ref="jedisShiroSessionRepository" />
+		<property name="sessionIdGenerator" ref="sessionIdGenerator" />
+	</bean>
+
+	<!-- 手动操作Session，管理Session -->
+	<bean id="customSessionManager"
+		class="com.htkapp.core.shiro.core.shiro.session.CustomSessionManager">
+		<property name="shiroSessionRepository" ref="jedisShiroSessionRepository" />
+		<property name="customShiroSessionDAO" ref="customShiroSessionDAO" />
+	</bean>
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="sampleRealm" />
+		<property name="sessionManager" ref="sessionManager" />
+		<property name="rememberMeManager" ref="rememberMeManager" />
+		<property name="cacheManager" ref="customShiroCacheManager" />
+	</bean>
+
+	<!-- 用户缓存 -->
+	<bean id="customShiroCacheManager"
+		class="com.htkapp.core.shiro.core.shiro.cache.impl.CustomShiroCacheManager">
+		<property name="shiroCacheManager" ref="jedisShiroCacheManager" />
+	</bean>
+
+	<!-- shiro 缓存实现，对ShiroCacheManager，我是采用redis的实现 -->
+	<bean id="jedisShiroCacheManager"
+		class="com.htkapp.core.shiro.core.shiro.cache.impl.JedisShiroCacheManager">
+		<property name="jedisManager" ref="jedisManager" />
+	</bean>
+
+	<!-- redis 的缓存 -->
+	<bean id="jedisManager" class="com.htkapp.core.shiro.core.shiro.cache.JedisManager">
+		<property name="jedisPool" ref="jedisPool" />
+	</bean>
+
+	<!-- 授权 认证 -->
+	<bean id="sampleRealm" class="com.htkapp.core.customShiro.CusRealm" />
+
+	<!-- Session Manager -->
+	<bean id="sessionManager"
+		class="com.htkapp.core.customShiro.CustomDefaultWebSessionManage">
+		<!-- session 有效时间为一小时 （毫秒单位） -->
+		<!--<property name="globalSessionTimeout" value="18000000" />-->
+		<!--@author 马鹏昊-->
+		<!--@desc 设置永不超时-->
+		<!--<property name="globalSessionTimeout" value="-1000" />-->
+		<!--配置12个小时失效-->
+		<property name="globalSessionTimeout" value="43200000" />
+		<property name="sessionDAO" ref="customShiroSessionDAO" />
+		<!-- session 监听，可以多个。 -->
+		<property name="sessionListeners">
+			<list>
+				<ref bean="customSessionListener" />
+			</list>
+		</property>
+		<!--配置12个小时一检查-->
+		<property name="sessionValidationInterval" value="43210000" />
+		<!--<property name="sessionValidationInterval" value="65000" />-->
+		<!-- 间隔多少时间检查，不配置是60分钟 -->
+		<!--<property name="sessionValidationScheduler" ref="sessionValidationScheduler"/> -->
+		<!-- 是否开启 检测，默认开启 -->
+		<property name="sessionValidationSchedulerEnabled" value="true" />
+		<!-- 是否删除无效的，默认也是开启 -->
+		<property name="deleteInvalidSessions" value="true" />
+		<!-- 会话Cookie模板 -->
+		<property name="sessionIdCookie" ref="sessionIdCookie" />
+		<!-- 是否开启cookie缓存 默认是开启 -->
+		<property name="sessionIdCookieEnabled" value="true" />
+	</bean>
+
+	<!-- session 创建、删除、查询 -->
+	<bean id="jedisShiroSessionRepository"
+		class="com.htkapp.core.shiro.core.shiro.cache.JedisShiroSessionRepository">
+		<property name="jedisManager" ref="jedisManager" />
+	</bean>
+
+	<!-- 认证数据库存储 -->
+	<bean id="shiroManager"
+		class="com.htkapp.core.shiro.core.shiro.service.impl.ShiroManagerImpl" />
+	<bean id="login" class="com.htkapp.core.shiro.core.shiro.filter.LoginFilter" />
+	<bean id="role" class="com.htkapp.core.shiro.core.shiro.filter.RoleFilter" />
+	<bean id="permission"
+		class="com.htkapp.core.shiro.core.shiro.filter.PermissionFilter" />
+	<!--<bean id="simple" class="com.htkapp.core.shiro.core.shiro.filter.SimpleAuthFilter"/> -->
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/merchant/login" />
+		<!-- TODO 待提取 -->
+		<property name="successUrl" value="/merchant/index" />
+		<property name="unauthorizedUrl" value="/open/404" />
+		<!-- 读取初始自定义权限内容 -->
+		<property name="filterChainDefinitions" value="#{shiroManager.loadFilterChainDefinitions()}" />
+		<property name="filters">
+			<util:map>
+				<entry key="login" value-ref="login" />
+				<entry key="role" value-ref="role" />
+				<!--<entry key="simple" value-ref="simple" /> -->
+				<entry key="permission" value-ref="permission" />
+				<!--<entry key="kickout" value-ref="kickoutSessionFilter" /> -->
+			</util:map>
+		</property>
+	</bean>
+	<!-- Shiro生命周期处理器 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	<!--&lt;!&ndash; 会话验证调度器 &ndash;&gt; -->
+	<!--<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler"> -->
+	<!--<property name="sessionManager" ref="sessionManager"/> -->
+	<!--&lt;!&ndash; 间隔多少时间检查，不配置是60分钟, 值是毫秒值 &ndash;&gt; -->
+	<!--<property name="interval" value="10"/> -->
+	<!--</bean> -->
+	
+	<!-- 静态注入，相当于调用SecurityUtils.setSecurityManager(securityManager) -->
+	<!--<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"> -->
+	<!--<property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/> -->
+	<!--<property name="arguments" ref="securityManager"/> -->
+	<!--</bean> -->
+
+	<!-- session 校验单个用户是否多次登录 -->
+	<!--<bean id="kickoutSessionFilter" class="com.htkapp.core.shiro.core.shiro.filter.KickoutSessionFilter"> -->
+	<!--<property name="kickoutUrl" value="/u/login.htm?kickout"/> -->
+	<!--</bean> -->
+
+	<!-- 静态注入 jedisShiroSessionRepository -->
+	<!--<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"> -->
+	<!--<property name="staticMethod" value="com.htkapp.core.shiro.core.shiro.filter.KickoutSessionFilter.setShiroSessionRepository"/> -->
+	<!--<property name="arguments" ref="jedisShiroSessionRepository"/> -->
+	<!--</bean> -->
+</beans>
+

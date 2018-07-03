@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodProductMapper">
+
+	<sql id="Base_Column_List">
+		id, product_name, price, img_url, product_detail, category_id, integral,
+		shop_id,state
+	</sql>
+
+	<resultMap id="Base_Map" type="BuffetFoodProduct">
+		<id property="id" column="id" />
+		<result property="productName" column="product_name" />
+		<result property="price" column="price" />
+		<result property="imgUrl" column="img_url" />
+		<result property="productDetail" column="product_detail" />
+		<result property="categoryId" column="category_id" />
+		<result property="integral" column="integral" />
+		<result property="shopId" column="shop_id" />
+		<result property="categoryName" column="category_name" />
+		<collection property="pgProductList" column="id"
+			ofType="com.htkapp.modules.merchant.buffetFood.entity.BuffetFoodProductPackage"
+			javaType="ArrayList" select="getPackageProductById" />
+	</resultMap>
+
+	<!-- =====================接口开始====================== -->
+	<select id="getGoodsListByCategoryIdDAO" resultMap="Base_Map">
+		select
+		buffet_food_product.id, buffet_food_product.product_name, buffet_food_product.price,
+		buffet_food_product.img_url, buffet_food_product.product_detail,
+		buffet_food_product.category_id,
+		buffet_food_product.integral, buffet_food_product.shop_id, category_name as categoryName,
+		buffet_food_product.state
+		from buffet_food_product left join buffet_food_category
+		on buffet_food_product.category_id = buffet_food_category.id
+		where buffet_food_product.category_id = #{categoryId}
+	</select>
+	<select id="getBuffetFoodProductDetailByIdDAO" resultType="BuffetFoodProduct">
+		select
+		<include refid="Base_Column_List" />
+		from buffet_food_product
+		where buffet_food_product.id = #{productId}
+	</select>
+	<update id="likeProductAddOneByIdDAO">
+		update buffet_food_product
+		set like_quantity = like_quantity+1
+		where id = #{productId}
+	</update>
+	<select id="matchSearchingByProductNameDAO" resultType="BuffetFoodProduct">
+		select
+		<include refid="Base_Column_List" />
+		from buffet_food_product
+		where product_name like concat('%',#{0},'%')
+	</select>
+
+	<select id="getPackageProductById" resultType="BuffetFoodProductPackage">
+		select
+		c_name, c_img_url, c_quantity, c_price
+		from buffet_food_product_package
+		where parent_id = #{id}
+	</select>
+	<!-- ====================接口结束====================== -->
+
+	<!-- ==================JSP页面接口结束======================= -->
+	<select id="getBuffetFoodProductByIdDAO" resultType="BuffetFoodProduct">
+		select
+		<include refid="Base_Column_List" />
+		from buffet_food_product
+		where category_id = #{categoryId}
+	</select>
+	<select id="getBuffetFoodProductListByAccountShopIdDAO"
+		resultType="BuffetFoodProduct">
+		select
+		buffet_food_product.id, buffet_food_product.img_url, product_name, price, product_detail,
+		integral, category_id, buffet_food_product.shop_id
+		from buffet_food_product left join shop on buffet_food_product.shop_id =
+		shop.shop_id
+		left join account_shop on shop.account_shop_id = account_shop.id
+		where account_shop.id = #{accountShopId}
+	</select>
+	<select id="getBuffetFoodProductByCategoryIdDAO" resultType="BuffetFoodProduct">
+		select
+		buffet_food_product.id, buffet_food_product.img_url, product_name, price, product_detail,
+		integral, category_id, buffet_food_product.shop_id
+		from buffet_food_product left join shop on buffet_food_product.shop_id =
+		shop.shop_id
+		left join account_shop on shop.account_shop_id = account_shop.id
+		where account_shop.id = #{accountShopId} and category_id = #{categoryId}
+	</select>
+	<select id="getBuffetFoodProductByPIdDAO" resultType="BuffetFoodProduct">
+		select
+		buffet_food_product.*
+		from
+		buffet_food_product
+		left join shop
+		on buffet_food_product.shop_id = shop.shop_id
+		left join account_shop on shop.account_shop_id = account_shop.id
+		where buffet_food_product.id = #{1} and account_shop.id = #{0};
+	</select>
+	<insert id="addBuffetFoodProductDAO">
+		insert into buffet_food_product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="imgUrl != null">
+				img_url,
+			</if>
+			<if test="productName != null">
+				product_name,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="integral != null">
+				integral,
+			</if>
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="productDetail != null">
+				product_detail,
+			</if>
+			<if test="shopId != null">
+				shop_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="imgUrl != null">
+				#{imgUrl},
+			</if>
+			<if test="productName != null">
+				#{productName},
+			</if>
+			<if test="price != null">
+				#{price},
+			</if>
+			<if test="integral != null">
+				#{integral},
+			</if>
+			<if test="categoryId != null">
+				#{categoryId},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="productDetail != null">
+				#{productDetail},
+			</if>
+			<if test="shopId != null">
+				#{shopId},
+			</if>
+		</trim>
+	</insert>
+	<delete id="delProductByIdDAO">
+		delete
+		from buffet_food_product
+		where id = #{0}
+	</delete>
+	<update id="editProductByIdDAO">
+		update buffet_food_product
+		<set>
+			<if test="imgUrl != null">
+				img_url = #{imgUrl},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName},
+			</if>
+			<if test="price != null">
+				price = #{price},
+			</if>
+			<if test="integral != null">
+				integral = #{integral},
+			</if>
+			<if test="categoryId != null">
+				category_id = #{categoryId},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="productDetail != null">
+				product_detail = #{productDetail},
+			</if>
+			<if test="shopId != null">
+				shop_id = #{shopId}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<delete id="delProductByCIdDAO">
+		delete from buffet_food_product
+		where category_id = #{0}
+	</delete>
+	<select id="getNotInGroupBuyProductListDataDAO" resultType="BuffetFoodProduct">
+		select buffet_food_product.*
+		from buffet_food_product
+		left join (select * from buy_package_product where p_type = 2) as
+		buyPackageProduct
+		on buffet_food_product.id = buyPackageProduct.product_id
+		where buyPackageProduct.id is null and buffet_food_product.shop_id = #{0}
+
+	</select>
+	<select id="getAllProductByShopId" resultType="BuffetFoodProduct">
+		select * from buffet_food_product where shop_id=#{shopId} order by
+		#{orderBy}
+	</select>
+	<update id="buffetFoodOff">
+		update buffet_food_product
+		set state=0
+		where
+		<foreach collection="productIds" item="each" index="index" open=""
+			separator="or" close="">
+			id = #{each}
+		</foreach>
+	</update>
+	<update id="buffetFoodOn">
+		update buffet_food_product
+		set state=1
+		where
+		<foreach collection="productIds" item="each" index="index" open=""
+			separator="or" close="">
+			id = #{each}
+		</foreach>
+	</update>
+
+	<!-- ==================JSP页面接口结束======================= -->
+
+</mapper>

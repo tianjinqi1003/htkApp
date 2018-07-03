@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.OrderProductMapper">
+
+    <sql id="Base_Column_List">
+        id, product_id, product_name, quantity, price, order_id
+    </sql>
+
+    <!-- ================接口开始======================== -->
+    <insert id="insertProductInfoByOrderDAO">
+        insert into order_product
+        (product_id,product_name, quantity, price, order_id)
+        values
+        (#{productId}, #{productName}, #{quantity}, #{price}, #{orderId})
+    </insert>
+    <select id="getProductListByOrderIdDAO" resultType="OrderProduct">
+        select
+        <include refid="Base_Column_List" />
+        from order_product
+        where order_id = #{orderId}
+    </select>
+    <delete id="deleteOrderProductByOrderIdDAO">
+        delete from order_product
+        where order_id = #{0}
+    </delete>
+    <!-- ================接口结束======================== -->
+
+    <!-- =======================JSP接口开始============================== -->
+    <select id="getOrderProductNameByOrderIdDAO" resultType="String">
+        select product_name
+        from order_product
+        where order_id = #{0}
+    </select>
+    <!-- =======================JSP接口结束============================= -->
+</mapper>

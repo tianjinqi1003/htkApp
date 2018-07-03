@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.AccountUseTicketListMapper">
+	<select id="getTicketListByTokenAndShopIdDAO" resultType="com.htkapp.modules.merchant.integral.entity.AccountUseTicketList">
+		select
+		ast.id as id,ast.t_name as tName ,ast.t_expiration as tExpiration,atl.gmt_create as gmtCreate,
+		ast.t_money as tMoney,ast.integral_value as integralValue,ast.t_use_money as tUseMoney,
+		 atl.ticket_id as ticketId,
+		atl.quantity as quantity, atl.use_phone as usePhone , atl.shop_id as shopId, atl.account_token as accountToken
+		from
+		account_saver_ticket ast JOIN account_ticket_list atl on
+		ast.id=atl.ticket_id
+		where atl.shop_id=#{1} and
+		atl.account_token=#{0} and
+		atl.quantity >0
+	</select>
+	<select id="getTicketListByTokenAndShopId" resultType="com.htkapp.modules.merchant.integral.entity.AccountUseTicketList">
+		select
+		ast.id as id,ast.t_name as tName ,ast.t_expiration as tExpiration,atl.gmt_create as gmtCreate,
+		ast.t_money as tMoney,ast.integral_value as integralValue,ast.t_use_money as tUseMoney,
+		 atl.ticket_id as ticketId,
+		atl.quantity as quantity, atl.use_phone as usePhone , atl.shop_id as shopId, atl.account_token as accountToken
+		from
+		account_saver_ticket ast JOIN account_ticket_list atl on
+		ast.id=atl.ticket_id
+		where atl.ticket_id=#{1} and
+		atl.account_token=#{0}
+	</select>
+	<delete id="delTicketListByTokenAndShopIdAndTime">
+		delete from account_ticket_list where shop_id=#{1} and
+		account_token=#{0}and
+		gmt_create=#{2}
+	</delete>
+	<update id="updataTicketListByTokenAndShopIdAndTime">
+		UPDATE account_ticket_list set quantity=#{2} where ticket_id=#{1} and
+		account_token=#{0} 
+	</update>
+</mapper>

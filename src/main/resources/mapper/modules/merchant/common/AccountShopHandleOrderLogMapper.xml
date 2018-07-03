@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.common.dao.AccountShopHandleOrderLogMapper">
+
+    <sql id="Base_Column_List">
+        id, content, order_number, account_shop_token
+    </sql>
+    
+    <insert id="insertAccountShopHandleOrderLogDAO" parameterType="AccountShopHandleOrderLog">
+        insert into account_shop_handle_order_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null">
+                content,
+            </if>
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="accountShopToken != null">
+                account_shop_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="orderNumber != null">
+                #{orderNumber},
+            </if>
+            <if test="accountShopToken != null">
+                #{accountShopToken},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

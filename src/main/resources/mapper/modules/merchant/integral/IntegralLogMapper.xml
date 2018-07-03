@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.IntegralLogMapper">
+
+    <sql id="Base_Column_List">
+        id, description, val, shop_id, account_token
+    </sql>
+
+    <!-- =========================接口开始============================= -->
+    <insert id="insertIntegralLogDAO" >
+        insert into integral_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="description != null">
+                description,
+            </if>
+            <if test="val != null">
+                val,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="val != null">
+                #{val},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!-- =========================接口结束============================= -->
+
+</mapper>

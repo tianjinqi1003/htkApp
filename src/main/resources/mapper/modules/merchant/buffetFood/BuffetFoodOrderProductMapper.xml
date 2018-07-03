@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodOrderProductMapper">
+
+	<sql id="Base_Column_List">
+		id, product_id, product_name, img_url, quantity, price, state, order_id
+	</sql>
+
+	<!-- ==============================接口开始================================== -->
+	<insert id="insertProductDetailsUnderOrderDAO">
+		insert into buffet_food_order_product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="productId != null">
+				product_id,
+			</if>
+			<if test="productName != null">
+				product_name,
+			</if>
+			<if test="imgUrl != null">
+				img_url,
+			</if>
+			<if test="quantity != null">
+				quantity,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="productId != null">
+				#{productId},
+			</if>
+			<if test="productName != null">
+				#{productName},
+			</if>
+			<if test="imgUrl != null">
+				#{imgUrl},
+			</if>
+			<if test="quantity != null">
+				#{quantity},
+			</if>
+			<if test="price != null">
+				#{price},
+			</if>
+			<if test="orderId != null">
+				#{orderId},
+			</if>
+		</trim>
+	</insert>
+	<select id="getOrderProductListByIdDAO" resultType="BuffetFoodOrderProduct">
+		select
+		buffet_food_product.id,
+		buffet_food_order_product.product_name,
+		buffet_food_order_product.img_url,
+		buffet_food_order_product.quantity, buffet_food_order_product.price, buffet_food_order_product.order_id,
+		buffet_food_order_product.state, category_name,
+		buffet_food_product.category_id
+		from buffet_food_order_product left join buffet_food_product on
+		buffet_food_order_product.product_id = buffet_food_product.id
+		left join buffet_food_category on buffet_food_product.category_id =
+		buffet_food_category.id
+		where order_id = #{orderId}
+	</select>
+	<select id="getOrderProductDetailByIdDAO" resultType="BuffetFoodOrderProduct">
+		select
+		product_name, quantity, price, state
+		from buffet_food_order_product
+		where
+		<foreach collection="idLists" index="index" item="each"
+			separator="or" open="" close="">
+			buffet_food_order_product.id = #{each} and buffet_food_order_product.order_id = #{orderId}
+		</foreach>
+	</select>
+	<update id="changeOrderProductStateByIdDAO">
+		update buffet_food_order_product
+		set state = #{state}
+		where
+		<foreach collection="idLists" index="index" item="each"
+			separator="or" open="" close="">
+			buffet_food_order_product.id = #{each} and buffet_food_order_product.order_id = #{orderId}
+		</foreach>
+	</update>
+	<delete id="delOrderProductByIdDAO">
+		delete
+		from buffet_food_order_product
+		where
+		<foreach collection="idLists" index="index" item="each"
+			separator="or" open="" close="">
+			buffet_food_order_product.id = #{each}
+		</foreach>
+	</delete>
+	<delete id="deleteOrderProductByOrderIdDAO">
+		delete from buffet_food_order_product
+		where order_id = #{0}
+	</delete>
+	<select id="getOrderProductListByOrderNumberDAO" resultType="BuffetFoodOrderProduct">
+		select
+		buffet_food_order_product.product_id, buffet_food_order_product.product_name,
+		buffet_food_order_product.quantity, buffet_food_order_product.price,
+		from buffet_food_order_product left join buffet_food_order
+		on buffet_food_order_product.order_id = buffet_food_order.id
+		where buffet_food_order.order_number = #{0}
+	</select>
+	<update id="updataOrderProductBzById">
+		update buffet_food_order_product
+		set bz=#{bz}
+		where order_id=#{product.orderId} and
+		product_name=#{product.productName}
+	</update>
+	<!-- ==============================接口结束================================== -->
+</mapper>

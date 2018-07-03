@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 扫描service包下所有使用注解的类型 -->
+    <context:component-scan base-package="com.htkapp.**.service"/>
+    <!-- rabbit扫描 -->
+    <!--<context:component-scan base-package="com.htkapp.core.rabbit" />-->
+    <!--配置事物管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入数据库的连接池-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--配置基于注解的声明式事物 - 默认使用注解来管理事物行为-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--将事务管理应用在切入点（Pointcut）上 -->
+    <aop:config proxy-target-class="true">
+        <!--这个切面表示所有service层的方法 -->
+        <aop:pointcut id="serviceTransaction" expression="execution(* com.htkapp.*.*.serviceImpl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceTransaction"/>
+        <aop:aspect id="aspect" ref="myInterceptor">
+            <aop:after-returning method="notifyMeg"
+                                 pointcut="execution(* com.htkapp.modules.API.service.serviceImpl.PaymentInterfaceServiceImpl.callUpRefundInterfaceHTK(..))"
+                                 returning="retVal" arg-names="joinPoint, retVal"/>
+            <aop:after-returning method="notifyMeg"
+                                 pointcut="execution(* com.htkapp.modules.merchant.takeout.service.serviceImpl.TakeoutServiceImpl.*(String))"
+                                 returning="retVal" arg-names="joinPoint, retVal"/>
+            <aop:after-returning method="notifyMeg"
+                                 pointcut="execution(* com.htkapp.modules.API.service.serviceImpl.AccountServiceImpl.enterReceipt(..)))"
+                                 returning="retVal" arg-names="joinPoint, retVal"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- aop -->
+    <!--事务的通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 方法名 传播级别 -->
+            <!-- 当service包下的方法执行抛出 Exception 异常,都会执行回滚 -->
+            <tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="callUpPaymentInterfaceHTK" read-only="false" propagation="REQUIRED"
+                       rollback-for="java.lang.Exception"/>
+            <tx:method name="*RefundInterfaceHTK" propagation="REQUIRED" read-only="false"
+                       rollback-for="java.lang.Exception"/>
+            <!--<tx:method name="*" propagation="NOT_SUPPORTED" read-only="true"/>-->
+        </tx:attributes>
+    </tx:advice>
+
+</beans>

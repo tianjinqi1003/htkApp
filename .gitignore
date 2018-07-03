@@ -1,0 +1,12 @@
+/.idea
+/out
+/*.iml
+/target/
+/bin/
+
+/output
+/.classpath
+/.gitignore
+/.project
+/pom.xml
+/README.md

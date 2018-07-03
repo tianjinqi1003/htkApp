@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.ActivityGoodsMapper">
+
+    <sql id="Base_Column_List">
+        id, entity_name, description, integral, entity_count, shop, img,
+        parent_id, gmt_create, gmt_modifiedn
+    </sql>
+
+    <!-- ======================================接口开始====================================== -->
+    <select id="editPresentById" parameterType="java.lang.Integer" resultType="ActivityGoods">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_goods
+        where id = #{id}
+    </select>
+    <!-- =====================================接口结束======================================== -->
+
+    <select id="findPresentListByPageById" resultType="ActivityGoods">
+        select
+        activityGoods.id, entity_name, active_goods.description, integral, entity_count, shop, active_goods.img,
+        parent_id, active_goods.gmt_create, active_goods.gmt_modifiedn ,activity.title as activity_name
+        from active_goods LEFT JOIN activity on active_goods.parent_id = activity.id
+        where shop = #{shopId,jdbcType=INTEGER}
+        <if test="integral != null">
+            and integral = #{integral,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <delete id="deletePresentById" parameterType="java.lang.Integer">
+        delete from active_goods where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insertPresentById"
+            useGeneratedKeys="true" keyProperty="activityId">
+        insert into active_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="entityName != null">
+                entity_name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="integral != null">
+                integral,
+            </if>
+            <if test="entityCount != null">
+                entity_count,
+            </if>
+            <if test="shopId != null">
+                shop,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+            <if test="parentId != 0">
+                parent_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="entityName != null">
+                #{entityName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="integral != null">
+                #{integral,jdbcType=INTEGER},
+            </if>
+            <if test="entityCount != null">
+                #{entityCount,jdbcType=INTEGER},
+            </if>
+            <if test="shopId != null">
+                #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId == 0">
+                null,
+            </if>
+            <if test="parentId != null">
+                #{parentId, jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updatePresentById">
+        update active_goods
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER},
+            </if>
+            <if test="entityName != null">
+                entity_name = #{entityName,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="integral != null">
+                integral = #{integral,jdbcType=INTEGER},
+            </if>
+            <if test="entityCount != null">
+                entity_count = #{entityCount,jdbcType=INTEGER},
+            </if>
+            <if test="shopId != null">
+                shop = #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId == 0">
+                parent_id = null
+            </if>
+            <if test="parentId > 0">
+                parent_id = #{parentId}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="findActivityListById" parameterType="java.lang.Integer" resultType="ActivityGoods">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_goods
+        where shop = #{shopId,jdbcType=INTEGER} and parent_id = #{parentId}
+    </select>
+
+    <select id="selectActivityCount" resultType="java.lang.Integer">
+        SELECT count(parent_id)
+        from active_goods
+        where parent_id = #{id}
+    </select>
+
+    <!--app页面-->
+    <update id="updateActivityCountById" parameterType="java.lang.Integer">
+        update activity_goods
+        <set>
+            <if test="id != null">
+                entity_count = entity_count-1,
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="findGoodsNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select entity_name
+        from activity_goods
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+</mapper>

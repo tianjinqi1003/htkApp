@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.takeout.dao.TakeoutCategoryMapper">
+
+    <sql id="Base_Column_List">
+    id, category_name, shop_id
+  </sql>
+
+
+    <!-- ====================接口开始=========================== -->
+    <select id="getTakeoutCategoryByIdDAO" resultType="TakeoutCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        takeout_category
+        where shop_id = #{shopId}
+    </select>
+
+    <!-- ====================接口结束=========================== -->
+
+    <!-- ====================JSP页面接口开始=========================== -->
+    <select id="getTakeoutCategoryListByAccountShopIdDAO" resultType="TakeoutCategory">
+    select
+    takeout_category.*
+    from
+    takeout_category
+    left join shop on takeout_category.shop_id = shop.shop_id
+    left join account_shop on shop.account_shop_id = account_shop.id
+    where account_shop.id = #{accountShopId} and mark = 0
+  </select>
+    <update id="editCategoryNameByIdDAO">
+    update takeout_category
+    set takeout_category.category_name = #{categoryName}
+    where takeout_category.id = #{id}
+  </update>
+    <insert id="addCategoryByIdDAO">
+    insert into takeout_category(category_name,shop_id)
+    values(#{0},
+    (select shop_id from shop
+    left join account_shop on shop.account_shop_id = account_shop.id where account_shop.id=#{1} and shop.mark=#{2}))
+  </insert>
+    <select id="getCategoryByIdDAO" resultType="TakeoutCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from takeout_category
+        where id = #{0}
+    </select>
+    <delete id="delCategoryByIdDAO">
+        delete from takeout_category
+        where id = #{0}
+    </delete>
+
+    <!-- =====================JSP页面接口结束=========================== -->
+
+</mapper>

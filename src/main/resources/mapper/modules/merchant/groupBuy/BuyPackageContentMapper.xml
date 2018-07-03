@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.groupBuy.dao.BuyPackageContentMapper">
+    <sql id="Base_Column_List">
+        id, product_id, product_name, price, original_cost, quantity, package_id
+    </sql>
+
+    <!-- =================================接口开始======================================== -->
+    <insert id="insertPackageItemDAO">
+        insert into buy_package_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="productId != null">
+              product_id,
+          </if>
+            <if test="productName != null">
+                product_name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="originalCost != null">
+                original_cost,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="packageId != null">
+                package_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="originalCost != null">
+                #{originalCost},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="packageId != null">
+                #{packageId},
+            </if>
+        </trim>
+    </insert>
+    <select id="getPackageItemListByIdDAO" resultType="BuyPackageContent">
+        select
+        <include refid="Base_Column_List" />
+        from buy_package_content
+        where package_id = #{0}
+    </select>
+    <delete id="deletePackageContentListByIdDAO">
+        delete from buy_package_content
+        where package_id = #{0}
+    </delete>
+    <!-- =================================接口结束====================================== -->
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.BillRecordStatisticsMapper">
+
+    <sql id="Base_Column_List">
+        id, status, order_income, spending_on_order, amount, account_shop_token, gmt_create, gmt_modified
+    </sql>
+
+    <!-- ========================接口开始============================ -->
+    <select id="getBillRecordStatisticsByCurDateDAO" resultType="BillRecordStatistics">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_record_statistics
+        where gmt_create between #{startTime} and #{endTime}
+        and account_shop_token = #{token} order by gmt_create desc limit 1
+    </select>
+    <insert id="insertBillRecordStatisticsByTokenDAO">
+        insert into bill_record_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="status != null">
+                status,
+            </if>
+            <if test="orderIncome != null">
+                order_income,
+            </if>
+            <if test="spendingOnOrder != null">
+                spending_on_order,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="accountShopToken != null">
+                account_shop_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="orderIncome != null">
+                #{orderIncome},
+            </if>
+            <if test="spendingOnOrder != null">
+                #{spendingOnOrder},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="accountShopToken != null">
+                #{accountShopToken},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateBillRecordStatisticsByIdDAO">
+        update bill_record_statistics
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="orderIncome != null">
+                order_income = #{orderIncome},
+            </if>
+            <if test="spendingOnOrder != null">
+                spending_on_order = #{spendingOnOrder},
+            </if>
+            <if test="amount != null">
+                amount = #{amount}
+            </if>
+        </set>
+        where id = #{id}
+        and account_shop_token = #{accountShopToken}
+    </update>
+    <update id="updateBillRecordStatisticsByDateDAO">
+        update bill_record_statistics
+        <set>
+            <if test="amount != null">
+                order_income = order_income - #{amount},
+            </if>
+            <if test="amount != null">
+                amount = amount - #{amount}
+            </if>
+        </set>
+        where account_shop_token = #{token}
+        and gmt_create between #{startTime} and #{endTime}
+    </update>
+    <select id="getBillRecordStatisticsListByDateDAO" resultType="BillRecordStatistics">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_record_statistics
+        where account_shop_token = #{accountShopToken}
+        and gmt_create between #{startTime} and #{endTime} order by ${orderDesc}
+    </select>
+    <!-- ========================接口结束============================ -->
+
+</mapper>

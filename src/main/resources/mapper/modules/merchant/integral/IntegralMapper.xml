@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.IntegralMapper">
+
+    <sql id="Base_Column_List">
+        id, val, shop_id, account_token, gmt_create as joinTime, flag
+    </sql>
+
+
+    <update id="updateLatestConsumeTime">
+        update integral
+                set gmt_modified =  #{2}
+        where account_token = #{0}
+        and shop_id = #{1}
+    </update>
+
+
+    <update id="updateLatestGetTime">
+        update integral
+                set gmt_latest_get =  #{2}
+        where account_token = #{0}
+        and shop_id = #{1}
+    </update>
+
+    <!-- ===============================接口开始=================================== -->
+    <select id="getAccountIntegralListByIdDAO"
+            resultType="com.htkapp.modules.merchant.integral.dto.AccountIntegralList">
+        select account.user_name, integral.val, integral.gmt_create as join_time, flag
+        from (select account_focus.account_token from account_focus
+        left join shop on account_focus.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId}) as account_token_list
+        left join account on account_token_list.account_token = account.token
+        left join integral on account.token = integral.account_token
+        where 1=1
+        <if test="userName != null">
+            and account.user_name = #{userName}
+        </if>
+    </select>
+    <!-- ===============================接口结束=================================== -->
+
+    <!-- ==============================JSP接口开始===================================== -->
+
+
+    <select id="getIntegralUserListByShopIds" resultType="Integral">
+        select
+        id, shop_id, account_token, gmt_create as joinTime,
+        gmt_modified as last_consume_time, gmt_latest_get as last_get_time, flag
+        from integral
+        where
+        <foreach collection="shopIdList" index="index" item="each"  open="" separator="or" close="">
+            shop_id=#{each}
+        </foreach>
+        order by ${orderDesc}
+    </select>
+
+
+
+
+    <select id="getIntegralUserListByShopTokenDAO" resultType="Integral">
+        select count(DISTINCT integral.account_token),
+        integral.id, integral.shop_id, integral.gmt_create as joinTime,
+        integral.gmt_modified as last_consume_time, integral.gmt_latest_get as last_get_time, flag,
+        integral.account_token
+        from integral
+        left join shop on integral.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.token = #{token}
+        group by integral.account_token
+        <if test="condition != null">
+            and integral.account_token = #{condition} group by integral.account_token
+        </if>
+        order by ${orderDesc}
+    </select>
+    <select id="getIntegralValByAccountTokenDAO" resultType="java.lang.Integer">
+        select
+        sum(val)
+        from integral
+        left join shop on integral.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.token = #{0} and account_token = #{1}
+    </select>
+    <!--<select id="getIntegralUserListByShopTokenDAO" resultType="Integral">-->
+    <!--select-->
+    <!--integral.id, val, integral.shop_id, integral.account_token, integral.gmt_create as joinTime,-->
+    <!--integral.gmt_modified as last_use_time, flag-->
+    <!--from integral-->
+    <!--left join shop on integral.shop_id = shop.shop_id-->
+    <!--left join account_shop on shop.account_shop_id = account_shop.id-->
+    <!--where account_shop.token = #{token}-->
+    <!--<if test="condition != null">-->
+    <!--and account_token = #{condition} group by integral.account_token-->
+    <!--</if>-->
+    <!--order by ${orderDesc}-->
+    <!--</select>-->
+
+    <select id="getVal" resultType="java.lang.Integer">
+        select val
+        from integral
+        where account_token = #{0}
+        and shop_id = #{1}
+    </select>
+
+    <update id="updateIntegral">
+        update integral set val = #{2}
+        where account_token = #{0}
+        and shop_id = #{1}
+    </update>
+
+    <update id="presentOrDeductionIntegralByTokenDAO">
+        update integral
+        <choose>
+            <when test="operationId == 0">
+                set val = val - #{val}
+            </when>
+            <when test="operationId == 1">
+                set val = val + #{val}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        where account_token = #{accountToken}
+        and shop_id = #{shopId}
+    </update>
+    <select id="getUserIntegralByAccountTokenDAO" resultType="Integral">
+        select
+        <include refid="Base_Column_List"/>
+        from integral
+        where account_token = #{0} and shop_id = #{1}
+    </select>
+    <insert id="insertUserIntegralDAO">
+        insert into integral
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="val != null">
+                val,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="val != null">
+                #{val},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateIntegralFlagByTokenDAO">
+        update integral
+        set flag = #{1}
+        where account_token = #{0}
+    </update>
+    <!-- ==============================JSP接口结束===================================== -->
+</mapper>

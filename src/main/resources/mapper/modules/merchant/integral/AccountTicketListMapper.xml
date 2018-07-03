@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.AccountTicketListMapper">
+
+    <sql id="Base_Column_List">
+        ticket_id, quantity, use_phone, shop_id, account_token
+    </sql>
+
+    <select id="getTicketListByTokenAndShopIdDAO" resultType="AccountTicketList">
+        select
+        <include refid="Base_Column_List" />
+        from account_ticket_list
+        where account_token = #{0} and shop_id = #{1} and quantity>0
+    </select>
+
+    <!--/**-->
+    <!--* 通过用户token 和 优惠券id 查找此用户所拥有的优惠券列表-->
+    <!--* @modified by 马鹏昊-->
+    <!--*/-->
+    <select id="getTicketListByTokenAndCouponIdDAO" resultType="AccountTicketList">
+        select
+        <include refid="Base_Column_List" />
+        from account_ticket_list
+        where account_token = #{0} and ticket_id = #{1}
+    </select>
+
+    <!--/**-->
+    <!--* 优惠券使用完后要更新用户拥有的数量-->
+    <!--* @modified by 马鹏昊-->
+    <!--*/-->
+    <update id="updateTicketListByTokenAndCouponIdDAO" >
+        update account_ticket_list
+        set quantity = #{ticketQuantity}
+        where account_token = #{token} and ticket_id = #{ticket_id}
+    </update>
+
+    <select id="getTicketListByTokenDAO" resultType="AccountTicketList">
+        select
+        <include refid="Base_Column_List" />
+        from account_ticket_list
+        where account_token = #{0}
+    </select>
+    
+    <insert id="insertAccountTicketDAO">
+        insert into account_ticket_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ticketId != null">
+                ticket_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="usePhone != null">
+                use_phone,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="ticketId != null">
+                #{ticketId},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="usePhone != null">
+                #{usePhone},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+        </trim>
+    </insert>
+    
+    <select id="getTicketByTokenAndShopIdAndTicketId" resultType="AccountTicketList">
+    	select * from account_ticket_list where ticket_id=#{0} and account_token=#{1} and shop_id=#{2}
+    </select>
+    <update id="updataTicketByTokenAndShopIdAndTicketId">
+    	update account_ticket_list
+    	  set quantity = #{3}
+    	  where ticket_id=#{0} and account_token=#{1} and shop_id=#{2}
+    </update>
+</mapper>

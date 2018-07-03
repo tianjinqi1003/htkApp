@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.common.dao.ShopMessageCommentMapper">
+
+    <sql id="Base_Column_List">
+    id, comments_stars, content, order_id, account_token, shop_id,gmt_create
+  </sql>
+
+
+
+    <!-- =================接口开始======================== -->
+    <select id="getTakeoutCommentByIdDAO" resultType="com.htkapp.modules.merchant.common.dto.ReturnCommentInfo">
+    select
+    id as comment_id, comments_stars, content, order_id, account_token,gmt_create as comment_time
+    from shop_message_comment
+    where shop_id = #{shopId} order by gmt_create desc
+  </select>
+
+    <!--获取商家回复的评论-->
+    <select id="getMerchantReplyListByUserCommentId" resultType="com.htkapp.modules.merchant.common.dto.MerchantReplyInfo">
+        select *
+        from account_shop_reply_comments
+        where comment_id = #{0}
+    </select>
+
+
+    <select id="viewReviewDetailsByIdDAO" resultType="ShopMessageComment">
+    select shop_message_comment.id,
+    comments_stars,content,shop_message_comment.gmt_create
+    from shop_message_comment right join order_record on shop_message_comment.order_id = order_record.id
+    where order_id = #{orderId}
+  </select>
+    <insert id="commentOrderByIdDAO">
+        insert into shop_message_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentsStars != null">
+                comments_stars,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="token != null">
+                account_token,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="commentsStars != null">
+                #{commentsStars},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="token != null">
+                #{token},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+    <select id="getBuyPackageCommentListDAO" resultType="ShopMessageComment">
+    select
+    comments_stars,content,shop_message_comment.account_token,shop_message_comment.gmt_create
+    from shop_message_comment left join order_record
+    on shop_message_comment.order_id = order_record.id
+    left join order_buy_package on order_record.id = order_buy_package.order_id
+    where order_buy_package.package_id = #{packageId} and order_record.mark = 1
+  </select>
+    <select id="getShopCommentCountDAO" resultType="java.lang.Integer">
+        select
+        count(0)
+        from
+        shop_message_comment
+        where shop_id = #{0}
+    </select>
+    <select id="getCommentStatusByOrderIdDAO" resultType="ShopMessageComment">
+        select
+        <include refid="Base_Column_List"/>
+        from shop_message_comment
+        where order_id = #{0}
+    </select>
+    <!-- =================接口结束======================== -->
+
+    <!-- ========================JSP页面接口开始========================== -->
+    <select id="getTakeoutCommentListByShopIdDAO"
+            resultType="com.htkapp.modules.merchant.common.dto.TakeoutCommentList">
+        select comments_stars, content,order_number, shop_message_comment.gmt_create as comment_time
+        from shop_message_comment left join order_record
+        on shop_message_comment.order_id = order_record.id left join shop
+        on shop_message_comment.shop_id = shop.shop_id left join account_shop
+        on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId} and order_record.mark = 0
+        and shop_message_comment.gmt_create between #{start} and #{end}
+        <if test="starRating != 0">
+            and comments_stars = #{starRating}
+        </if>
+    </select>
+
+    <select id="getGroupBuyCommentListByShopIdDAO"
+            resultType="com.htkapp.modules.merchant.common.dto.GroupBuyCommentList">
+    select comments_stars, content,order_number,account.nick_name,account.avatar_url,
+    shop_message_comment.gmt_create as comment_time
+    from shop_message_comment left join order_record
+    on shop_message_comment.order_id = order_record.id left join account
+    on shop_message_comment.account_token = account.token left join shop
+    on shop_message_comment.shop_id = shop.shop_id left join account_shop
+    on shop.account_shop_id = account_shop.id
+    where account_shop.id = #{accountShopId} and order_record.mark = 1
+    </select>
+    <select id="getCommentListByTokenDAO" resultType="com.htkapp.modules.merchant.common.dto.CommentListInfo">
+        select shop_message_comment.id, comments_stars, content,order_number,
+        shop_message_comment.gmt_create as comment_time, reply_content,
+        shop_message_comment.order_id
+        from shop_message_comment left join order_record
+        on shop_message_comment.order_id = order_record.id left join shop
+        on shop_message_comment.shop_id = shop.shop_id left join account_shop
+        on shop.account_shop_id = account_shop.id left join account_shop_reply_comments
+        on shop_message_comment.id = account_shop_reply_comments.comment_id
+        where account_shop.token = #{accountShopToken}
+        and shop_message_comment.gmt_create between #{startTime} and #{endTime}
+        <if test="cMark == 0">
+            and order_record.mark = 0
+        </if>
+        <if test="cMark == 1">
+            and order_record.mark = 1
+        </if>
+        <if test="cMark == 2">
+            and order_record.mark = 2
+        </if>
+        <if test="comStar != 0">
+            and comments_stars =#{comStar}
+        </if>
+        <if test="comMark == 1">
+            and reply_content is NULL
+        </if>
+        <if test="comMark == 2">
+            and reply_content is NOT NULL
+        </if>
+        order by ${orderDesc}
+    </select>
+    <select id="getStarCountByStarNumDAO" resultType="java.lang.Integer">
+        select count(0)
+        from shop_message_comment left join order_record
+        on shop_message_comment.order_id = order_record.id left join shop
+        on shop_message_comment.shop_id = shop.shop_id left join account_shop
+        on shop.account_shop_id = account_shop.id left join account_shop_reply_comments
+        on shop_message_comment.id = account_shop_reply_comments.comment_id
+        where account_shop.token = #{accountShopToken}
+        <if test="cMark == 0">
+            and order_record.mark = 0
+        </if>
+        <if test="cMark == 1">
+            and order_record.mark = 1
+        </if>
+        <if test="cMark == 2">
+            and order_record.mark = 2
+        </if>
+        <if test="comStar != 0">
+            and comments_stars =#{comStar}
+        </if>
+        <if test="comMark == 1">
+            and reply_content is NULL
+        </if>
+        <if test="comMark == 2">
+            and reply_content is NOT NULL
+        </if>
+    </select>
+    <select id="getDateCountByDateValDAO" resultType="java.lang.Integer">
+        select count(0)
+        from shop_message_comment left join order_record
+        on shop_message_comment.order_id = order_record.id left join shop
+        on shop_message_comment.shop_id = shop.shop_id left join account_shop
+        on shop.account_shop_id = account_shop.id left join account_shop_reply_comments
+        on shop_message_comment.id = account_shop_reply_comments.comment_id
+        where account_shop.token = #{accountShopToken}
+        and shop_message_comment.gmt_create between #{startTime} and #{endTime}
+        <if test="cMark == 0">
+            and order_record.mark = 0
+        </if>
+        <if test="cMark == 1">
+            and order_record.mark = 1
+        </if>
+        <if test="cMark == 2">
+            and order_record.mark = 2
+        </if>
+        <if test="comMark == 1">
+            and reply_content is NULL
+        </if>
+        <if test="comMark == 2">
+            and reply_content is NOT NULL
+        </if>
+    </select>
+    <select id="getStarValByStarNumDAO" resultType="Double">
+        select sum(comments_stars)
+        from shop_message_comment left join order_record
+        on shop_message_comment.order_id = order_record.id left join shop
+        on shop_message_comment.shop_id = shop.shop_id left join account_shop
+        on shop.account_shop_id = account_shop.id left join account_shop_reply_comments
+        on shop_message_comment.id = account_shop_reply_comments.comment_id
+        where account_shop.token = #{accountShopToken}
+        <if test="cMark == 0">
+            and order_record.mark = 0
+        </if>
+        <if test="cMark == 1">
+            and order_record.mark = 1
+        </if>
+        <if test="cMark == 2">
+            and order_record.mark = 2
+        </if>
+        <if test="comStar != 0">
+            and comments_stars =#{comStar}
+        </if>
+    </select>
+    <!-- ========================JSP页面接口结束========================== -->
+</mapper>

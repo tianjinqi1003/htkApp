@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						   http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 1. dataSource -->
+	<context:property-placeholder location="classpath:properties/jdbc.properties" />
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="1" />
+		<property name="minIdle" value="1" />
+		<property name="maxActive" value="20" />
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="20" />
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="wall,stat" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:mapper/**/*.xml" />
+		<!-- 配置MyBatis全局配置文件：mybatis-config.xml -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="typeAliasesPackage"
+			value="com.htkapp.modules.admin.accountManage.entity,
+                                                   com.htkapp.modules.API.entity,
+                                                   com.htkapp.modules.admin.shopCategory.entity,
+                                                   com.htkapp.modules.merchant.shop.entity,
+                                                   com.htkapp.modules.merchant.common.entity,
+                                                   com.htkapp.modules.merchant.integral.entity,
+                                                   com.htkapp.modules.merchant.takeout.entity,
+                                                   com.htkapp.modules.merchant.pay.entity,
+                                                   com.htkapp.modules.admin.system.entity,
+                                                   com.htkapp.modules.admin.common.entity,
+                                                   com.htkapp.modules.merchant.groupBuy.entity,
+                                                   com.htkapp.modules.common.entity,
+                                                   com.htkapp.modules.merchant.buffetFood.entity
+                                                 " />
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<!-- 这里的几个配置主要演示如何使用，如果不理解，一定要去掉下面的配置 -->
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.htkapp.**.dao " />
+	</bean>
+
+	<bean name="otherUtils" class="com.htkapp.core.OtherUtils">
+		<property name="getIdUtil" ref="getIdUtil" />
+		<property name="moreMethodsServiceImpl" ref="moreMethodsServiceImpl" />
+		<constructor-arg name="moreMethodsUtils"
+			type="com.htkapp.core.MoreMethodsUtils" ref="moreMethodsUtils" />
+		<!--<property name="wxPay" ref="wxPay" /> -->
+		<property name="jedisServiceCache" ref="jedisServiceCache" />
+		<property name="baseRedisCache" ref="baseRedisCache" />
+		<property name="baseSolr" ref="baseSolr" />
+	</bean>
+
+
+	<!-- set注入 -->
+	<bean name="getIdUtil" class="com.htkapp.core.GetIdUtil" />
+	<!-- 构造方法注入 -->
+	<bean name="moreMethodsUtils" class="com.htkapp.core.MoreMethodsUtils" />
+	<!-- set注入 -->
+	<bean name="moreMethodsServiceImpl"
+		class="com.htkapp.core.springAop.methodService.methodServiceImpl.MoreMethodsServiceImpl" />
+	<!-- set 注入 -->
+	<!--<bean name="wxPay" class="com.htkapp.core.dto.WeChatPayUtil" /> -->
+	<bean name="jedisServiceCache" class="com.htkapp.core.redisCache.JedisServiceCache" />
+	<bean name="baseRedisCache" class="com.htkapp.core.redisCache.BaseRedisCache" />
+	<bean name="baseSolr" class="com.htkapp.core.solr.BaseSolr" />
+
+	<!-- 配置切入点Bean -->
+	<bean id="myInterceptor" class="com.htkapp.core.springAop.MyPointcut" />
+
+</beans>

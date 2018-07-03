@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.ShopArticleInfoMapper">
+
+    <sql id="Base_Column_List">
+        id, title, img_url, describe_, html_content, shop_id, state
+    </sql>
+
+    <resultMap id="ShopArticleInfoMap" type="ShopArticleInfo">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="imgUrl" column="imgUrl" />
+        <result property="describe_" column="describe_" />
+        <result property="htmlContent" column="html_content" />
+        <result property="createTime" column="gmt_create" />
+        <result property="shopId" column="shopId" />
+        <result property="state" column="state" />
+
+    </resultMap>
+    
+    <select id="getShopArticleInfoByShopIdDAO" resultType="ShopArticleInfo">
+        select
+        <include refid="Base_Column_List" />, gmt_create as createTime
+        from shop_article_info
+        where shop_id = #{0} and state = 0 order by gmt_create desc
+    </select>
+
+    <insert id="insertShopArticleInfoDAO">
+        insert into shop_article_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="describe_ != null">
+                describe_,
+            </if>
+            <if test="htmlContent != null">
+                html_content,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl},
+            </if>
+            <if test="describe_ != null">
+                #{describe_},
+            </if>
+            <if test="htmlContent != null">
+                #{htmlContent},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getShopArticleInfoByIdDAO" resultMap="ShopArticleInfoMap">
+        select
+        shop_article_info.id, shop_article_info.title, shop_article_info.img_url,
+        describe_, html_content, shop_article_info.shop_id,
+        shop_article_info.gmt_create as createTime, shop_article_info.state
+        from shop_article_info
+        left join shop on shop_article_info.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId} order by ${orderDesc}
+    </select>
+
+    <select id="getShopArticleByIdDAO" resultType="ShopArticleInfo">
+        select
+        <include refid="Base_Column_List" />
+        from shop_article_info where id = #{0}
+    </select>
+
+    <update id="updateArticleInfoShowStateDAO">
+        update shop_article_info
+        set state = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateMesByIdDAO" >
+        update shop_article_info
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl},
+            </if>
+            <if test="describe_ != null">
+                describe_ = #{describe_},
+            </if>
+            <if test="htmlContent != null">
+                html_content = #{htmlContent}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.API.dao.SmsBaseMapper" >
+
+  <sql id="Base_Column_List" >
+    id, tel_phone, val_code
+  </sql>
+  <select id="selectByPrimaryKey" resultType="SmsBase" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from smsbase
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   <select id="selectByTelphone" resultType="SmsBase" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from smsbase
+    where tel_phone = #{telPhone,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from smsbase
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="SmsBase" >
+    insert into smsbase (id, tel_phone, val_code
+      )
+    values (#{id,jdbcType=INTEGER}, #{telPhone,jdbcType=CHAR}, #{valCode,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="SmsBase" >
+    insert into smsbase
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="telPhone != null" >
+        tel_phone,
+      </if>
+      <if test="valCode != null" >
+        val_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="telPhone != null" >
+        #{tel_phone,jdbcType=CHAR},
+      </if>
+      <if test="valCode != null" >
+        #{val_code,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="SmsBase" >
+    update smsbase
+    <set >
+      <if test="telPhone != null" >
+        tel_phone = #{telPhone,jdbcType=CHAR},
+      </if>
+      <if test="valCode != null" >
+        val_code = #{valCode,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="SmsBase" >
+    update smsbase
+    set telp_hone = #{telPhone,jdbcType=CHAR},
+      val_code = #{valCode,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

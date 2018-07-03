@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.API.dao.AccountFocusMapper">
+
+    <sql id="Base_Column_List">
+        focus_id, account_token, shop_id
+    </sql>
+
+    <!-- ===============接口开始=================== -->
+    <select id="getCollectListByTokenDAO" resultType="AccountFocus">
+        select
+        account_focus.*
+        from account_focus left join shop
+        on account_focus.shop_id = shop.shop_id
+        where account_token = #{token}
+        <if test="mark != null">
+            and shop.mark = #{mark}
+        </if>
+    </select>
+    <insert id="collectionStoreDAO">
+        insert into
+        account_focus
+        (account_token,shop_id)
+        values
+        (#{token},#{shopId})
+    </insert>
+    <delete id="cancelTheStoreDAO">
+        delete from account_focus
+        where account_token = #{token} and shop_id = #{shopId}
+    </delete>
+
+    <!-- ===============接口结束=================== -->
+
+    <!-- ============================JSP页面接口开始================================= -->
+    <select id="getAccountFocusByUserPhoneDAO" resultType="AccountFocus">
+        select
+        account_focus.focus_id, account_focus.account_token, account_focus.shop_id
+        from
+        account_focus left join account
+        on account_focus.account_token = account.token
+        left join shop on account_focus.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account.user_name = #{0} and account_shop.token = #{1} limit 1
+    </select>
+    <!-- ============================JSP页面接口结束================================= -->
+
+
+    <insert id="joinCollection">
+        insert into account_focus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountToken != null">
+                account_token,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="checkCollection" resultType="AccountFocus">
+        select
+        <include refid="Base_Column_List"/>
+        from account_focus
+        where account_token = #{accountToken} and shop_id = #{shopId};
+    </select>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.AccountShopReplyCommentsMapper">
+
+    <sql id="Base_Column_List">
+        id, reply_content, comment_id, account_shop_token
+    </sql>
+
+    <!-- ==============================JSP页面接口开始===================================== -->
+    <select id="getNoCommentNumberDAO" resultType="java.lang.Integer">
+        select count(0)
+        from account_shop_reply_comments
+        right join shop_message_comment
+        on account_shop_reply_comments.comment_id = shop_message_comment.id
+        where account_shop_reply_comments.account_shop_token = #{accountShopToken}
+    </select>
+    <select id="getBadCommentNumberDAO" resultType="java.lang.Integer">
+        select count(0)
+        from account_shop_reply_comments
+        right join shop_message_comment
+        on account_shop_reply_comments.comment_id = shop_message_comment.id
+        where
+        account_shop_reply_comments.account_shop_token = #{accountShopToken}
+        and
+        shop_message_comment.comments_stars > 1
+    </select>
+
+    <!--马鹏昊修改,星级小于3颗星的算差评-->
+    <select id="getBadCommentCounts" resultType="java.lang.Integer">
+        select count(0)
+        from shop_message_comment  where id not in
+        (select comment_id from account_shop_reply_comments)
+        and
+        comments_stars  &lt;= 2
+        and
+        <foreach collection="shopIdList" index="index" item="each" open="" separator="or" close="">
+            shop_id = #{each}
+        </foreach>
+    </select>
+
+    <!--马鹏昊修改,查询未回复的所有评价，不考虑是否是差评-->
+    <select id="getNoCommentCounts" resultType="java.lang.Integer">
+        select count(0)
+        from shop_message_comment  where id not in
+        (select comment_id from account_shop_reply_comments)
+        and
+        <foreach collection="shopIdList" index="index" item="each" open="" separator="or" close="">
+            shop_id = #{each}
+        </foreach>
+    </select>
+
+    <select id="getReplyContentByIdDAO" resultType="AccountShopReplyComments" >
+        select *
+        from account_shop_reply_comments
+        where comment_id = #{commentId}
+    </select>
+    <insert id="insertReplyDAO" >
+        insert into
+        account_shop_reply_comments(reply_content,comment_id,account_shop_token)
+        values(#{replyContent}, #{commentId}, #{accountShopToken})
+    </insert>
+    <!-- ==============================接口结束===================================== -->
+
+</mapper>

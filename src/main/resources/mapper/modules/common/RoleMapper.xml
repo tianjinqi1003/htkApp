@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.common.dao.RoleMapper">
+
+    <sql id="Base_Column_List">
+        role_name
+    </sql>
+    
+    <select id="getRoleListByUserIdDAO" resultType="String">
+        select
+        <include refid="Base_Column_List" />
+        from role left join account_shop_role
+        on role.id = account_shop_role.r_id
+        where account_shop_role.u_id = #{0}
+    </select>
+    <select id="getRoleListNameByUserIdDAO" resultType="String">
+        select
+        role_des
+        from role left join account_shop_role
+        on role.id = account_shop_role.r_id
+        where account_shop_role.u_id = #{0}
+    </select>
+    <select id="getRoleListDAO" resultType="Role">
+        select
+        id, role_name, role_des
+        from role where role_name != 'admin'
+    </select>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodOrderProductTemporaryMapper">
+
+    <sql id="Base_Column_List">
+        id, product_id, product_name, quantity, price, order_id
+    </sql>
+
+    <!-- =================================接口开始==================================== -->
+    <select id="getProductListByIdDAO" resultType="BuffetFoodOrderProductTemporary">
+        select
+        <include refid="Base_Column_List" />
+        from buffet_food_order_product_temporary
+        where order_id = #{0}
+    </select>
+    <delete id="deleteProductListByIdDAO">
+        delete
+        from buffet_food_order_product_temporary
+        where order_id = #{0}
+    </delete>
+    <insert id="insertProductTemporaryDAO">
+        insert into buffet_food_order_product_temporary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="productName != null">
+                product_name,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- =================================接口结束==================================== -->
+</mapper>

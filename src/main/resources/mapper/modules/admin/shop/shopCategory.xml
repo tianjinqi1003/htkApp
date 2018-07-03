@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.admin.shopCategory.dao.ShopCategoryMapper">
+
+    <sql id="Base_Column_List">
+        id, category_name, description, category_url, parent_id, desc_number, mark
+    </sql>
+
+    <!-- ==================接口开始======================== -->
+
+    <select id="getShopCategoryList" resultType="ShopCategoryData">
+        select *
+        from shop_category
+    </select>
+
+
+    <select id="getShopCategoryDAO" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List" />
+        from shop_category
+        where mark = #{0} and parent_id = 0
+    </select>
+    <select id="getCategoryByIdDAO" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List" />
+        from shop_category
+        where id = #{0}
+    </select>
+    <!--<select id="getCategoryListByIdDAO" resultType="ShopCategory">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List" />-->
+        <!--from shop_category-->
+        <!--where parent_id = #{0}-->
+    <!--</select>-->
+    <select id="getCategoryListByIdDAO" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List" />
+        from shop_category
+        where id = #{0}
+    </select>
+    <select id="getCategoryListByIdAndMarkDAO" resultType="com.htkapp.modules.API.dto.ChildCategoryInfo">
+        select
+        id, category_name, mark
+        from shop_category
+        where parent_id = #{0} and mark = #{1}
+    </select>
+
+    <!-- ==================接口结束======================== -->
+
+    <!-- ====================JSP页面接口开始============================= -->
+    <select id="getShopCategoryDataByIdDAO" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List" />
+        from shop_category
+        where id = #{categoryId}
+    </select>
+    <select id="getCategoryListDataDAO" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List" />
+        from shop_category
+        where parent_id = 0
+        <if test="mark == 0 || mark == 1">
+            and mark = #{mark}
+        </if>
+    </select>
+    <select id="getChildCategoryByIdDAO" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List" />
+        from shop_category
+        where parent_id = #{1} and mark = #{0}
+    </select>
+    <insert id="addChildCategoryByIdDAO" >
+        insert into shop_category
+        (category_name,description,mark,parent_id)
+        values
+        (#{categoryName}, #{description}, #{mark},#{parentId})
+    </insert>
+    <insert id="addCategoryByMarkDAO">
+        insert into shop_category
+        (category_name, description, category_url, parent_id, mark)
+        VALUES
+        (#{categoryName},#{description},#{categoryUrl},#{parentId},#{mark})
+    </insert>
+    <update id="saveCategoryByIdDAO" >
+        update shop_category
+        <set>
+            <if test="categoryName != null">
+                category_name = #{categoryName},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="categoryUrl != null">
+                category_url = #{categoryUrl}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delCategoryIdDAO">
+        delete
+        from shop_category
+        where id = #{0}
+    </delete>
+    <!-- ====================JSP页面接口结束============================= -->
+
+    <select id="findAllShopCategoryByPage" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from shop_category where 1=1
+    </select>
+    <insert id="insertShopCategory" parameterType="com.htkapp.modules.admin.shopCategory.entity.ShopCategory">
+        insert into shop_category (shop_category_name, shop_category_description,
+        shop_category_picture)
+        values (#{shopCategoryName,jdbcType=VARCHAR}, #{shopCategoryDescription,jdbcType=VARCHAR},
+        #{shopCategoryPicture,jdbcType=VARCHAR})
+    </insert>
+    <delete id="deleteByPrimaryKeyShopCategory" parameterType="java.lang.Integer">
+        delete from shop_category
+        where shop_category_id = #{shopCategoryId,jdbcType=INTEGER}
+    </delete>
+    <select id="selectByPrimaryKeyShopCategory" parameterType="java.lang.Integer"
+            resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from shop_category
+        where shop_category_id = #{shopCategoryId,jdbcType=INTEGER}
+    </select>
+    <update id="updateByPrimaryKeySelectiveShopCategory"
+            parameterType="com.htkapp.modules.admin.shopCategory.entity.ShopCategory">
+        update shop_category
+        <set>
+            <if test="shopCategoryName != null">
+                shop_category_name = #{shopCategoryName,jdbcType=VARCHAR},
+            </if>
+            <if test="shopCategoryDescription != null">
+                shop_category_description = #{shopCategoryDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="shopCategoryPicture != null">
+                shop_category_picture = #{shopCategoryPicture,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where shop_category_id = #{shopCategoryId,jdbcType=INTEGER}
+    </update>
+    <select id="findAllShopCategory" resultType="ShopCategory">
+        select
+        <include refid="Base_Column_List"/>
+        from shop_category
+        where 1=1
+    </select>
+</mapper>

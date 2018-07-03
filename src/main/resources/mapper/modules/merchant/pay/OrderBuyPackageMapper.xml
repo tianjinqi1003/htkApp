@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.OrderBuyPackageMapper">
+
+    <sql id="Base_Column_List">
+        id, package_name, logo_url, quantity, price, package_id, order_id
+    </sql>
+
+    <!-- ===================接口开始======================== -->
+    <select id="getOrderPackageByIdDAO" resultType="OrderBuyPackage">
+        select
+        <include refid="Base_Column_List" />
+        from order_buy_package
+        where order_id = #{orderId}
+    </select>
+    <insert id="insertBuyPackageDataByOrderIdDAO" >
+        insert into order_buy_package
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="packageName != null">
+                package_name,
+            </if>
+            <if test="logoUrl != null">
+                logo_url,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="packageId != null">
+                package_id,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="packageName != null">
+                #{packageName},
+            </if>
+            <if test="logoUrl != null">
+                #{logoUrl},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="packageId != null">
+                #{packageId},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteOrderBuyPackageByOrderIdDAO">
+        delete from order_buy_package
+        where order_id = #{0}
+    </delete>
+
+    <!-- ===================接口结束======================== -->
+
+
+</mapper>

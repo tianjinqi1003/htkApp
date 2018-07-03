@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.common.dao.NoticeCenterMapper">
+
+    <sql id="Base_Column_List">
+        id, notice_title, notice_content, order_id, account_token
+    </sql>
+
+    <!-- ================接口开始====================== -->
+    <insert id="insertOrderMessageToNoticeCenterDAO" >
+        insert into account_notice_center
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noticeTitle != null">
+                notice_title,
+            </if>
+            <if test="noticeContent != null">
+                notice_content,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="noticeTitle != null">
+                #{noticeTitle},
+            </if>
+            <if test="noticeContent != null">
+                #{noticeContent},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+        </trim>
+    </insert>
+    <select id="getNoticeCenterListByTokenDAO" resultType="NoticeCenter">
+        select 
+        <include refid="Base_Column_List" />, gmt_create as notice_time
+        from account_notice_center
+        where account_token = #{accountToken} order by ${orderByDesc}
+    </select>
+
+
+
+    <!-- ================接口结束====================== -->
+
+</mapper>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.takeout.dao.TakeoutProductMapper">
+
+    <sql id="Base_Column_List">
+    id, img_url, product_name, price, price_canhe, property, inventory, inventory_count, integral, category_id, description, time, label, shop_id,if_can_buy
+  </sql>
+
+    <!-- ==================接口开始======================= -->
+
+
+    <update id="setProductTakeOn">
+        update
+        takeout_product
+        set if_can_buy = 1
+        where
+        <foreach collection="productIds" item="each" index="index" open="" separator="or" close="">
+            id = #{each}
+        </foreach>
+    </update>
+
+    <update id="setProductTakeOff">
+        update
+        takeout_product
+        set if_can_buy = 0
+        where
+        <foreach collection="productIds" item="each" index="index" open="" separator="or" close="">
+            id = #{each}
+        </foreach>
+    </update>
+
+
+    <select id="getTakeoutProductByCategoryIdAndIfCanBuy" resultType="TakeoutProduct">
+        select
+        <include refid="Base_Column_List"/>
+        from takeout_product
+        where category_id = #{categoryId} and if_can_buy = 1
+    </select>
+
+    <select id="getTakeoutProductByProductId" resultType="TakeoutProduct">
+        select *
+        from takeout_product
+        where id = #{0}
+    </select>
+
+    <select id="getTakeoutProductByIdDAO" resultType="TakeoutProduct">
+        select
+        <include refid="Base_Column_List"/>
+        from takeout_product
+        where category_id = #{categoryId}
+        order by if_can_buy desc,gmt_modified desc
+    </select>
+    <update id="productReduceNumberDAO">
+    update
+    takeout_product
+    set inventory = inventory - ${quantity}
+    where id = #{productId} and inventory > 0
+  </update>
+
+    <!-- ==================接口结束======================= -->
+
+
+    <!-- ==================JSP页面接口结束======================= -->
+    <select id="getTakeoutProductListByAccountShopIdDAO" resultType="TakeoutProduct">
+    select
+    takeout_product.id, takeout_product.img_url, product_name, price, inventory, inventory_count, category_id, takeout_product.shop_id
+    from takeout_product left join shop on takeout_product.shop_id = shop.shop_id
+    left join account_shop on shop.account_shop_id = account_shop.id
+    where account_shop.id = #{accountShopId}
+  </select>
+    <select id="getTakeoutProductListByCategoryIdDAO" resultType="TakeoutProduct">
+    select
+    takeout_product.id, takeout_product.img_url, product_name, price, inventory, inventory_count, category_id, takeout_product.shop_id
+    from takeout_product left join shop on takeout_product.shop_id = shop.shop_id
+    left join account_shop on shop.account_shop_id = account_shop.id
+    where account_shop.id = #{accountShopId} and category_id = #{categoryId}
+  </select>
+    <update id="filledUpProductInventoryDAO">
+    update takeout_product
+    left join shop
+    on takeout_product.shop_id = shop.shop_id
+    left join account_shop on shop.account_shop_id = account_shop.id
+    set takeout_product.inventory = takeout_product.inventory_count
+    where takeout_product.id = #{productId} and account_shop.id = #{accountShopId};
+  </update>
+    <update id="emptyProductInventoryDAO">
+    update takeout_product
+    left join shop
+    on takeout_product.shop_id = shop.shop_id
+    left join account_shop on shop.account_shop_id = account_shop.id
+    set takeout_product.inventory = 0
+    where takeout_product.id = #{productId} and account_shop.id = #{accountShopId};
+  </update>
+    <select id="getTakeoutProductByPIdDAO" resultType="TakeoutProduct">
+    select
+    takeout_product.*
+    from
+    takeout_product
+    left join shop
+    on takeout_product.shop_id = shop.shop_id
+    left join account_shop on shop.account_shop_id = account_shop.id
+    where takeout_product.id = #{1} and account_shop.id = #{0};
+  </select>
+    <insert id="addTakeoutProductDAO">
+        insert into takeout_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="productName != null">
+                product_name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="priceCanhe != null">
+                price_canhe,
+            </if>
+            <if test="property != null">
+                property,
+            </if>
+            <if test="inventory != null">
+                inventory,
+            </if>
+            <if test="inventoryCount != null">
+                inventory_count,
+            </if>
+            <if test="integral != null">
+                integral,
+            </if>
+            <if test="categoryId != null">
+                category_id,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="label != null">
+                label,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imgUrl != null">
+                #{imgUrl},
+            </if>
+            <if test="productName != null">
+                #{productName},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="priceCanhe != null">
+                #{priceCanhe},
+            </if>
+            <if test="property != null">
+                #{property},
+            </if>
+            <if test="inventory != null">
+                #{inventory},
+            </if>
+            <if test="inventoryCount != null">
+                #{inventoryCount},
+            </if>
+            <if test="integral != null">
+                #{integral},
+            </if>
+            <if test="categoryId != null">
+                #{categoryId},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="time != null">
+                #{time},
+            </if>
+            <if test="label != null">
+                #{label},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+    <delete id="delProductByIdDAO">
+    delete
+    from takeout_product
+    where id = #{0}
+  </delete>
+    <update id="editProductByIdDAO">
+        update takeout_product
+        <set>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl},
+            </if>
+            <if test="productName != null">
+                product_name = #{productName},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="priceCanhe != null">
+                price_canhe = #{priceCanhe},
+            </if>
+            <if test="property != null">
+                property = #{property},
+            </if>
+            <if test="inventory != null">
+                inventory = #{inventory},
+            </if>
+            <if test="inventoryCount != null">
+                inventory_count = #{inventoryCount},
+            </if>
+            <if test="integral != null">
+                integral = #{integral},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="label != null">
+                label = #{label},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delProductByCIdDAO">
+    delete from takeout_product
+    where category_id = #{0}
+  </delete>
+    <select id="getNotInGroupBuyProductListDataDAO" resultType="TakeoutProduct">
+    select takeout_product.*
+    from takeout_product
+    left join (select * from buy_package_product where p_type = 0) as buyPackageProduct
+    on takeout_product.id = buyPackageProduct.product_id
+    where buyPackageProduct.id is null and takeout_product.shop_id = #{0}
+  </select>
+    <!-- ==================JSP页面接口结束======================= -->
+</mapper>

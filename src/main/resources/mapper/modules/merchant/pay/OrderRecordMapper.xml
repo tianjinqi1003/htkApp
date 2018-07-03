@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.OrderRecordMapper">
+
+    <sql id="Base_Column_List">
+        id, order_number, order_amount, receipt_name, sex, receiving_call,shipping_address,longitude, latitude,
+        order_body,payment_method,order_state, order_time, mark, account_token as token,shop_id, number, all_number,coupon_id,
+        remark
+    </sql>
+
+    <!-- ===================接口开始===================== -->
+
+    <select id="getOrderHasDealedQuantities" resultType="java.lang.Integer">
+        select COUNT(0)
+        from order_record LEFT JOIN takeout_order
+        on takeout_order.order_id = order_record.id
+        where  order_record.shop_id = #{shopId} and (order_record.gmt_modified between #{startDate} and #{endDate})
+        and order_record.order_state = 4
+    </select>
+
+    <select id="getOrderProduct" resultType="com.htkapp.modules.merchant.pay.entity.OrderProduct">
+        select *
+        from order_product
+        where order_id = #{0}
+    </select>
+
+
+    <insert id="paymentSuccessfullyCreatedOrderDAO" useGeneratedKeys="true" keyProperty="id">
+        insert into order_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="orderAmount != null">
+                order_amount,
+            </if>
+            <if test="receiptName != null">
+                receipt_name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="receivingCall != null">
+                receiving_call,
+            </if>
+            <if test="shippingAddress != null">
+                shipping_address,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="orderBody != null">
+                order_body,
+            </if>
+            <if test="paymentMethod != null">
+                payment_method,
+            </if>
+            <if test="orderState != null">
+                order_state,
+            </if>
+            <if test="orderTime != null">
+                order_time,
+            </if>
+            <if test="voucherNumber != null">
+                voucher_number,
+            </if>
+            <if test="mark != null">
+                mark,
+            </if>
+            <if test="token != null">
+                account_token,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="number != null">
+                number,
+            </if>
+            <if test="allNumber != null">
+                all_number,
+            </if>
+            <if test="couponId != null">
+                coupon_id
+            </if>
+            <if test="remark != null">
+                remark
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                #{orderNumber},
+            </if>
+            <if test="orderAmount != null">
+                #{orderAmount},
+            </if>
+            <if test="receiptName != null">
+                #{receiptName},
+            </if>
+            <if test="sex != null">
+                #{sex},
+            </if>
+            <if test="receivingCall != null">
+                #{receivingCall},
+            </if>
+            <if test="shippingAddress != null">
+                #{shippingAddress},
+            </if>
+            <if test="longitude != null">
+                #{longitude},
+            </if>
+            <if test="latitude != null">
+                #{latitude},
+            </if>
+            <if test="orderBody != null">
+                #{orderBody},
+            </if>
+            <if test="paymentMethod != null">
+                #{paymentMethod},
+            </if>
+            <if test="orderState != null">
+                #{orderState},
+            </if>
+            <if test="orderTime != null">
+                #{orderTime},
+            </if>
+            <if test="voucherNumber != null">
+                #{voucherNumber},
+            </if>
+            <if test="mark != null">
+                #{mark},
+            </if>
+            <if test="token != null">
+                #{token},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="number != null">
+                #{number},
+            </if>
+            <if test="allNumber != null">
+                #{allNumber},
+            </if>
+            <if test="couponId != null">
+                #{couponId}
+            </if>
+            <if test="remark != null">
+                #{remark}
+            </if>
+        </trim>
+    </insert>
+    <select id="getOrderRecordByIdDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>, gmt_modified as lastUpdateTime, voucher_number as voucherNumber
+        from order_record
+        where id = #{orderId}
+    </select>
+    <select id="getOrderRecordListByIdDAO" resultType="OrderRecord">
+        select
+        id, order_number, order_amount, receipt_name, sex, receiving_call,shipping_address,
+        order_body,payment_method,order_state, order_time, shop_id
+        from order_record
+        where account_token = #{token} and mark = #{mark} order by ${orderByDesc}
+    </select>
+    <select id="getOrderRecordByOrderNumberDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where order_number = #{orderNumber}
+    </select>
+    <select id="getOrderRecordByOrderIdDAO" resultType="OrderRecord">
+        select id,
+        order_number,order_amount,shop_id
+        from order_record
+        where id = #{orderId}
+    </select>
+    <update id="changeOrderStateByOrderNumberDAO">
+        update order_record
+        set order_state = #{orderState}
+        where order_number = #{orderNumber}
+    </update>
+    <select id="getOrderListByShopIdDAO" resultType="OrderRecord">
+        select
+        id,account_token as token
+        from order_record
+        where shop_id = #{shopId} and mark = #{mark}
+    </select>
+    <select id="getOrderListByShopIdAndMarkDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where shop_id = #{shopId} and mark = #{mark}
+    </select>
+    <update id="handlesTakeoutOrderDAO">
+        update
+        order_record
+        set order_state = #{stateId}
+        where shop_id = #{shopId} and order_number = #{orderNumber}
+    </update>
+    <select id="verifyOrderInformationDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where order_number = #{orderNumber} and shop_id = #{shopId}
+    </select>
+    <select id="getAllProcessedOrderListByIdAndOrderStateDAO" resultType="OrderRecord">
+        select
+        order_record.*
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId}
+        <if test="mark == 0">
+            and order_state = 10
+            or order_state = 1
+            or order_state = 2
+            or order_state = 3
+        </if>
+        <if test="mark == 1">
+            and order_state != 1
+            and order_state != 2
+            and order_state != 3
+            and order_state != 10
+        </if>
+        order by ${orderDesc}
+    </select>
+    <select id="getGroupBuyOrderListByIdAndOrderStateDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where shop_id = #{shopId}
+        <if test="mark == 0">
+            and order_state = 10
+        </if>
+        <if test="mark == 1">
+            and order_state != 10
+        </if>
+        and mark = 1 order by ${orderDesc}
+    </select>
+    <select id="getTakeoutOrderListByIdAndOrderStateDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>, gmt_modified as modifiedTime
+        from order_record
+        where shop_id = #{shopId}
+        <if test="mark == 0">
+            and order_state = 1
+        </if>
+        <if test="mark == 1">
+            and (order_state = 3 or order_state = 2 or order_state = 4)
+        </if>
+        and mark = 0 order by ${orderDesc}
+    </select>
+    <delete id="deleteOrderByOrderNumberDAO">
+        delete from order_record
+        where order_number = #{0} and account_token = #{1}
+    </delete>
+    <select id="getOrderRecordByTokenAndShopIdDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where order_number = #{0} and shop_id = #{1}
+    </select>
+    <!-- ===================接口结束===================== -->
+
+
+    <!-- ===============================共同接口开始================================ -->
+    <update id="cancelUnpaidOrderByDate">
+        update order_record
+        set order_state = 5
+        where order_state = 1 and gmt_create &lt;= #{dateParams}
+    </update>
+    <!-- ===============================共同接口结束================================= -->
+
+
+    <!-- ====================JSP页面接口开始====================== -->
+    <select id="getOrderListCountByAccountShopIdAndMarkDAO" resultType="java.lang.Integer">
+        select
+        count(0)
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId} and order_record.mark = #{mark} and order_record.gmt_create > #{time}
+    </select>
+    <select id="getTodayIncomeByAccountShopIdDAO" resultType="java.lang.Double">
+        select
+        sum(order_amount)
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId} and order_record.gmt_create > #{time}
+    </select>
+    <select id="getTakeoutOrderListByOrderStateDAO" resultType="OrderRecord">
+        select
+        order_record.*
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where order_record.mark = 0 and order_state = #{orderState} and account_shop.id = #{accountShopId}
+    </select>
+    <select id="getTakeoutOrderListByConditionDAO" resultType="OrderRecord">
+        select
+        order_record.*
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where order_record.mark = 0 and account_shop.id = #{accountShopId}
+        <if test="orderNumber != null">
+            and order_number = #{orderNumber}
+        </if>
+        <if test="orderMark == 1">
+            and order_state != 1
+            and order_state != 2
+            and order_state != 3
+        </if>
+        <if test="orderMark == 2">
+            and order_state = 1
+            or order_state = 2
+            or order_state = 3
+        </if>
+    </select>
+    <select id="getGroupBuyOrderListByOrderStateDAO" resultType="OrderRecord">
+        select
+        order_record.*
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where order_record.mark = 1 and order_state = #{orderState} and account_shop.id = #{accountShopId}
+    </select>
+    <select id="getGroupBuyOrderListByConditionDAO" resultType="OrderRecord">
+        select
+        order_record.*
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where order_record.mark = 1 and account_shop.id = #{accountShopId}
+        <if test="orderNumber != null">
+            and order_number = #{orderNumber}
+        </if>
+        <if test="orderMark == 1">
+            and order_state != 10
+        </if>
+        <if test="orderMark == 2">
+            and order_state = 10
+        </if>
+    </select>
+    <select id="getNewOrderNumberDAO" resultType="java.lang.Integer">
+        select
+        count(0)
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where order_record.mark = 1 and order_record.mark = 10 and account_shop.token = #{accountShopToken}
+    </select>
+    <select id="getOrderNumberByDate" resultType="java.lang.Integer">
+        select
+        count(0)
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where
+        account_shop.token = #{accountShopToken} and
+        order_record.gmt_create > #{startTime}  and
+        order_record.gmt_create <![CDATA[<]]> #{endTime}
+    </select>
+    <select id="getRevenueByDate" resultType="java.lang.Double">
+        select
+        sum(order_amount)
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where
+        account_shop.token = #{accountShopToken} and
+        order_record.gmt_create > #{startTime}  and
+        order_record.gmt_create <![CDATA[<]]> #{endTime} and order_state = 4
+    </select>
+    <select id="getTakeoutOrderListByTokenDAO" resultType="OrderRecord">
+        select
+        order_record.*, order_record.gmt_modified as modified_time
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where
+        account_shop.token = #{accountShopToken} and order_record.mark=0
+        <if test="stateId == 0">
+            <!-- 全部 -->
+        </if>
+        <if test="stateId == 1">
+            <!-- 进行中 -->
+            and order_state = 1
+            or order_state = 2
+            or order_state = 3
+        </if>
+        <if test="stateId == 2">
+            <!-- 已取消 -->
+            and order_state = 5
+        </if>
+        <if test="stateId == 3">
+            <!-- 已完成 -->
+            and order_state = 4
+        </if>
+        <if test="stateId == 4">
+            <!--售后退款-->
+        </if>
+        order by ${orderDesc}
+    </select>
+    <select id="getGroupBuyOrderListByTokenDAO" resultType="OrderRecord">
+        select
+        order_record.*, order_record.gmt_modified as modified_time
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where
+        account_shop.token = #{accountShopToken} and order_record.mark=1
+        <if test="stateId == 0">
+            <!-- 全部 -->
+        </if>
+        <if test="stateId == 5">
+            <!-- 未使用 -->
+            and order_state = 10
+        </if>
+        <if test="stateId == 6">
+            <!-- 已使用 -->
+            and order_state = 11
+        </if>
+        <if test="stateId == 7">
+            <!-- 已取消 -->
+            and order_state = 12
+        </if>
+        order by ${orderDesc}
+    </select>
+    <select id="getOrderDetailByOrderNumberDAO" resultType="OrderRecord">
+        select
+        order_record.*, order_record.gmt_modified as modified_time
+        from order_record left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where
+        account_shop.token = #{accountShopToken} and order_number = #{orderNumber}
+    </select>
+    <select id="getOrderPageDataByConditionDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where shop_id = #{shopId} and mark = #{mark} and
+        gmt_create between #{startDate} and #{endDate}
+        <choose>
+            <when test="status == 0">
+                <!-- 未完成订单 -->
+                and order_state != 4
+            </when>
+            <otherwise>
+                <!-- 完成订单 -->
+                and order_state = 4
+            </otherwise>
+        </choose>
+        order by ${orderDesc}
+    </select>
+    <select id="getTakeoutRealTimeOrderByConditionDAO" resultType="OrderRecord">
+        select
+        order_record.*
+        from order_record left join
+        takeout_order on order_record.id = takeout_order.order_id
+        where shop_id = #{shopId} and mark = 0 and
+        order_record.gmt_create between #{startDate} and #{endDate}
+        <choose>
+            <when test="statusCode == 0">
+                <!-- 新订单 -->
+                and order_state = 1
+            </when>
+            <when test="statusCode == 1">
+                <!-- 待配送 -->
+                and order_state = 2
+            </when>
+            <when test="statusCode == 2">
+                <!-- 配送中 -->
+                and order_state = 3
+            </when>
+            <when test="statusCode == 3">
+                <!-- 已收货 -->
+                and order_state = 4
+            </when>
+            <when test="statusCode == 4">
+                <!-- 催单 -->
+                and reminder_state = 1
+            </when>
+            <when test="statusCode == 5">
+                <!-- 取消单 -->
+                and order_state = 5
+            </when>
+            <otherwise>
+                and order_ state is not null
+            </otherwise>
+        </choose>
+        group by order_record.id order by order_record.gmt_create desc
+    </select>
+    <select id="verifyOrderExitByDateDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from order_record
+        where shop_id = #{0}
+        and gmt_create between #{1} and #{2}
+        and mark = #{3} order by gmt_create desc limit 1
+    </select>
+    <select id="getAllNumberByLimitDAO" resultType="Integer">
+        select
+        max(all_number)
+        from order_record
+        where shop_id = #{0}
+    </select>
+    <select id="statisticalQuantityByStateIdAndDateDAO" resultType="Integer">
+        select count(0)
+        from order_record
+        where gmt_create between #{2} and #{3}
+        and order_state = #{1}
+        and shop_id = #{0}
+    </select>
+    <select id="statisticalOrderQuantityByStateIdAndDateDAO" resultType="Integer">
+        select count(0)
+        from order_record
+        where order_record.gmt_create between #{2} and #{3}
+        and order_state > #{1}
+        and order_record.shop_id = #{0}
+    </select>
+    <select id="statisticalIncomeByDateDAO" resultType="Double">
+        select sum(order_amount)
+        from order_record
+        where gmt_create between #{1} and #{2}
+        and shop_id = #{0}
+        and order_state = 4
+    </select>
+    <select id="getOrderRecordListByDescAndShopIdDAO" resultType="OrderRecord">
+        select
+        <include refid="Base_Column_List" />
+        from order_record
+        where shop_id = #{shopId}
+        <if test="keyWord != null">
+            and order_number = #{keyWord} or voucher_number = #{keyWord}
+        </if>
+        order by ${orderDesc}
+    </select>
+
+    <!-- ====================JSP页面接口结束======================= -->
+</mapper>

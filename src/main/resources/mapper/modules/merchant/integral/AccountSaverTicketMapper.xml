@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.AccountSaverTicketMapper">
+
+    <sql id="Base_Column_List">
+        id, t_name, t_start_time, t_expiration, t_money, t_use_money, integral_value, state, shop_id
+    </sql>
+    
+    <select id="getTicketActiveCounts" resultType="java.lang.Integer">
+        select count(0)
+        from account_saver_ticket
+        where
+        <foreach collection="shopIdList" index="index" item="every" open="" separator="or" close="">
+            shop_id = #{every}
+        </foreach>
+    </select>
+
+
+    <select id="getTicketActiveUnderWayCounts" resultType="AccountSaverTicket">
+        select
+        <include refid="Base_Column_List" />
+        from account_saver_ticket
+        where
+        <foreach collection="shopIdList" index="index" item="every" open="" separator="or" close="">
+            shop_id = #{every}
+        </foreach>
+    </select>
+
+
+
+    <select id="getTicketMesByIdAndShopIdDAO" resultType="AccountSaverTicket">
+        select
+        <include refid="Base_Column_List" />
+        from account_saver_ticket
+        where id = #{0} and shop_id = #{1}
+    </select>
+
+    <select id="getSaverTicketListByShopIdDAO" resultType="AccountSaverTicket">
+        select
+        <include refid="Base_Column_List" />
+        from account_saver_ticket
+        where shop_id = #{0} and state = 0
+    </select>
+    <insert id="insertSaverTicketByShopIdDAO">
+        insert into account_saver_ticket
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tName != null">
+                t_name,
+            </if>
+            <if test="tStartTime != null">
+                t_start_time,
+            </if>
+            <if test="tExpiration != null">
+                t_expiration,
+            </if>
+            <if test="tMoney != null">
+                t_money,
+            </if>
+            <if test="tUseMoney != null">
+                t_use_money,
+            </if>
+            <if test="integralValue != null">
+                integral_value,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="tName != null">
+                #{tName},
+            </if>
+            <if test="tStartTime != null">
+                #{tStartTime},
+            </if>
+            <if test="tExpiration != null">
+                #{tExpiration},
+            </if>
+            <if test="tMoney != null">
+                #{tMoney},
+            </if>
+            <if test="tUseMoney != null">
+                #{tUseMoney},
+            </if>
+            <if test="integralValue != null">
+                #{integralValue},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+    <select id="getSaverTicketListByConditionDAO" resultType="AccountSaverTicket">
+        select
+        <include refid="Base_Column_List" />
+        from account_saver_ticket
+        where 1=1 and shop_id = #{shopId}
+        <if test="flag == 0">
+            and t_start_time &gt; #{time}
+        </if>
+        <if test="flag == 1">
+            and t_start_time &lt; #{time} and t_expiration &gt; #{time}
+        </if>
+        <if test="flag == 2">
+            and t_expiration &lt; #{time}
+        </if>
+        order by ${orderDesc}
+    </select>
+    <update id="updateActiveStateDAO" >
+        update account_saver_ticket
+        set state = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateActiveOpenTimeDAO" >
+        update account_saver_ticket
+        set t_start_time = #{1}
+        where id = #{0}
+    </update>
+    <update id="updateActiveCloseTimeDAO" >
+        update account_saver_ticket
+        set t_expiration = #{1}
+        where id = #{0}
+    </update>
+</mapper>

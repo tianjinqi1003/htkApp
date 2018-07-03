@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.SeatOrderMapper">
+
+    <sql id="Base_Column_List">
+        id, order_number, seat_count, seat_name, scheduled_name, scheduled_time, seat_phone, shop_id, account_token, remarks, status
+    </sql>
+
+    <!-- ======================接口开始============================= -->
+    <select id="getSeatOrderListByTokenAndShopIdDAO" resultType="SeatOrder">
+        select
+        <include refid="Base_Column_List" />, gmt_create as orderTime
+        from seat_order
+        where seat_order.account_token = #{token} and shop_id = #{shopId} order by ${orderBy}
+    </select>
+    <select id="getSeatOrderDetailDAO" resultType="com.htkapp.modules.API.dto.SeatOrderDetail">
+        select
+        <include refid="Base_Column_List" />, gmt_create as orderTime
+        from seat_order
+        where seat_order.order_number = #{0} and seat_order.account_token = #{1}
+    </select>
+    <select id="getSeatOrderByOrderNumberDAO" resultType="SeatOrder">
+        select
+        seat_order.order_number,
+         seat_order.seat_count,
+          seat_order.scheduled_time, 
+          seat_order.scheduled_time, 
+          remarks, 
+          seat_order.seat_name, 
+          seat_phone,
+        seat_order.status, 
+        seat_order.gmt_create as order_time,
+        seat_order.account_token as accountToken,
+        seat_order.shop_id, 
+        shop.shop_name, 
+        shop.logo_url
+        from seat_order left join shop
+        on seat_order.shop_id = shop.shop_id
+        where seat_order.order_number = #{0}
+    </select>
+    <insert id="insertSeatOrderByTokenDAO">
+        insert into seat_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="seatCount != null">
+                seat_count,
+            </if>
+            <if test="scheduledName != null">
+                scheduled_name,
+            </if>
+            <if test="scheduledTime != null">
+                scheduled_time,
+            </if>
+            <if test="seatPhone != null">
+                seat_phone,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                #{orderNumber},
+            </if>
+            <if test="seatCount != null">
+                #{seatCount},
+            </if>
+            <if test="scheduledName != null">
+                #{scheduledName},
+            </if>
+            <if test="scheduledTime != null">
+                #{scheduledTime},
+            </if>
+            <if test="seatPhone != null">
+                #{seatPhone},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+            <if test="remarks != null">
+                #{remarks},
+            </if>
+        </trim>
+    </insert>
+    
+    <select id="getSeatOrderListByShopIdAndStatus" resultType="SeatOrder">
+    select <include refid="Base_Column_List" />
+    	 from seat_order 
+    	 where shop_id=#{0} and status=#{1}
+    </select>
+    <!-- ======================接口结束============================= -->
+
+    <!-- =====================JSP接口开始============================== -->
+    <insert id="insertSeatOrderData" parameterType="SeatOrder">
+        insert into seat_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="seatNum != null">
+                seat_num,
+            </if>
+            <if test="seatCount != null">
+                seat_count,
+            </if>
+            <if test="scheduledName != null">
+                scheduled_name,
+            </if>
+            <if test="seatPhone != null">
+                seat_phone,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="seatNum != null">
+                #{seatNum,jdbcType=VARCHAR},
+            </if>
+            <if test="seatCount != null">
+                #{seatCount,jdbcType=INTEGER},
+            </if>
+            <if test="scheduledName != null">
+                #{scheduledName},
+            </if>
+            <if test="seatPhone != null">
+                #{seatPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="shopId != null">
+                #{shopId,jdbcType=BIGINT},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+            <if test="remarks != null">
+                #{remarks},
+            </if>
+        </trim>
+    </insert>
+    <select  id="getSeatOrderListByShopId" resultType="SeatOrder">
+    	select <include refid="Base_Column_List" />
+    	 from seat_order 
+    	 where shop_id=#{shopId}
+    	 <if test="startTime != null and endTime != null">
+            and gmt_create between #{startTime} and #{endTime} 
+        </if>
+        order by gmt_create DESC
+    
+    </select>
+    <update id="updataSeatInfo">
+    	update seat_order
+    	set seat_name=#{0},
+    	status =1
+    	where  order_number=#{1}
+    </update>
+    <delete id="deleteSeatOrder" >
+    	delete from seat_order where 
+    	<foreach collection="productIds" item="each" index="index" open=""
+			separator="or" close="">
+		order_number= #{each}
+		</foreach>
+    </delete>
+    <update id="updataSeatInfoStatus">
+    	update seat_order
+    	set status=2
+    	where
+    	<foreach collection="productIds" item="each" index="index" open=""
+			separator="or" close="">
+		order_number= #{each}
+		</foreach>
+    </update>
+    
+    <!-- =====================JSP接口结束============================ -->
+
+</mapper>

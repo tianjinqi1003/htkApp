@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.admin.system.dao.AdminLoginLogMapper" >
+    <sql id="Base_Column_List" >
+        id, login_date, sign_out_date, current_state, admin_token
+    </sql>
+
+    <!-- ===================接口开始======================= -->
+
+    <insert id="insertAdminCurrentLoginLogDAO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into admin_login_log
+        (login_date, current_state,admin_token)
+        values
+        (#{loginDate}, #{currentState}, #{adminToken})
+    </insert>
+    <update id="insertAdminCurrentSignOutLogDAO">
+        update admin_login_log
+        set
+        sign_out_date = #{signOutDate},
+        current_state = #{currentState}
+        where id = #{id}
+    </update>
+    <!-- ====================接口结束========================= -->
+
+</mapper>

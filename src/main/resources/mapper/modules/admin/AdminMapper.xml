@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.admin.common.dao.AdminMapper" >
+
+  <sql id="Base_Column_List" >
+    id, user_name, password, email, sex, register_time, token, salt_token,
+    encrypt_token, account_status, pc_login_state, avatar_img
+  </sql>
+
+  <!-- =====================接口开始============================ -->
+  <update id="changeAdminLoginStateDAO">
+    update admin
+    set pc_login_state = #{pcLoginState}
+    where token = #{token}
+  </update>
+  <select id="getAccountByNameAndPwdDAO" resultType="Admin">
+    select
+    <include refid="Base_Column_List" />
+    from admin
+    where user_name = #{0} and password = #{1}
+  </select>
+
+  <!-- ======================接口结束============================= -->
+</mapper>

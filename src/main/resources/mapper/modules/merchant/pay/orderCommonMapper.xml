@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.OrderCommonMapper">
+    <sql id="Base_Column_List">
+        order_number, gmt_create, gmt_modified, mark, account_token
+    </sql>
+    
+    <select id="getAllOrderListDAO" resultType="OrderCommon">
+        select * from
+        (
+          select
+          <include refid="Base_Column_List" />
+          from order_record
+        union
+          select
+          <include refid="Base_Column_List" />
+          from seat_order
+        union
+          select
+          <include refid="Base_Column_List" />
+          from buffet_food_order
+        ) as common
+        where account_token = #{0} order by gmt_create desc limit #{1}, #{2}
+    </select>
+</mapper>

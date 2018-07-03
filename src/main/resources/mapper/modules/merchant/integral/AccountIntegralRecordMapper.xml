@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.AccountIntegralRecordMapper">
+
+    <sql id="Base_Column_List">
+        id, title, integral_value, record_type, shop_id, account_token
+    </sql>
+
+    <select id="getIntegralRecordByTokenAndShopIdDAO" resultType="AccountIntegralRecord">
+        select
+        <include refid="Base_Column_List" />, gmt_create as recordTime
+        from account_integral_record
+        where account_token = #{token} and shop_id = #{shopId} order by ${orderBy}
+    </select>
+    
+    <insert id="insertIntegralRecordDAO">
+        insert into account_integral_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="integralValue != null">
+                integral_value,
+            </if>
+            <if test="recordType != null">
+                record_type,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="integralValue != null">
+                #{integralValue},
+            </if>
+            <if test="recordType != null">
+                #{recordType},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

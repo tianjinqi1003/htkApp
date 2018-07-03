@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.API.dao.AppAccountEventLogMapper">
+    <sql id="Base_Column_List">
+        id, token, event_time, login_way, content, gmt_create, gmt_modified
+    </sql>
+
+    <!-- ======================接口开始=========================== -->
+    <insert id="addEventLogDAO" parameterType="AppAccountEventLog">
+        insert into app_account_event_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="token != null">
+                token,
+            </if>
+            <if test="eventTime != null">
+                event_time,
+            </if>
+            <if test="loginWay != null">
+                login_way,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="token != null">
+                #{token},
+            </if>
+            <if test="eventTime != null">
+                #{eventTime},
+            </if>
+            <if test="loginWay != null">
+                #{loginWay},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!-- ======================接口结束=========================== -->
+</mapper>

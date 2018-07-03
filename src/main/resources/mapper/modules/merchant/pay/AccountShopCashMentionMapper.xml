@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.AccountShopCashMentionMapper">
+
+    <sql id="Base_Column_List">
+        id, out_biz_no, order_number, payee_type, payee_account,
+        amount, remark
+    </sql>
+
+    <!-- ==========================接口开始================================ -->
+    <insert id="insertTransferDAO">
+        insert into account_shop_cash_mention
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="outBizNo != null">
+                out_biz_no,
+            </if>
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="payeeType != null">
+                payee_type,
+            </if>
+            <if test="payeeAccount != null">
+                payee_account,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="outBizNo != null">
+                #{outBizNo},
+            </if>
+            <if test="orderNumber != null">
+                #{orderNumber},
+            </if>
+            <if test="payeeType != null">
+                #{payeeType},
+            </if>
+            <if test="payeeAccount != null">
+                #{payeeAccount},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+        </trim>
+    </insert>
+    <select id="validationStatusDAO" resultType="AccountShopCashMention">
+        select
+        account_shop_cash_mention.*
+        from account_shop_cash_mention
+        left join order_record on account_shop_cash_mention.order_number = order_record.order_number
+        left join shop on order_record.shop_id = shop.shop_id
+        left join account_shop on shop.shop_id = account_shop.id
+        where account_shop.encrypt_token = #{1} and account_shop_cash_mention.order_number = #{0}
+    </select>
+    <select id="validationStatusByBuffetFoodDAO" resultType="AccountShopCashMention">
+        select
+        account_shop_cash_mention.*
+        from account_shop_cash_mention
+        left join buffet_food_order on account_shop_cash_mention.order_number = buffet_food_order.order_number
+        left join shop on buffet_food_order.shop_id = shop.shop_id
+        left join account_shop on shop.shop_id = account_shop.id
+        where account_shop.encrypt_token = #{1} and account_shop_cash_mention.order_number = #{0}
+    </select>
+    <!-- =================================接口结束================================== -->
+
+</mapper>

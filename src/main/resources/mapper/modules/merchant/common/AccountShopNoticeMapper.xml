@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.common.dao.AccountShopNoticeMapper">
+
+    <sql id="Base_Column_List" >
+        id, title, msg_category, msg_content, account_shop_token, msg_status, gmt_create
+    </sql>
+
+    <!-- ========================接口开始============================ -->
+    <insert id="insertNoticeByTokenDAO" >
+        insert into account_shop_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="title">
+              title,
+          </if>
+            <if test="msgCategory">
+                msg_category,
+            </if>
+            <if test="msgContent">
+                msg_content,
+            </if>
+            <if test="msgStatus">
+                msg_status,
+            </if>
+            <if test="accountShopToken">
+                account_shop_token
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title">
+                #{title},
+            </if>
+            <if test="msgCategory">
+                #{msgCategory},
+            </if>
+            <if test="msgContent">
+                #{msgContent},
+            </if>
+            <if test="msgStatus">
+                #{msgStatus},
+            </if>
+            <if test="accountShopToken">
+                #{accountShopToken},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="changeNoticeStatusByIdDA0" >
+        update account_shop_notice
+        set msg_status = #{1}
+        where id = #{0}
+    </update>
+    
+    <select id="getNoticeListByTokenAndStatusDAO" resultType="AccountShopNotice">
+        select
+        <include refid="Base_Column_List" />
+        from
+        account_shop_notice
+        where account_shop_token = #{token}
+        <choose>
+            <when test="status == 0">
+                and msg_status = 0
+            </when>
+            <when test="status == 1">
+                and msg_status = 1
+            </when>
+            <otherwise>
+                and msg_status != 99
+            </otherwise>
+        </choose>
+        order by ${orderByDesc}
+    </select>
+    
+    <!-- ========================接口结束============================ -->
+</mapper>

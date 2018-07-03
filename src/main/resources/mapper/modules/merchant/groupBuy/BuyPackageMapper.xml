@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.groupBuy.dao.BuyPackageMapper">
+
+    <sql id="Base_Column_List">
+        id, package_name, img_url, usage_time, reservation, price, retail_price, sold_quantity,
+        use_details, use_rules,people_used_number, shop_id, validity_time
+    </sql>
+
+
+    <!-- ============接口开始================== -->
+    <select id="getGroupBuyListByIdDAO" resultType="BuyPackage">
+        select
+        <include refid="Base_Column_List" />
+        from buy_package
+        where shop_id = #{shopId}
+    </select>
+    <select id="getPackageInformationDAO" resultType="BuyPackage">
+        select
+        <include refid="Base_Column_List" />
+        from buy_package
+        where id = #{packageId}
+    </select>
+
+    <!-- ===============接口结束======================== -->
+
+    <!-- =====================JSP页面接口开始======================== -->
+    <select id="getGroupBuyListByAccountShopIdDAO" resultType="BuyPackage">
+        select
+        buy_package.id, buy_package.package_name, buy_package.img_url, usage_time, reservation, price, retail_price, sold_quantity,
+        use_details, use_rules,people_used_number, buy_package.shop_id
+        from buy_package left join shop on buy_package.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.id = #{accountShopId}
+    </select>
+    <insert id="insertBuyPackageDAO" useGeneratedKeys="true" keyProperty="id">
+        insert into buy_package
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="packageName != null">
+                package_name,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="usageTime != null">
+                usage_time,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="retailPrice != null">
+                retail_price,
+            </if>
+            <if test="useDetails != null">
+                use_details,
+            </if>
+            <if test="useRules != null">
+                use_rules,
+            </if>
+            <if test="validityTime != null">
+                validity_time,
+            </if>
+            <if test="peopleUsedNumber != null">
+                people_used_number,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="packageName != null">
+                #{packageName},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl},
+            </if>
+            <if test="usageTime != null">
+                #{usageTime},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="retailPrice != null">
+                #{retailPrice},
+            </if>
+            <if test="useDetails != null">
+                #{useDetails},
+            </if>
+            <if test="useRules != null">
+                #{useRules},
+            </if>
+            <if test="validityTime != null">
+                #{validityTime},
+            </if>
+            <if test="peopleUsedNumber != null">
+                #{peopleUsedNumber},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteBuyPackageByIdDAO">
+        delete from buy_package
+        where id = #{0} and shop_id = #{1}
+    </delete>
+    <update id="updateBuyPackageByIdDAO" >
+        update buy_package
+        <set>
+            <if test="packageName != null">
+                package_name = #{packageName},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl},
+            </if>
+            <if test="usageTime != null">
+                usage_time = #{usageTime},
+            </if>
+            <if test="useDetails != null">
+                use_details = #{useDetails},
+            </if>
+            <if test="useRules != null">
+                use_roles = #{useRules},
+            </if>
+            <if test="validityTime != null">
+                validity_time = #{validityTime},
+            </if>
+            <if test="peopleUsedNumber != null">
+                people_used_number = #{peopleUsedNumber},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!-- =====================JSP页面接口结束========================= -->
+
+
+</mapper>

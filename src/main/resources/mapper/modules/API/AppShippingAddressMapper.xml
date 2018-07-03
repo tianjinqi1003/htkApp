@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.API.dao.AppShippingAddressMapper">
+  <sql id="Base_Column_List">
+  address_id, user_name, sex, phone, location, address, token
+  </sql>
+
+  <!-- ================接口开始===================== -->
+  <select id="getAccountShippingAddressListDAO" resultType="AppShippingAddress">
+    select
+    <include refid="Base_Column_List" />
+    from app_shipping_address
+    where token = #{token} limit 0,10
+  </select>
+  <insert id="addAccountShippingAddressDAO" parameterType="AppShippingAddress">
+    insert into app_shipping_address
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName},
+      </if>
+      <if test="sex != null">
+        #{sex},
+      </if>
+      <if test="phone != null">
+        #{phone},
+      </if>
+      <if test="location != null">
+        #{location},
+      </if>
+      <if test="address != null">
+        #{address},
+      </if>
+      <if test="token != null">
+        #{token},
+      </if>
+    </trim>
+  </insert>
+  <update id="changeAccountShippingAddressDAO" parameterType="AppShippingAddress">
+    update app_shipping_address
+    <set>
+      <if test="userName != null">
+        user_name = #{userName},
+      </if>
+      <if test="sex != null">
+        sex = #{sex},
+      </if>
+      <if test="phone != null">
+        phone = #{phone},
+      </if>
+      <if test="location != null">
+        location = #{location},
+      </if>
+      <if test="address != null">
+        address = #{address}
+      </if>
+    </set>
+    where token = #{token} and address_id = #{addressId}
+  </update>
+  <delete id="deleteAccountShippingAddressDAO">
+    delete from app_shipping_address
+    where token = #{token} and address_id = #{addressId}
+  </delete>
+
+  <!-- =================接口结束====================== -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="AppShippingAddress">
+    select 
+    <include refid="Base_Column_List" />
+    from appShippingAddress
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from appShippingAddress
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.htkapp.modules.API.entity.AppShippingAddress">
+    insert into appShippingAddress ( name, sex, location , appShippingAddress, phone,phone_bk, flag, account_id)
+    values ( #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+    #{location,jdbcType=VARCHAR}, #{appShippingAddress,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+    #{phoneBk,jdbcType=VARCHAR}, #{flag,jdbcType=TINYINT}, #{accountId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.htkapp.modules.API.entity.AppShippingAddress">
+    insert into appShippingAddress
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="addressId != null">
+        address_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="location != null">
+        location,
+      </if>
+      <if test="appShippingAddress != null">
+        appShippingAddress,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="phoneBk != null">
+        phone_bk,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="addressId != null">
+        #{addressId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="appShippingAddress != null">
+        #{appShippingAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneBk != null">
+        #{phoneBk,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=BIT},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.htkapp.modules.API.entity.AppShippingAddress">
+    update appShippingAddress
+    <set>
+      <if test="appShippingAddress != null">
+        appShippingAddress = #{appShippingAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneBk != null">
+        phone_bk = #{phoneBk,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=BIT},
+      </if>
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.htkapp.modules.API.entity.AppShippingAddress">
+    update appShippingAddress
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      appShippingAddress = #{appShippingAddress,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      phone_bk = #{phoneBk,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=BIT},
+      account_id = #{accountId,jdbcType=INTEGER}
+    where address_id = #{addressId,jdbcType=INTEGER}
+  </update>
+</mapper>

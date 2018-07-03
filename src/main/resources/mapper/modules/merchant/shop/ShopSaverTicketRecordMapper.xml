@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopSaverTicketRecordMapper">
+
+    <sql id="Base_Column_List">
+        id, ticket_id, quantity, account_token
+    </sql>
+
+    <insert id="insertAccountExchangeRecordDAO" >
+        insert into shop_saver_ticket_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ticketId != null">
+                ticket_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="accountToken != null">
+                account_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="ticketId != null">
+                #{ticketId},
+            </if>
+            <if test="quantity != null">
+                #{quantity},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="accountToken != null">
+                #{accountToken},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateAccountExchangeRecordDao">
+    update shop_saver_ticket_record
+    	  set quantity = #{3}
+    	  where ticket_id=#{0} and account_token=#{1} and shop_id=#{2}
+    </update>
+    <select id="getShopSaverTicketRecordByTokenAndShopIdAndTicketId" resultType="com.htkapp.modules.merchant.shop.entity.ShopSaverTicketRecord">
+    	select * from shop_saver_ticket_record 
+    	where ticket_id=#{0} and account_token=#{1} and shop_id=#{2}
+    </select>
+    
+    
+</mapper>

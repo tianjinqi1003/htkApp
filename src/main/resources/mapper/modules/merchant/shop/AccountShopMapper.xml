@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.AccountShopMapper" >
+
+  <sql id="Base_Column_List">
+    id, user_name, password, nick_name, phone, sex, email, register_time, token, salt_token, encrypt_token, account_status,
+    pc_login_state, app_login_state, avatar_img, alipay_account, alipay_account_type, use_start_time, use_end_time
+  </sql>
+
+  <sql id="Base_Account_Shop_Column_List">
+    id as userId,user_name, password, nick_name, email, token,salt_token,encrypt_token,
+    pc_login_state, account_status, avatar_img, use_start_time, use_end_time
+  </sql>
+
+
+
+  <!-- ==========================接口开始================================ -->
+
+  <select id="getAlipayAccount" resultType="AccountShop">
+    select *
+    from account_shop
+    where id = #{0}
+  </select>
+
+  <update id="changeBindedAccount">
+    update account_shop
+    set alipay_account = #{1}
+    where id = #{0}
+  </update>
+
+  <update id="changePasswordBySMSDAO">
+    update account_shop
+    set password = #{password}
+    where user_name = #{userName}
+  </update>
+  <select id="selectByTokenDAO" resultType="AccountShop">
+    select
+    <include refid="Base_Column_List" />
+    from account_shop
+    where token = #{token}
+  </select>
+  <update id="changeAccountShopLoginStateDAO" >
+    update account_shop
+    set account_status = #{pcLoginState}
+    where id = #{id}
+  </update>
+  <select id="getAccountShopDataByIdDAO" resultType="AccountShop">
+    select 
+    <include refid="Base_Column_List" />
+    from account_shop
+    where id = #{accountShopId}
+  </select>
+  <select id="getAccountShopByPhoneAndUserNameDAO" resultType="AccountShop">
+    select
+    <include refid="Base_Column_List" />
+    from account_shop
+    where user_name = #{phone} and phone = #{phone}
+  </select>
+  <select id="getUseTimeByTokenDAO" resultType="AccountShop">
+    select *
+    from account_shop
+    where token = #{token}
+  </select>
+
+  <!-- ===========================接口结束=================================== -->
+
+  <!-- ===========================JSP页面接口开始==================================== -->
+  <select id="getAccountShopListByConditionDAO" resultType="AccountShop">
+    select 
+    <include refid="Base_Column_List" />
+    from account_shop
+    where user_name = #{userName}
+  </select>
+  <select id="getAccountShopListDAO" resultType="AccountShop">
+    select
+    <include refid="Base_Column_List" />
+    from account_shop
+  </select>
+  <insert id="registerAccountShopByPhoneDAO" useGeneratedKeys="true" keyProperty="id">
+    insert into account_shop
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="registerTime != null">
+        register_time,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="saltToken != null">
+        salt_token,
+      </if>
+      <if test="encryptToken != null">
+        encrypt_token,
+      </if>
+      <if test="accountStatus != null">
+        account_status,
+      </if>
+      <if test="avatarImg != null">
+        avatar_img,
+      </if>
+      <if test="useStartTime != null">
+        use_start_time,
+      </if>
+      <if test="useEndTime != null">
+        use_end_time,
+      </if>
+      <if test="identity != null">
+        identity,
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName},
+      </if>
+      <if test="password != null">
+        #{password},
+      </if>
+      <if test="nickName != null">
+        #{nickName},
+      </if>
+      <if test="phone != null">
+        #{phone},
+      </if>
+      <if test="registerTime != null">
+        #{registerTime},
+      </if>
+      <if test="token != null">
+        #{token},
+      </if>
+      <if test="saltToken != null">
+        #{saltToken},
+      </if>
+      <if test="encryptToken != null">
+        #{encryptToken},
+      </if>
+      <if test="accountStatus != null">
+        #{accountStatus},
+      </if>
+      <if test="avatarImg != null">
+        #{avatarImg},
+      </if>
+      <if test="useStartTime != null">
+        #{useStartTime},
+      </if>
+      <if test="useEndTime != null">
+        #{useEndTime},
+      </if>
+      <if test="identity != null">
+        #{identity},
+      </if>
+    </trim>
+  </insert>
+  <update id="changeAccountShopNickNameDAO">
+    update
+    account_shop
+    set nick_name = #{nickName}
+    where token = #{token}
+  </update>
+  <update id="changePasswordDAO">
+    update
+    account_shop
+    set password = #{password}
+    where user_name = #{phone} and phone = #{phone}
+  </update>
+  <select id="getAccountShopByNameAndPwdDAO" resultType="LoginUser">
+    select
+    <include refid="Base_Account_Shop_Column_List" />
+    from account_shop
+    where user_name = #{0} and password = #{1}
+  </select>
+  <update id="updatePasswordDAO" >
+    update account_shop
+    set password = #{password}
+    where id = #{id}
+  </update>
+  <update id="updateShopPhoneDAO" >
+    update account_shop
+    set phone = #{phone}
+    where id = #{id}
+  </update>
+  <update id="updateUseTimeByIdDAO">
+    update account_shop
+    set use_end_time = #{1}
+    where id = #{0}
+  </update>
+
+  <!-- ============================JSP页面接口结束==================================== -->
+
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.BillBalanceSheetMapper">
+
+    <sql id="Base_Column_List">
+        id, record_type, description, sum_amount, balance, status, remark, account_shop_token, gmt_create
+    </sql>
+
+    <!-- ===================接口开始======================= -->
+    <select id="getAccountBalanceDAO" resultType="Double">
+        select balance
+        from bill_balance_sheet
+        where account_shop_token = #{0}
+        order by gmt_create desc limit 1
+    </select>
+
+    <update id="updateAccountBalance">
+        update bill_balance_sheet
+        set balance = #{1}
+        where account_shop_token = #{0}
+    </update>
+
+    <select id="getBalanceSheetRecordListByAccountShopTokenDAO" resultType="BillBalanceSheet">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_balance_sheet
+        where account_shop_token = #{token}
+        and gmt_create between #{starTime} and #{endTime}
+        <if test="type != 0">
+            and record_type = #{type}
+        </if>
+        order by ${orderDesc}
+    </select>
+    <insert id="insetBalanceSheetRecordDAO">
+        insert into bill_balance_sheet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordType != null">
+                record_type,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="sumAmount != null">
+                sum_amount,
+            </if>
+            <if test="balance != null">
+                balance,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="accountShopToken != null">
+                account_shop_token,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="recordType != null">
+                #{recordType},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="sumAmount != null">
+                #{sumAmount},
+            </if>
+            <if test="balance != null">
+                #{balance},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="accountShopToken != null">
+                #{accountShopToken},
+            </if>
+        </trim>
+    </insert>
+    <select id="getBalanceSheetRecordByDateDAO" resultType="BillBalanceSheet">
+        select
+        <include refid="Base_Column_List" />
+        from bill_balance_sheet
+        where account_shop_token = #{token}
+        and gmt_create between #{startTime} and #{endTime} limit 1
+    </select>
+    <update id="updateBalanceSheetRecordByIdDAO">
+        update bill_balance_sheet
+        <set>
+            <if test="sumAmount != null">
+                sum_amount = #{sumAmount},
+            </if>
+            <if test="balance != null">
+                balance = #{balance}
+            </if>
+        </set>
+        where id = #{id} and account_shop_token = #{accountShopToken}
+    </update>
+    <select id="getBalanceSheetRecordByLastDateDAO" resultType="BillBalanceSheet">
+        select
+        <include refid="Base_Column_List" />
+        from bill_balance_sheet
+        where account_shop_token = #{0}
+        order by gmt_create desc limit 1
+    </select>
+    <!-- ===================接口结束======================== -->
+</mapper>

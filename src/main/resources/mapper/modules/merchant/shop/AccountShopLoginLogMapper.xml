@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.AccountShopLoginLogMapper">
+
+    <sql id="Base_Column_List">
+        id, login_date, sign_out_date, current_state, account_shop_token
+    </sql>
+
+    <!-- ==================接口开始=================== -->
+    <insert id="insertCurrentLoginLogDAO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into account_shop_login_log
+        (login_date, current_state,account_shop_token)
+        values
+        (#{loginDate}, #{currentState}, #{accountShopToken})
+    </insert>
+    <update id="insertCurrentSignOutLogDAO">
+        update account_shop_login_log
+        set
+        sign_out_date = #{signOutDate},
+        current_state = #{currentState}
+        where id = #{id}
+    </update>
+    <select id="getCurrentLoginLogByTokenDAO" resultType="java.lang.String" >
+        select
+        login_date
+        from account_shop_login_log
+        where account_shop_token = #{accountShopToken}
+        and current_state = 1
+        order by gmt_create desc limit 1
+    </select>
+    <select id="getLastLoginLogByTokenDAO" resultType="java.lang.String" >
+        select
+        sign_out_date
+        from account_shop_login_log
+        where account_shop_token = #{accountShopToken}
+        and current_state = 0
+        order by gmt_create desc limit 1
+    </select>
+    <!-- =================接口结束================= -->
+</mapper>

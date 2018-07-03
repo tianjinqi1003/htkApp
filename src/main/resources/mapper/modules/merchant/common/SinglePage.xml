@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.common.dao.SinglePageMapper">
+
+	<sql id="Base_Column_List">
+		id, title, declaration, content, start_time, end_time,
+		single_type, account_shop_id, shop_id, long_term, input1, input2, input3
+	</sql>
+
+	<!-- ===========================appHtml页面接口开始========================== -->
+	<select id="findSinglePageDataByType" resultType="SinglePage">
+		select
+		<include refid="Base_Column_List" />
+		from single_page
+		where 1=1
+		<if test="shopId != null">
+			and shop_id = #{shopId,jdbcType=INTEGER}
+		</if>
+		<if test="singleType != null">
+			and single_type = #{singleType,jdbcType=CHAR}
+		</if>
+	</select>
+
+	<!-- ===========================appHtml页面接口结束========================== -->
+
+	<select id="findSpendingById" resultType="SinglePage">
+		select
+		<include refid="Base_Column_List" />
+		from single_page
+		where account_shop_id = #{accountShopId,jdbcType=INTEGER} and single_type = #{singleType,jdbcType=CHAR}
+	</select>
+
+	<update id="updateSpendingById">
+		update single_page
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="declaration != null">
+				declaration = #{declaration,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+
+			start_time = #{startTime},
+
+			end_time = #{endTime},
+
+			<if test="accountShopId != null">
+				account_shop_id = #{accountShopId,jdbcType=INTEGER},
+			</if>
+			<if test="shopId != null">
+				shop_id = #{shopId,jdbcType=INTEGER},
+			</if>
+			<if test="longTerm != null">
+				long_term = #{longTerm},
+			</if>
+			<if test="input1 != null">
+				input1 = #{input1},
+			</if>
+			<if test="input2 != null">
+				input2 = #{input2},
+			</if>
+			<if test="input3 != null">
+				input3 = #{input3}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER} and single_type = #{singleType,jdbcType=CHAR}
+	</update>
+
+	<insert id="insertSpendingById">
+		insert into single_page
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="declaration != null">
+				declaration,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="sTime != null">
+				start_time,
+			</if>
+			<if test="eTime != null">
+				end_time,
+			</if>
+			<if test="singleType != null">
+				single_type,
+			</if>
+			<if test="accountShopId != null">
+				account_shop_id,
+			</if>
+			<if test="shopId != null">
+				shop_id,
+			</if>
+			<if test="longTerm != null">
+				long_term,
+			</if>
+			<if test="input1 != null">
+				input1,
+			</if>
+			<if test="input2 != null">
+				input2,
+			</if>
+			<if test="input3 != null">
+				input3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="declaration != null">
+				#{declaration,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="sTime != null">
+				#{sTime},
+			</if>
+			<if test="eTime != null">
+				#{eTime},
+			</if>
+			<if test="singleType != null">
+				#{singleType,jdbcType=CHAR},
+			</if>
+			<if test="accountShopId != null">
+				#{accountShopId,jdbcType=INTEGER},
+			</if>
+			<if test="shopId != null">
+				#{shopId,jdbcType=INTEGER},
+			</if>
+			<if test="longTerm != null">
+				#{longTerm},
+			</if>
+			<if test="input1 != null">
+				#{input1},
+			</if>
+			<if test="input2 != null">
+				#{input2},
+			</if>
+			<if test="input3 != null">
+				#{input3}
+			</if>
+		</trim>
+	</insert>
+</mapper>

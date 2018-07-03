@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopCommentMapper">
+    <resultMap id="BaseResultMap" type="com.htkapp.modules.merchant.shop.entity.ShopComment">
+        <id column="shopComment_id" property="shopCommentId" jdbcType="INTEGER"/>
+        <result column="shopComment_content" property="shopCommentContent" jdbcType="VARCHAR"/>
+        <result column="shopComment_time" property="shopCommentTime" jdbcType="TIMESTAMP"/>
+        <result column="shopComment_accountId" property="shopCommentAccountId" jdbcType="INTEGER" />
+        <result column="shopComment_shopId" property="shopCommentShopId" jdbcType="INTEGER" />
+        <result column="username" jdbcType="VARCHAR" property="userName" />
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    </resultMap>
+
+   <sql id="Base_Column_List">
+       shopComment_id, shopComment_content, shopComment_time, shopComment_accountId, shopComment_shopId
+   </sql>
+
+    <!--/*=============================================商家=============================================*/-->
+    <select id="findShopCommentByShopIdByPage" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select sc.username,s.shop_name,sc.shopComment_content,sc.shopComment_time
+        from (select * from shopcomment left join account on shopcomment.shopComment_accountId=account.account_id ) as sc left join shop as s
+        on sc.shopComment_shopId=s.shop_id left join accountshop as acs
+        on s.account_shop_id=acs.account_shop_id where acs.account_shop_id=#{shopId, jdbcType=INTEGER}
+    </select>
+
+    <select id="findTotalRows" parameterType="java.lang.Integer" resultType="java.lang.Integer" >
+        select count(1)
+        from shopcomment as sc left join shop s
+        on sc.shopComment_shopId=s.shop_id left join accountshop as acs
+        on s.account_shop_id=acs.account_shop_id where 1=1 and acs.account_shop_id=#{shopId, jdbcType=INTEGER}
+    </select>
+</mapper>

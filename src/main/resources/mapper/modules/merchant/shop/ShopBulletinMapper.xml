@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopBulletinMapper">
+
+    <sql id="Base_Column_List">
+        id, content, shop_id
+    </sql>
+
+    <!-- ==================接口开始===================== -->
+    <select id="getShopBulletinByIdDAO" resultType="ShopBulletin">
+        select 
+        <include refid="Base_Column_List" />
+        from shop_bulletin
+        where shop_id = #{shopId}
+    </select>
+
+    <!-- ==================接口结束===================== -->
+
+    <!-- ===================JSP页面接口开始==================== -->
+    <select id="getShopBulletinByTokenDAO" resultType="ShopBulletin" >
+        select
+        shop_bulletin.*
+        from shop_bulletin
+        left join account_shop on shop_bulletin.shop_id = account_shop.id
+        where account_shop.token = #{accountShopToken}
+    </select>
+    <!-- ===================JSP页面接口结束===================== -->
+</mapper>

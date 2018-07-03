@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.common.dao.UserMessageMapper">
+    <sql id="Base_Account_Column_List">
+		account_id as userId,user_name, password, email,token,salt_token,encrypt_token,account_status
+	</sql>
+    <sql id="Base_Account_Shop_Column_List">
+		id as userId,user_name, password, nick_name, email, token,salt_token,encrypt_token,
+		pc_login_state, account_status, avatar_img, use_start_time, use_end_time
+	</sql>
+    <sql id="Base_Account_Emp_Column_List">
+		id as userId,user_name, password, email,token,salt_token,encrypt_token, account_status, pc_login_state, avatar_img
+	</sql>
+    <!-- ===================app用户接口开始===================== -->
+    <select id="selectByUser" resultType="LoginUser">
+        select
+        <include refid="Base_Account_Column_List"/>
+        from account
+        where user_name = #{userName,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByUserToken" resultType="LoginUser">
+        select
+        <include refid="Base_Account_Column_List"/>
+        from account
+        where token = #{token,jdbcType=VARCHAR}
+    </select>
+    <!-- ====================app用户接口结束============================== -->
+
+
+    <!-- ======================商户用户接口开始============================== -->
+    <select id="selectByAccountShop" resultType="LoginUser">
+        select
+        <include refid="Base_Account_Shop_Column_List"/>,shop.state, shop.shop_name
+        from account_shop left join shop on account_shop.id = shop.shop_id
+        where user_name = #{userName,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByAccountShopToken" resultType="LoginUser">
+        select
+        <include refid="Base_Account_Shop_Column_List"/>
+        from account_shop
+        where token = #{token,jdbcType=VARCHAR}
+    </select>
+    <!-- ======================商户用户接口结束============================== -->
+
+
+    <!-- =======================管理员用户接口开始================================== -->
+    <select id="selectByAdmin" resultType="LoginUser">
+        select
+        <include refid="Base_Account_Emp_Column_List"/>
+        from admin
+        where user_name = #{userName,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByAdminToken" resultType="LoginUser">
+        select
+        <include refid="Base_Account_Emp_Column_List"/>
+        from admin
+        where token = #{token,jdbcType=VARCHAR}
+    </select>
+    <!-- ================================管理员用户接口结束================================== -->
+</mapper>

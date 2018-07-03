@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodOrderMapper">
+
+    <sql id="Base_Column_List">
+        id, order_number, order_amount, discount_amount, order_body,seat_name,
+        payment_method, order_state, account_token, shop_id,
+        mark, reminder_state, adjust_order_json as adjustState, remark, serial_number, all_serial_number
+    </sql>
+
+    <!-- =========================接口开始============================= -->
+    <insert id="insertOrderDAO" useGeneratedKeys="true" keyProperty="id" parameterType="BuffetFoodOrder">
+        insert into buffet_food_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="orderAmount != null">
+                order_amount,
+            </if>
+            <if test="orderBody != null">
+                order_body,
+            </if>
+            <if test="seatName != null">
+                seat_name,
+            </if>
+            <if test="paymentMethod != null">
+                payment_method,
+            </if>
+            <if test="orderState != null">
+                order_state,
+            </if>
+            <if test="token != null">
+                account_token,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="serialNumber!=null">
+            	serial_number,
+            </if>
+            <if test="allSerialNumber!=null">
+            	all_serial_number
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null">
+                #{orderNumber},
+            </if>
+            <if test="orderAmount != null">
+                #{orderAmount},
+            </if>
+            <if test="orderBody != null">
+                #{orderBody},
+            </if>
+            <if test="seatName != null">
+                #{seatName},
+            </if>
+            <if test="paymentMethod != null">
+                #{paymentMethod},
+            </if>
+            <if test="orderState != null">
+                #{orderState},
+            </if>
+            <if test="token != null">
+                #{token},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="serialNumber!=null">
+            	 #{serialNumber},
+            </if>
+              <if test="allSerialNumber!=null">
+            	 #{allSerialNumber}
+            </if>
+        </trim>
+    </insert>
+<!-- 修改订单操作状态 -->
+    <update id="changeOrderStateDAO">
+        update buffet_food_order
+        set order_state = #{stateId}
+        where order_number = #{orderNumber}
+    </update>
+ <!-- 修改订单支付状态状态 -->
+    <update id="changeOrderStateByAccountShopTokenDAO">
+        update buffet_food_order
+        set pay_state = #{1}
+        where order_number = #{0}
+    </update>
+    <select id="getOrderByOrderNumberDAO" resultType="BuffetFoodOrder">
+        select
+        <include refid="Base_Column_List"/>
+        from buffet_food_order
+        where account_token = #{token} and order_number = #{orderNumber}
+    </select>
+    <select id="getOrderByOrderNumberADAO" resultType="com.htkapp.modules.API.dto.ReturnBuffetFoodOrderData">
+        select
+        order_number, gmt_create as orderTime, order_state,seat_name
+        from buffet_food_order
+        where order_number = #{0}
+    </select>
+    <select id="getOrderListByTokenDAO" resultType="BuffetFoodOrder">
+        select
+        id,bfo.order_number, bfo.order_amount, bfo.discount_amount, bfo.order_body,bfo.seat_name,
+        bfo.payment_method, bfo.order_state, bfo.account_token as token, bfo.shop_id, bfo.mark, bfo.reminder_state, 
+         bfo.remark, bfo.serial_number, bfo.all_serial_number,
+        adjust_order_json, adjust_order_product_json,adjust_state ,bfo.gmt_create as order_time
+        from buffet_food_order as bfo left join shop on bfo.shop_id = shop.shop_id
+        where bfo.account_token = #{0} and bfo.shop_id = #{1} order by ${2}
+    </select>
+    <select id="getOrderDetailListByTokenAndIdDAO" resultType="com.htkapp.modules.merchant.buffetFood.dto.ReturnOrderDetailInfo">
+        select
+        buffet_food_order.id, buffet_food_order.gmt_create as order_time, seat_name,shop.shop_name,buffet_food_order.order_number,
+        order_amount,payment_method,shop.shop_id,shop.logo_url,buffet_food_order.pay_state,buffet_food_order.order_state
+        from buffet_food_order left join shop on buffet_food_order.shop_id = shop.shop_id
+        where account_token = #{0} and buffet_food_order.id = #{1}
+    </select>
+    <update id="changeOrderPayStateDAO">
+        update
+        buffet_food_order
+        set
+        pay_state = #{1},
+        payment_method = #{3}
+        where id = #{0} and account_token = #{2}
+    </update>
+    <select id="getOrderListByTokenAndPageDAO" resultType="com.htkapp.modules.merchant.buffetFood.dto.ReturnOrderInfo">
+        select
+        id, buffet_food_order.gmt_create as order_time, seat_name,shop.shop_name,
+        shop.logo_url,shop.shop_id,pay_state
+        from buffet_food_order left join shop on buffet_food_order.shop_id = shop.shop_id
+        where account_token = #{0} order by ${1}
+    </select>
+    <delete id="delOrderByIdDAO">
+        delete
+        from buffet_food_order
+        where
+        id = #{orderId}
+    </delete>
+    <select id="getOrderByOrderNumberAndTokenDAO" resultType="com.htkapp.modules.merchant.buffetFood.dto.ReturnOrderInfo">
+        select
+        id, buffet_food_order.gmt_create as order_time, order_state, seat_name,order_amount,order_number,shop.shop_name,
+        shop.logo_url,shop.shop_id,pay_state, order_number
+        from buffet_food_order left join shop on buffet_food_order.shop_id = shop.shop_id
+        where account_token = #{0} and order_number = #{1}
+    </select>
+    <delete id="delOrderByOrderNumberDAO">
+        delete
+        from buffet_food_order
+        where
+        order_number = #{0}
+    </delete>
+    <select id="getBuffetFoodOrderByOrderNumberDAO" resultType="BuffetFoodOrder">
+        select
+        id, order_number, order_amount, discount_amount, order_body,seat_name,
+        payment_method, order_state, account_token as token, shop_id, mark, reminder_state, 
+         remark, serial_number, all_serial_number,
+        adjust_order_json, adjust_order_product_json,adjust_state,temp_seat_name
+        from buffet_food_order
+        where order_number = #{0}
+    </select>
+    <update id="confirmOrderButtonDAO">
+        update buffet_food_order
+        <set>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="discountAmount != null">
+                discount_amount = #{discountAmount},
+            </if>
+            <if test="seatName != null">
+                seat_name = #{seatName},
+            </if>
+            <if test="orderAmount != null">
+                order_amount = #{orderAmount},
+            </if>
+            order_state = 1
+        </set>
+        where order_number = #{orderNumber}
+    </update>
+    <update id="reminderDAO">
+        update buffet_food_order
+        set reminder_state = #{1}
+        where order_number = #{0}
+    </update>
+    <update id="enterAdjustOrderDAO">
+        update buffet_food_order
+        <set>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="discountAmount != null">
+                discount_amount = #{discountAmount},
+            </if>
+            <if test="seatName != null">
+                seat_name = #{seatName},
+            </if>
+            <if test="orderAmount != null">
+                order_amount = #{orderAmount}
+            </if>
+            where order_number = #{orderNumber}
+        </set>
+    </update>
+    <update id="updateOrderAdjustOrderJsonDAO">
+        update buffet_food_order
+        <set>
+            <if test="adjustOrderJson != null">
+                adjust_order_json = #{adjustOrderJson},
+            </if>
+            <if test="adjustOrderProductJson!=null">
+                adjust_order_product_json = #{adjustOrderProductJson}
+            </if>
+        </set>
+        where order_number = #{orderNumber}
+    </update>
+    <select id="getOrderListByTokenAndShopId" resultType="BuffetFoodOrder">
+    	  select
+        id, order_number, order_amount, discount_amount, order_body,seat_name,
+        payment_method, order_state, account_token as token, shop_id, mark, reminder_state, 
+         remark, serial_number, all_serial_number,
+        adjust_order_json, adjust_order_product_json,adjust_state 
+        from buffet_food_order
+        where account_token = #{token} and shop_id=#{shopId}
+    </select>
+	<select id="getBuffetFoodOrderByOrderStateAndSeatName" resultType="BuffetFoodOrder">
+	  select id, order_number, order_amount, discount_amount, order_body,seat_name,
+        payment_method, order_state, account_token, shop_id, mark, reminder_state,
+        adjust_order_json,adjust_order_product_json adjustOrderProductJson, remark, serial_number, all_serial_number, gmt_create as orderTime
+        from buffet_food_order
+	where seat_name=#{0}  and order_state=#{1}
+	</select>
+    
+    <!-- =========================接口结束============================= -->
+
+    <!-- ==========================JSP页面接口开始=============================== -->
+    <select id="getBuffetFoodOrderListByTokenDAO" resultType="BuffetFoodOrder">
+        select
+        buffet_food_order.id, buffet_food_order.order_number,
+        buffet_food_order.order_amount,
+        buffet_food_order.order_body,buffet_food_order.seat_name,
+        buffet_food_order.payment_method, buffet_food_order.order_state,
+        buffet_food_order.account_token, buffet_food_order.shop_id,
+        buffet_food_order.gmt_create as orderTime
+        from buffet_food_order
+        left join shop on buffet_food_order.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.token = #{accountToken}
+    </select>
+    <select id="getBuffetFoodOrderDAO" resultType="BuffetFoodOrder">
+        select
+        buffet_food_order.id, buffet_food_order.order_number,
+        buffet_food_order.order_amount,
+        buffet_food_order.order_body,buffet_food_order.seat_name,
+        buffet_food_order.payment_method, buffet_food_order.order_state,
+        buffet_food_order.account_token token, buffet_food_order.shop_id,
+        buffet_food_order.gmt_create as orderTime
+        from buffet_food_order
+        left join shop on buffet_food_order.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.token = #{accountShopToken} and buffet_food_order.order_number = #{orderNumber}
+    </select>
+ <!-- 这是查询订单列表 -->
+    <select id="getBuffetFoodOrderListByTokenAndConditionDAO" resultType="BuffetFoodOrder">
+        select
+        buffet_food_order.id, buffet_food_order.order_number,
+        buffet_food_order.order_amount,
+        buffet_food_order.order_body,buffet_food_order.seat_name,
+        buffet_food_order.payment_method, buffet_food_order.order_state,
+        buffet_food_order.account_token, buffet_food_order.shop_id,
+        buffet_food_order.gmt_create as orderTime,buffet_food_order.serial_number,
+        buffet_food_order.all_serial_number,buffet_food_order.account_token as token
+        from buffet_food_order
+        left join shop on buffet_food_order.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.token = #{accountShopToken} and pay_state = #{orderState}
+        <if test="startTime != null and endTime != null">
+            and buffet_food_order.gmt_create between #{startTime} and #{endTime} 
+        </if>
+        and buffet_food_order.adjust_order_product_json is null
+        and buffet_food_order.reminder_state='0'
+        order by ${orderDesc}
+    </select>
+    <update id="updateOrderTotalAmountDAO">
+        update buffet_food_order
+        set order_amount = #{1}
+        where order_number = #{0}
+    </update>
+    <select id="getBuffetFoodOrderListByShopIdAndOrderStateIdDAO" resultType="BuffetFoodOrder">
+        select
+        buffet_food_order.id, buffet_food_order.order_number,
+        buffet_food_order.order_amount,
+        buffet_food_order.order_body,buffet_food_order.seat_name,
+        buffet_food_order.payment_method, buffet_food_order.order_state,
+        buffet_food_order.account_token, buffet_food_order.shop_id,
+        buffet_food_order.gmt_create as orderTime,buffet_food_order.serial_number,
+        buffet_food_order.all_serial_number
+        from buffet_food_order
+        where shop_id = #{shopId} and adjust_order_product_json is null and order_state = #{orderStateId} and pay_state = 0
+        order by ${orderDesc}
+    </select>
+    <select id="getLastOrderDAO" resultType="BuffetFoodOrder">
+        select
+        <include refid="Base_Column_List" />
+        from buffet_food_order
+        where shop_id = #{0} order by gmt_create desc limit 1
+    </select>
+    <select id="verifyTodayOrderDAO" resultType="BuffetFoodOrder">
+        select
+        <include refid="Base_Column_List" />
+        from buffet_food_order
+        where shop_id = #{0} and gmt_create between #{1} and #{2} order by gmt_create desc limit 1
+    </select>
+    <select id="getAdjustOrderListDAO" resultType="BuffetFoodOrder">
+        select id, order_number, order_amount, discount_amount, order_body,seat_name,
+        payment_method, order_state, account_token, shop_id, mark, reminder_state,
+        adjust_order_json,adjust_order_product_json adjustOrderProductJson, remark, serial_number,
+        all_serial_number, gmt_create as orderTime,temp_seat_name
+        from buffet_food_order
+        where shop_id = #{shopId} and adjust_order_product_json is not null order by ${orderDesc}
+    </select>
+    <select id="getReminderOrderListDAO" resultType="BuffetFoodOrder">
+        select id, order_number, order_amount, discount_amount, order_body,seat_name,
+        payment_method, order_state, account_token, shop_id, mark, reminder_state,
+        adjust_order_json, remark, serial_number, all_serial_number, gmt_create as orderTime
+        from buffet_food_order
+        where shop_id = #{shopId} and reminder_state =1 order by ${orderDesc}
+    </select>
+    <update id="dealWithNewOrderDAO">
+        update buffet_food_order
+        set order_state = #{1},
+        pay_state = #{2}
+        where order_number = #{0}
+    </update>
+    <update id="replyReminderDAO" >
+        update buffet_food_order
+        set reminder_state = #{1}
+        where order_number = #{0}
+    </update>
+    <update id="replyFalseDAO" >
+        update buffet_food_order
+        set adjust_order_product_json = #{1}
+        where order_number = #{0}
+    </update>
+    <update id="updataOrderAdjustState">
+    	update buffet_food_order
+        set adjust_state = #{adjustState}
+        where order_number = #{orderNumber}
+    </update>
+    <update id="updateOrderSeatName">
+    	update buffet_food_order
+        set seat_name = #{seatName}
+        where order_number = #{orderNumber}
+    </update>
+    <update id="updateTempSeatName">
+    	update buffet_food_order
+        set temp_seat_name = #{tempSeatName}
+        where order_number = #{orderNumber}
+    </update>
+    
+    <select id="getBFOLByToken" resultType="BuffetFoodOrder">
+    select
+        buffet_food_order.id, buffet_food_order.order_number,
+        buffet_food_order.order_amount,
+        buffet_food_order.order_body,buffet_food_order.seat_name,
+        buffet_food_order.payment_method, buffet_food_order.order_state,
+        buffet_food_order.account_token, buffet_food_order.shop_id,
+        buffet_food_order.gmt_create as orderTime,buffet_food_order.serial_number,
+        buffet_food_order.all_serial_number,buffet_food_order.account_token as token,shop.shop_name
+        from buffet_food_order
+        left join shop on buffet_food_order.shop_id = shop.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where buffet_food_order.shop_id=#{1} and buffet_food_order.order_number=#{0}
+    </select>
+    <!-- =========================JSP页面接口结束================================= -->
+
+</mapper>

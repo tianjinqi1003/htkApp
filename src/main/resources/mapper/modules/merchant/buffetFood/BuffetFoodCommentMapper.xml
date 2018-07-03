@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodCommentMapper">
+    <sql id="Base_Column_List">
+        id, product_id, comment_star, comment_content, account_token
+    </sql>
+
+    <!-- =======================================接口开始============================================= -->
+    <select id="getCommentListByProductIdDAO" resultType="com.htkapp.modules.merchant.buffetFood.dto.ReturnCommentList">
+        select
+        comment_start, comment_content, buffet_food_comment.gmt_create as comment_time, nick_name as accountUserName
+        from buffet_food_comment left join
+        buffet_food_product on buffet_food_comment.product_id = buffet_food_product.id
+        left join account on buffet_food_comment.account_token = account.token
+        where shop_id = #{shopId} and buffet_food_comment.product_id = #{productId}
+    </select>
+
+    <!-- =======================================接口结束============================================= -->
+</mapper>

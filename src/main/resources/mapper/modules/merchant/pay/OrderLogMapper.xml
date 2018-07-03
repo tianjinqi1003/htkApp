@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.pay.dao.OrderLogMapper">
+
+    <sql id="Base_Column_List">
+        id, order_id, content, shop_id, account_token
+    </sql>
+
+    <!-- ===================接口开始======================== -->
+    <insert id="insertOrderLogDAO">
+        insert into order_log
+        (order_id, content, shop_id, account_token)
+        values
+        (#{orderId}, #{content}, #{shopId}, #{accountToken})
+    </insert>
+
+
+    <!-- ===================接口结束======================== -->
+</mapper>

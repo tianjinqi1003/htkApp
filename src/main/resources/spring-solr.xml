@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- 定义solr server -->
+    <bean id="httpSolrServer" class="org.apache.solr.client.solrj.impl.HttpSolrServer">
+        <constructor-arg index="0" value="http://120.27.5.36:8080/C0AA91AE88DDCD9D3960FB1550020CB5/db" />
+
+        <!--设置响应解析器-->
+        <property name="parser">
+            <bean class="org.apache.solr.client.solrj.impl.XMLResponseParser" />
+        </property>
+
+        <!--设置重试次数-->
+        <property name="maxRetries" value="1" />
+
+        <!--建立连接的最长时间-->
+        <property name="connectionTimeout" value="500" />
+
+    </bean>
+</beans>

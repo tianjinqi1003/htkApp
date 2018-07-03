@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.AccountTradingRecordMapper">
+
+    <sql id="Base_Column_List">
+        id, order_number, order_type, pay_method, pay_amount, shop_id, account_token
+    </sql>
+    
+    <select id="getTradingRecordByTokenAndShopIdDAO" resultType="AccountTradingRecord">
+        select 
+        <include refid="Base_Column_List" />, gmt_create as createTime
+        from account_trading_record
+        where account_token = #{token} and shop_id = #{shopId} order by ${orderBy}
+    </select>
+
+
+</mapper>

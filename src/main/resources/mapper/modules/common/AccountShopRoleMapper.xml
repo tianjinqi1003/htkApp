@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.common.dao.AccountShopRoleMapper">
+
+    <sql id="Base_Column_List">
+        id, u_id, r_id
+    </sql>
+
+    <insert id="insertAccountShopRoleDAO" >
+        insert into
+        account_shop_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId != null">
+                u_id,
+            </if>
+            <if test="rId != null">
+                r_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="uId != null">
+                #{uId},
+            </if>
+            <if test="rId != null">
+                #{rId},
+            </if>
+        </trim>
+    </insert>
+    <select id="getAccountShopRoleByIdDAO" resultType="AccountShopRole">
+        select 
+        <include refid="Base_Column_List" />
+        from account_shop_role
+        where u_id = #{0}
+    </select>
+    <update id="updateAccountShopRoleDAO" >
+        update account_shop_role
+        set r_id = #{rId}
+        where u_id = #{uId}
+    </update>
+</mapper>

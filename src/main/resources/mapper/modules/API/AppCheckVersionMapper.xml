@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.API.dao.AppCheckVersionMapper">
+
+    <sql id="Base_Column_List">
+        id, app_id, app_name, client_version, download_url, upload_log, update_install
+    </sql>
+
+    <!-- =====================接口开始===================== -->
+    <select id="getTheLatestVersionNumberDAO" resultType="AppCheckVersion">
+        select
+        <include refid="Base_Column_List"/>
+        from app_check_version
+        where 1=1 and app_id = #{appId} order by gmt_create desc limit 1
+    </select>
+    <!-- =================接口开始======================== -->
+
+
+    <!-- ===========================jsp页面接口开始================================= -->
+    <select id="getVersionListByAppIdDAO" resultType="AppCheckVersion">
+        select
+        <include refid="Base_Column_List"/>
+        from app_check_version
+        where 1=1
+        <if test="appId != null">
+            app_id = #{appId}
+        </if>
+        order by ${orderDesc}
+    </select>
+    <select id="getVersionDetailByIdDAO" resultType="AppCheckVersion">
+        select
+        <include refid="Base_Column_List"/>
+        from app_check_version
+        where id = #{0}
+    </select>
+
+    <!-- ===========================jsp页面接口结束================================== -->
+</mapper>

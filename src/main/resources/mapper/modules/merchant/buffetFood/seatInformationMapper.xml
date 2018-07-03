@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.buffetFood.dao.SeatInformationMapper">
+
+    <sql id="Base_Column_List">
+        id,seat_name, number_seat, shop_id,seat_status,use_seat_time
+    </sql>
+    
+    <!-- =====================接口开始======================= -->
+ <!--     //根据商户id查找商铺下的座位信息 -->
+    <select id="getSeatInformationListByShopIdDAO" resultType="SeatInformation">
+        select 
+        <include refid="Base_Column_List" />
+        from seat_information
+        where shop_id = #{shopId} and seat_status = 0
+    </select>
+	<update id="updataSeatInfoByShopId">
+		update seat_information
+		set seat_status=#{b}
+		where seat_name=#{bfo.seatName} and shop_id = #{bfo.shopId}
+	</update>
+	<!-- //根据商户id查找商铺下所有的座位信息-->
+	<select id="getSeatInformationListByShopId" resultType="SeatInformation">
+		select
+		<include refid="Base_Column_List" />
+		from seat_information
+		where shop_id = #{shopId}
+	</select>
+	<!--     //为商铺增加对应的座位信息 -->
+	<insert id="addSeatInfoByShopId"
+		parameterType="com.htkapp.modules.merchant.buffetFood.entity.SeatInformation">
+		insert into seat_information
+		<trim prefix="(" suffix=")">
+			<if test="seatName!=null">
+				seat_name,
+			</if>
+			<if test="numberSeat!=null">
+				number_seat,
+			</if>
+			<if test="shopId!=null">
+				shop_id,
+			</if>
+			<if test="seatStatus!=null">
+				seat_status,
+			</if>
+			gmt_create,
+			gmt_modified
+		</trim>
+		<trim prefix=" values(" suffix=")" >
+			<if test="seatName!=null">
+					#{seatName},
+			</if>
+			<if test="numberSeat!=null">
+					#{numberSeat},
+			</if>
+			<if test="shopId!=null">
+				#{shopId},
+			</if>
+			<if test="seatStatus!=null">
+			#{seatStatus},
+			</if>
+			now(),
+			now()
+		</trim>
+	</insert>
+	<delete id="delSeatInfoByShopIdAndId" parameterType="SeatInformation">
+		DELETE from seat_information where shop_id=#{shopId} and seat_name=#{seatName}
+	</delete>
+	<update id="updataSeatInfoBySeatName">
+		update seat_information
+		set
+		<if test="newSeat.numberSeat!=null">
+		number_seat=#{newSeat.numberSeat},
+		</if>
+		<if test="newSeat.seatName!=null">
+		seat_name=#{newSeat.seatName}
+		</if>
+		where seat_name=#{oldName} and shop_id=#{newSeat.shopId}
+	</update>
+	<select id="getSeatInformationByShopIdAndSeatName" resultType="SeatInformation">
+	select * from seat_information
+	where shop_id=#{0} and seat_name=#{1}
+	</select>
+	<update id="updataSeatInfoBySeatNameAndShopId" parameterType="SeatInformation">
+		update seat_information
+		set seat_status=#{seatStatus},use_seat_time=#{useSeatTime}
+		where shop_id=#{shopId} and seat_name=#{seatName}
+	</update>
+    <!-- =====================接口结束======================= -->
+
+</mapper>

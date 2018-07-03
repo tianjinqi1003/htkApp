@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.dao.CouponMapper">
+
+    <resultMap id="BaseResultMap" type="com.htkapp.modules.common.entity.Coupon">
+        <id column="coupon_id" jdbcType="INTEGER" property="couponId" />
+        <result column="coupon_title" jdbcType="VARCHAR" property="couponTitle" />
+        <result column="coupon_amount" jdbcType="DECIMAL" property="couponAmount" />
+        <result column="coupon_phone" jdbcType="VARCHAR" property="couponPhone" />
+        <result column="coupon_useDate" jdbcType="TIMESTAMP" property="couponUseDate" />
+        <result column="coupon_shop_business_hours" jdbcType="VARCHAR" property="couponShopBusinessHours" />
+        <result column="coupon_shop_id" jdbcType="INTEGER" property="couponShopId" />
+        <result column="coupon_account_id" jdbcType="INTEGER" property="couponAccountId" />
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        coupon_id, coupon_title, coupon_amount, coupon_phone, coupon_useDate, coupon_shop_business_hours, coupon_shop_id, coupon_account_id
+    </sql>
+
+
+
+    <!--/*=============================================app接口=============================================*/-->
+    <select id="findCouponListByAccountId" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />,s.shop_name
+        from coupon as c left join shop as s
+        on c.coupon_shop_id=s.shop_id where c.coupon_account_id=#{accountId, jdbcType=INTEGER}
+    </select>
+</mapper>

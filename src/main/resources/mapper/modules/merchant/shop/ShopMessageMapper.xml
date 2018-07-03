@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopMessageMapper">
+
+    <sql id="Base_Column_List">
+        id, score, monthly_sales_volume, per_capita_price, delivery_fee, shop_id
+    </sql>
+    
+    <update id="updateDeliverFeeDAO" >
+        update shop_message
+        set delivery_fee = #{deliveryFee}
+        where shop_id = #{shopId}
+    </update>
+
+    <insert id="initShopMessage">
+        insert into shop_message(shop_id)
+        values(#{shopId})
+    </insert>
+
+</mapper>

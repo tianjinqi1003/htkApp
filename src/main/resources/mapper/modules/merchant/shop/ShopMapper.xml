@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopMapper">
+
+    <sql id="Base_Column_List">
+    shop_id, shop_name, logo_url, opening_time,longitude, latitude, address, location, intro,phone, mobile_phone,
+    state,mark, des, account_shop_id, shop_category_id, shop_qr_code_url
+  </sql>
+
+    <select id="getShopListByCategoryList" resultType="Shop">
+        select * from shop
+        where shop.shop_category_id in
+        <foreach collection="categoryIdList" index="index" item="each" open="(" separator="," close=")">
+            #{each}
+        </foreach>
+    </select>
+
+    <!--获取属于大分类下的所有子分类id-->
+    <select id="getAllChildCategoryIdList" resultType="java.lang.Integer">
+        select id
+        from shop_category
+        where parent_id = #{0}
+    </select>
+
+    <!-- ==================接口开始======================== -->
+    <select id="getAllShopLatitudeAndLongitudeDAO" resultType="Shop">
+        select
+        shop.shop_id,shop_name,logo_url,score,monthly_sales_volume,
+        longitude,latitude
+        from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where #{3} &lt;= account_shop.use_end_time and shop.shop_id not in
+        (select
+        shop.shop_id
+        from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        right join account_focus on shop.shop_id = account_focus.shop_id
+        where shop.mark = #{0} and account_focus.account_token  = #{1}) and shop.mark = #{0}
+        order by ${2}
+    </select>
+    <select id="getNotLoginRecommendedBusinessesDAO" resultType="Shop">
+        select
+        shop.shop_id,shop_name,logo_url,score,monthly_sales_volume,
+        longitude,latitude
+        from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where shop.mark = #{0} and #{2} &lt;= account_shop.use_end_time order by #{1}
+    </select>
+    <select id="getShopByConditionDAO" resultType="Shop">
+        select
+        shop_.shop_id,shop_.shop_name,shop_.logo_url,shop_.score,shop_.monthly_sales_volume,
+        shop_.longitude,shop_.latitude,shop_.mark
+        from (select shop.shop_id,shop_name,logo_url,score,monthly_sales_volume,
+        longitude,latitude,mark from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        ) as shop_ left join
+        <choose>
+            <when test="mark == 0">
+                takeout_product on shop_.shop_id = takeout_product.shop_id
+            </when>
+            <otherwise>
+                buy_package on shop_.shop_id = buy_package.shop_id
+            </otherwise>
+        </choose>
+
+        <if test="keyWord != null">
+            where shop_.mark = #{mark} and shop_.shop_name like concat('%',#{keyWord},'%')
+            <choose>
+                <when test="mark == 0">
+                    or takeout_product.product_name like concat('%', #{keyWord}, '%') group by shop_id
+                </when>
+                <otherwise>
+                    or buy_package.package_name like concat('%', #{keyWord}, '%') group by shop_id
+                </otherwise>
+            </choose>
+        </if>
+        <if test="keyWord == null">
+            where shop_.mark = #{mark} group by shop_id
+        </if>
+    </select>
+
+
+    <select id="getShopIdByAccountShopId" resultType="Shop">
+        select shop.shop_id
+        from shop
+        where shop.account_shop_id = #{0} and shop.mark=#{1}
+    </select>
+
+    <select id="getShopDataByIdDAO" resultType="Shop">
+        select
+        shop.shop_id,shop_name,logo_url,score,monthly_sales_volume,
+        delivery_fee, longitude,latitude,mark,mobile_phone,shop.account_shop_id,shop.location, shop.address, shop.shop_qr_code_url
+        from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        where 1=1 and shop.shop_id = #{shopId}
+    </select>
+
+    <select id="getShopShowInfoByIdDAO" resultType="Shop">
+        select shop.shop_category_id,shop.shop_id,
+        shop_name,logo_url,delivery_fee,longitude,latitude,score,monthly_sales_volume,
+        location,address,opening_time,category_name,per_capita_price,shop.mark,phone,state,shop.intro
+        from (shop right join shop_message on shop.shop_id = shop_message.shop_id)
+        left join shop_category on shop_category_id = shop_category.id
+        where 1=1 and shop.shop_id = #{shopId}
+    </select>
+    <select id="getShopListByCategoryIdDAO" resultType="Shop">
+        select
+        shop.shop_id,shop_name,logo_url,score,monthly_sales_volume,
+        longitude,latitude,mark,shop_category_id
+        from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        where 1=1 and shop.shop_category_id = #{0} and shop.mark = #{1}
+    </select>
+    <select id="getShopByAccountShopIdDAO" resultType="Shop">
+        select
+        <include refid="Base_Column_List"/>
+        from shop
+        where account_shop_id = #{accountShopId}
+    </select>
+    <update id="changeShopStateByIdDAO">
+        update shop
+        set state = #{shopStateId}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <select id="getShopListByAccountShopIdDAO" resultType="Shop">
+        select
+        <include refid="Base_Column_List"/>
+        from shop
+        where account_shop_id = #{accountShopId}
+    </select>
+    <select id="getShopByAccountShopIdAndMarkDAO" resultType="Shop">
+        select
+        <include refid="Base_Column_List"/>
+        from shop
+        where account_shop_id = #{accountShopId} and mark = #{mark}
+    </select>
+    <select id="getShopListByCategoryIdAndFocusDAO" resultType="Shop">
+        select shop.*, score,monthly_sales_volume from shop
+        left join shop_message on shop.shop_id = shop_message.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where  #{nowDate} &lt;= account_shop.use_end_time
+        and
+        <choose>
+            <when test="tag == 0">
+                shop.shop_id not in
+                <foreach collection="shopIdList" index="index" item="each" open="(" separator="," close=")">
+                    #{each}
+                </foreach>
+                and shop.shop_category_id = #{categoryId} and shop.mark=#{mark}
+            </when>
+            <otherwise>
+                shop.shop_id in
+                <foreach collection="shopIdList" index="index" item="each" open="(" separator="," close=")">
+                    #{each}
+                </foreach>
+                and shop.shop_category_id = #{categoryId} and shop.mark=#{mark}
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getShopListByChildCategoryIdsAndFocusDAO" resultType="Shop">
+        select shop.*, score,monthly_sales_volume from shop
+        left join shop_message on shop.shop_id = shop_message.shop_id
+        left join account_shop on shop.account_shop_id = account_shop.id
+        where  #{nowDate} &lt;= account_shop.use_end_time
+        and
+        <choose>
+            <when test="tag == 0">
+                shop.shop_id not in
+                <foreach collection="shopIdList" index="index" item="each" open="(" separator="," close=")">
+                    #{each}
+                </foreach>
+                and shop.shop_category_id in
+                <foreach collection="childSId" index="indexs" item="every" open="(" separator="," close=")">
+                    #{every}
+                </foreach>
+                and shop.mark=#{mark}
+            </when>
+            <otherwise>
+                shop.shop_id in
+                <foreach collection="shopIdList" index="index" item="each" open="(" separator="," close=")">
+                    #{each}
+                </foreach>
+                and shop.shop_category_id in
+                <foreach collection="childSId" index="indexs" item="every" open="(" separator="," close=")">
+                    #{every}
+                </foreach>
+                and shop.mark=#{mark}
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getAllShopCountDAO" resultType="java.lang.Integer">
+        select count(0)
+        from shop
+        where mark = #{mark}
+    </select>
+    <select id="getShopByIndexDAO" resultType="Shop">
+        select
+        <include refid="Base_Column_List"/>
+        from shop
+        where mark = #{1} limit #{0}, 1
+    </select>
+    <update id="updateShopQRCodeDAO">
+        update shop
+        set
+        shop_qr_code_url = #{0}
+        where shop_id = #{1}
+    </update>
+    <!-- ==================接口结束======================== -->
+
+
+    <!-- ==================JSP页面接口开始===================== -->
+    <select id="getShopDataByAccountShopIdDAO" resultType="Shop">
+        select
+        <include refid="Base_Column_List"/>
+        from shop
+        where account_shop_id = #{accountShopId}
+    </select>
+    <select id="getShopDataByAccountShopTokenDAO" resultType="Shop">
+        select
+        shop.*, shop.gmt_create as shop_join_time
+        from shop left join account_shop on shop.account_shop_id = account_shop.id
+        where account_shop.token = #{accountShopToken} limit 1
+    </select>
+    <insert id="insertShopByIdDAO" useGeneratedKeys="true" keyProperty="shopId" parameterType="Shop">
+        insert into shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">
+                shop_name,
+            </if>
+            <if test="logoUrl != null">
+                logo_url,
+            </if>
+            <if test="openingTime != null">
+                opening_time,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="location != null">
+                location,
+            </if>
+            <if test="intro != null">
+                intro,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="mobilePhone != null">
+                mobile_phone,
+            </if>
+            <if test="accountShopId != null">
+                account_shop_id,
+            </if>
+            <if test="mark != null">
+                mark,
+            </if>
+            <if test="shopCategoryId != null">
+                shop_category_id,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">
+                #{shopName},
+            </if>
+            <if test="logoUrl != null">
+                #{logoUrl},
+            </if>
+            <if test="openingTime != null">
+                #{openingTime},
+            </if>
+            <if test="longitude != null">
+                #{longitude},
+            </if>
+            <if test="latitude != null">
+                #{latitude},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="location != null">
+                #{location},
+            </if>
+            <if test="intro != null">
+                #{intro},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="mobilePhone != null">
+                #{mobilePhone},
+            </if>
+            <if test="accountShopId != null">
+                #{accountShopId},
+            </if>
+            <if test="mark != null">
+                #{mark},
+            </if>
+            <if test="shopCategoryId != null">
+                #{shopCategoryId},
+            </if>
+        </trim>
+    </insert>
+    <select id="getShopMessageByIdDAO" resultType="Shop">
+        select
+        shop.*, delivery_fee
+        from shop left join shop_message on shop.shop_id = shop_message.shop_id
+        where account_shop_id = #{0} and mark = #{1}
+    </select>
+    <update id="updateShopImgDAO">
+        update shop
+        set logo_url = #{logoUrl}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <update id="updateOpeningTimeDAO">
+        update shop
+        set opening_time = #{openingTime}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <update id="updatePhoneDAO">
+        update shop
+        set mobile_phone = #{mobilePhone}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <update id="updateIntroDAO">
+        update shop
+        set intro = #{intro}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <update id="updateDesDAO">
+        update shop
+        set des = #{des}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <!-- ==================JSP页面接口结束====================== -->
+</mapper>

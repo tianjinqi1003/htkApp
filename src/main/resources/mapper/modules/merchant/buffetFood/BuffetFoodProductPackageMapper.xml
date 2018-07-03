@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.buffetFood.dao.BuffetFoodProductPackageMapper">
+
+    <sql id="Base_Column_List">
+        id, c_name, c_img_url, c_quantity, c_price
+    </sql>
+
+    <select id="getPackageProductListByIdDAO" resultType="BuffetFoodProductPackage">
+        select
+        <include refid="Base_Column_List" />
+        from buffet_food_product_package
+        where parent_id = #{0}
+    </select>
+</mapper>

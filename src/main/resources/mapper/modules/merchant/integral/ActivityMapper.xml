@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.merchant.integral.dao.ActivityMapper">
+
+    <sql id="Base_Column_List">
+        id, title, description, content, start_time, end_time, long_term, shop_id, img,
+        gmt_create, gmt_modifiedn
+    </sql>
+
+    <!-- =========================接口开始================================ -->
+    <select id="getActivityByIdDAO" resultType="Activity">
+        select
+        <include refid="Base_Column_List" />
+        from activity
+        where id = #{0}
+    </select>
+    <!-- ==========================接口结束================================= -->
+
+    <select id="findListById" resultType="Activity">
+        select
+        <include refid="Base_Column_List"/>
+        from activity
+        where shop_id = #{id}
+    </select>
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="Activity">
+        select
+        <include refid="Base_Column_List"/>
+        from activity
+        where 1=1 and id = #{id} and shop_id = #{shopId}
+    </select>
+
+    <insert id="saveById" parameterType="Activity">
+        insert into activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="longTerm != null">
+                long_term,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="longTerm != null">
+                #{longTerm},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="img != null">
+                #{img},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="Activity">
+        update activity
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=INTEGER},
+            </if>
+            start_time = #{startTime},
+
+            end_time = #{endTime},
+
+            <if test="longTerm != null">
+                long_term = #{longTerm},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId},
+            </if>
+            <if test="img != null">
+                img = #{img}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from activity
+        where id = #{id} and shop_id = #{shopId}
+    </delete>
+
+    <select id="findListByIdByDate" resultType="Activity">
+        select
+        activity.id, title, activity.description, content, start_time, end_time,
+        long_term, shop_id, activity.img,
+        activity.gmt_create, activity.gmt_modifiedn
+        from activity right join activity_goods on activity_goods.parent_id = activity.id
+        where shop_id = #{shopId}
+        and (long_term  = 0 and start_time <![CDATA[<=]]> #{nowTime}
+        and end_time >= #{nowTime}) or (long_term = 1) group by id
+    </select>
+
+</mapper>

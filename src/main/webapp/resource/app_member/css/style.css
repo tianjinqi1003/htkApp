@@ -1,0 +1,506 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+    padding-top: 50px;
+    background-color: #fff
+}
+
+.alert {
+    position: fixed;
+    width: 100%;
+    top: 50px;
+    z-index: 9999;
+}
+
+.navbar-text {
+    margin-right: 10px;
+}
+
+.navbar {
+    background-color: rgba(22, 129, 255, 0.84);
+    height: 20px;
+}
+
+.navbar a {
+    color: #FFFFFF;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer
+}
+
+#form_div {
+    width: 100%;
+    height: 40px;
+    background-color: #f8f8f8;
+    margin-top: 0px;
+    padding-top: 6px;
+    border-bottom: 1px #eee solid;
+    position: fixed;
+    z-index: 9;
+    clear: both;
+    overflow: hidden
+}
+
+#form_div form {
+    width: 93%;
+    margin: 0 auto;
+}
+
+#form_div form .key {
+    width: 80%;
+    height: 28px;
+    line-height: 28px;
+    vertical-align: middle;
+    border: 1px #ddd solid;
+    text-indent: 5px;
+    margin-right: 0
+}
+
+#form_div form button {
+    vertical-align: middle;
+    margin-left: -5px;
+    border: 1px #ddd solid;
+    background: none;
+    height: 28px;
+    line-height: 25px;
+    border-left: none
+}
+
+#anniu_div {
+    float: left;
+    clear: both;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+table {
+    border: 1px #ccc solid;
+    background-color: #fff;
+}
+
+table thead {
+    background-color: #ddd;
+}
+
+table th, table td {
+    border: 1px #ccc solid;
+}
+
+table th {
+    text-align: center;
+    border-bottom: 1px #ccc solid;
+}
+
+table tbody td {
+    border: 1px #ccc solid;
+    vertical-align: middle
+}
+
+#table_scr {
+    width: 100%;
+    overflow: auto;
+    padding: 0;
+    margin-top: 110px;
+    clear: both
+}
+
+#tab_s {
+    width: 700px;
+    margin: 0;
+    padding: 0
+}
+
+#pagediv {
+    width: 100%;
+    background-color: #fff;
+    padding-left: 10px;
+}
+
+.divpadding {
+}
+
+#fh {
+    margin-left: 0.5em;
+    margin-top: 0.9em
+}
+
+.form-group {
+    width: 100%;
+    margin: 0 auto;
+    height: 3.5em;
+    line-height: 3.5em;
+    border-bottom: 1px #ddd solid;
+    background-color: #fff
+}
+
+.form-group label {
+    width: 100px;
+    color: #878788;
+    text-indent: 0.5em;
+    font-size: 16px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.form-group input {
+    float: right;
+    width: 50%;
+    height: 2em;
+    line-height: 2em;
+    vertical-align: middle;
+    margin-top: 0.8em;
+    border: none;
+    text-align: right;
+    margin-right: 0.5em
+}
+
+.form-group select {
+    height: 2em;
+    line-height: 2em;
+    float: right;
+    vertical-align: middle;
+    margin-top: 0.7em;
+    border: 0;
+    margin-right: 0.5em
+}
+
+#tj {
+    width: 100%;
+    height: 50px;
+    background-color: #f8f8f8;
+    border-bottom: 1px #eee solid;
+    position: fixed;
+    top: 90px;
+    z-index: 999;
+}
+
+#tj span {
+    width: 30%;
+    height: 40px;
+    display: block;
+    color: #9696a2;
+    font-size: 12px;
+    font-weight: 700;
+    float: left;
+    text-align: center;
+    margin-left: 2%;
+    margin-top: 7px;
+}
+
+#tj span b {
+    display: block;
+    color: #ff715d;
+    margin-top: 3px;
+    font-size: 14px;
+}
+
+#paixun {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background-color: #fff;
+    border-bottom: 1px #ccc solid;
+    position: fixed;
+    top: 140px;
+    background-color: #f8f8f8;
+    z-index: 999
+}
+
+#paixun a {
+    width: 22%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    float: left;
+    margin-left: 2%;
+    color: #333333;
+    text-decoration: none;
+    overflow: hidden
+}
+
+#hplist {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    background-color: #fff;
+    margin-top: 130px
+}
+
+#hplist ul {
+    padding: 0;
+    margin: 0;
+    padding-top: 5px;
+}
+
+#hplist ul li {
+    width: 100%;
+    height: 110px;
+    border-bottom: 1px #eee solid;
+    list-style: none;
+    overflow: hidden;
+}
+
+#hplist ul li .l {
+    width: 90%;
+    height: 110px;
+    padding-left: 8px;
+}
+
+#hplist ul li .l p {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+#hplist ul li .l p.title {
+    height: 30px;
+    line-height: 30px;
+}
+
+#hplist ul li .l .con {
+    font-size: 14px;
+    color: #666
+}
+
+#hplist ul li .r {
+    width: 8%;
+    height: 110px;
+    line-height: 110px;
+    color: #999999
+}
+
+#hplist ul li .r a {
+    width: 100%;
+    height: 110px;
+    line-height: 110px;
+    color: #999999;
+}
+
+#hplist ul li .l p input {
+    margin-right: 3px;
+}
+
+#hplist ul li a {
+    color: #333333;
+    text-decoration: none
+}
+
+.top10 {
+    margin-top: 10px;
+    border-top: 1px #ddd solid
+}
+
+.margin-l {
+    margin-left: 20px;
+}
+
+.f-lg {
+    font-size: 20px;
+}
+
+.l {
+    float: left
+}
+
+.r {
+    float: right
+}
+
+#form_zdy select {
+    height: 25px;
+    line-height: 25px;
+}
+
+#hplist {
+    margin-top: 40px;
+}
+
+#hplist ul li {
+    height: 50px;
+    line-height: 50px;
+}
+
+#hplist ul li .l {
+    height: 50px;
+    line-height: 50px;
+    width: 70%;
+}
+
+#hplist ul li p {
+    height: 50px;
+    line-height: 50px;
+    margin: 0
+}
+
+#hplist ul li .r {
+    height: 50px;
+    line-height: 50px;
+    text-align: right;
+    width: 20%;
+    padding-right: 10px;
+}
+
+#hplist ul li .r a {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #999999;
+}
+
+#hplist ul li.s_nav .l p {
+    padding-left: 1.5em;
+}
+
+#hplist ul li.s_nav .l p a {
+    color: #666;
+}
+
+#hplist ul li.s_nav .l p a b {
+    font-weight: 100
+}
+
+#hp {
+    width: 100%;
+    padding: 0 5px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #fff;
+    border-bottom: 1px #ddd solid
+}
+
+#hp .l {
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer
+}
+
+#hp .l span {
+    display: block
+}
+
+#hp .l span.glyphicon {
+    font-size: 20px;
+    color: #00CC00;
+    float: left;
+    margin-top: 12px;
+}
+
+#hp .l span.text {
+    float: left;
+    margin-left: 5px;
+}
+
+.tiny {
+    width: 90%;
+}
+
+#hp1 {
+    width: 1500px;
+    padding: 0 5px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #fff;
+    border-bottom: 1px #ddd solid
+}
+
+#hp1 .l {
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer
+}
+
+#table tr td {
+    vertical-align: middle;
+    text-align: center
+}
+
+#table tr td.riqi {
+    width: 100px;
+}
+
+#table tr td.ylmc {
+    width: 150px;
+}
+
+#table_scr {
+    width: 100%;
+    overflow: auto;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#tab_s {
+    width: 1500px;
+    margin: 0;
+    padding: 0
+}
+
+#tab_s table tr td {
+    text-align: center
+}
+
+#tab_s table tr td a {
+    color: #333333
+}
+
+#tab_s table tr.title {
+    background-color: #eee;
+}
+
+#table {
+    margin-top: 40px;
+}
+
+#form_div {
+    width: 100%;
+    height: 40px;
+    background-color: #f8f8f8;
+    margin-top: 0px;
+    padding: 0;
+    border-bottom: 1px #eee solid;
+    position: fixed;
+    z-index: 9
+}
+
+#form_div a {
+    width: 22%;
+    margin-left: 2%;
+    display: block;
+    float: left;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border: 1px #ddd solid;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 6px;
+    background-color: #eee;
+    color: #333333;
+    text-decoration: none
+}
+
+#form_zdy {
+    width: 90%;
+    height: 100px;
+    margin: 10px;
+    padding: 0;
+    border-bottom: 1px #eee solid;
+    z-index: 9999
+}
+
+#form_zdy input {
+    width: 44%;
+    height: 30px;
+    line-height: 30px;
+}
+
+#form_div a.hover {
+    background-color: #0099FF;
+    color: #FFFFFF
+}
+
+#form_zdy p {
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+}

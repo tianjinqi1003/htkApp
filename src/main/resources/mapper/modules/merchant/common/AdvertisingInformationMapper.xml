@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.common.dao.AdvertisingInformationMapper">
+
+    <sql id="Base_Column_List">
+        id, img_url, ad_name, shop_id
+    </sql>
+
+    <!-- ================接口开始=================== -->
+    <select id="getGroupBuyAdListDAO" resultType="AdvertisingInformation">
+        select 
+        <include refid="Base_Column_List" />
+        from
+        advertising_information
+        where shop_id = #{shopId}
+    </select>
+    <select id="getRandomlyAdListDAO"  resultType="AdvertisingInformation">
+        select * from advertising_information order by rand() LIMIT 5
+    </select>
+
+    <!-- ================接口结束=================== -->
+</mapper>
