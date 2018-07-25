@@ -3,6 +3,7 @@ package com.htkapp.modules.API.service.serviceImpl;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.htkapp.core.API.APIRequestParams;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.MD5Utils;
 import com.htkapp.core.OtherUtils;
 import com.htkapp.core.curdException.UpdateException;
@@ -467,7 +468,7 @@ public class AccountServiceImpl implements AccountServiceI {
                 return new APIResponseModel(Globals.API_REQUEST_BAD, "修改头像请求参数错误");
             } else {
                 try {
-                    String updateAvaImg = FileUploadUtils.appUploadAvatarImg(avaImgFile, "app/account/");
+                    String updateAvaImg = FileUploadUtils.appUploadAvatarImg(avaImgFile, "app/account/", FTPConfig.port_to);
                     accountDao.changeAppAccountAvaUrlDAO(token, updateAvaImg);
                     AppAccountEventLog eventLog = new AppAccountEventLog()
                             .setToken(token)

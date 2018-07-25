@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.htkapp.core.MoreMethodsUtils;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.dto.TableResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.AjaxRequestParams;
@@ -174,7 +175,7 @@ public class IntegralManageServiceImpl implements IntegralManageService {
 	@Override
 	public AjaxResponseModel uploadMsgImg(MultipartFile file) {
 		try {
-			String imgUrl = FileUploadUtils.appUploadAvatarImg(file, "merchant/message/");
+			String imgUrl = FileUploadUtils.appUploadAvatarImg(file, "merchant/message/", FTPConfig.port_to);
 			return new AjaxResponseModel<>(Globals.COMMON_SUCCESSFUL_OPERATION, "成功", imgUrl);
 		} catch (Exception e) {
 			return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED);

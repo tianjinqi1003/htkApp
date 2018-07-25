@@ -3,6 +3,7 @@ package com.htkapp.modules.merchant.shop.service.serviceImpl;
 
 import com.htkapp.core.MD5Utils;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.AjaxRequestParams;
 import com.htkapp.core.params.RequestParams;
@@ -199,7 +200,7 @@ public class ShopInfoControllerServiceImpl implements ShopInfoControllerService 
         if(params != null){
             try {
                 //上传图片到FTP服务器，返回的图片地址更新到数据库
-                String filePath = FileUploadUtils.appUploadAvatarImg(params.getFile(), "shop/common/");
+                String filePath = FileUploadUtils.appUploadAvatarImg(params.getFile(), "shop/common/", FTPConfig.port_to);
                 Shop shop = new Shop();
                 shop.setLogoUrl(filePath);
                 LoginUser user = OtherUtils.getLoginUserByRequest();

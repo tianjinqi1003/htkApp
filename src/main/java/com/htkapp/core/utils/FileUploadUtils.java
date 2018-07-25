@@ -24,14 +24,14 @@ public class FileUploadUtils {
     private static Class<? extends Object> cls = FileUploadUtils.class;
 
     //处理上传图片
-    public static String appUploadAvatarImg(MultipartFile myFile, String folder) throws Exception {
+    public static String appUploadAvatarImg(MultipartFile myFile, String folder, Integer port) throws Exception {
         try {
             //重置文件名
             long time = System.currentTimeMillis();
             String timeStr = String.valueOf(time);
             String[] originalFileName = myFile.getOriginalFilename().split("\\.");
             String fileName = timeStr + "." + originalFileName[1];
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, port, FTPConfig.userName, FTPConfig.password);
             String writeTempPath = "D:\\resource";
             FileUtils.copyInputStreamToFile(myFile.getInputStream(), new File(writeTempPath, fileName));
             uploadFileForFTP(client, fileName, writeTempPath + "\\" + fileName, "Resource\\htkApp\\upload\\" + folder);
@@ -59,7 +59,7 @@ public class FileUploadUtils {
             String timeStr = String.valueOf(time);
             String[] originalFileName = myFile.getOriginalFilename().split("\\.");
             String fileName = timeStr + "." + originalFileName[1];
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
             String writeTempPath = "D:\\resource";
 //            String writeTempPath = "/home/terabithia";
 
@@ -96,7 +96,7 @@ public class FileUploadUtils {
             String timeStr = String.valueOf(time);
             String[] originalFileName = myFile.getOriginalFilename().split("\\.");
             String fileName = timeStr + "." + originalFileName[1];
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
             String writeTempPath = "D:\\resource";
 //            String writeTempPath = "/home/terabithia";
 
@@ -149,7 +149,7 @@ public class FileUploadUtils {
             File upload = new File(localPath, fileName);
             FileUtils.copyInputStreamToFile(file.getInputStream(), upload);
             String outFileName = String.valueOf(System.currentTimeMillis());
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
             uploadFileForFTP(client, outFileName + "." + originalFileName[1], localOutPath + "\\" + outFileName + "." + originalFileName[1], "Resource\\htkApp\\upload\\" + folder);
 //            uploadFileForFTP(client, outFileName+ "." + originalFileName[1], localOutPath + "/" + outFileName + "." + originalFileName[1], "Resource\\htkApp\\upload\\" + folder);
             String avaPath = Globals.PROJECT_URL + Globals.PHOTO_URL + folder;

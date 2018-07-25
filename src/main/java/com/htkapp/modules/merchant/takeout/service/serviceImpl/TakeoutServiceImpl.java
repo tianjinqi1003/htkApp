@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.htkapp.core.LogUtil;
 import com.htkapp.core.MoreMethodsUtils;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.dto.TableResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
@@ -122,7 +123,7 @@ public class TakeoutServiceImpl implements TakeoutService {
         try {
             //处理产品图片
             if (imgFile != null) {
-                String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/takeout/");
+                String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/takeout/", FTPConfig.port_to);
                 takeoutProduct.setImgUrl(uploadUrl);
             }
             String labels = String.valueOf(label);
@@ -326,7 +327,7 @@ public class TakeoutServiceImpl implements TakeoutService {
          * @desc 只判断为空还不行要判断imgFile有没有信息（修改信息但是没修改图片的情况）
          */
         if (imgFile != null&&!imgFile.isEmpty()) {
-            String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/takeout/");
+            String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/takeout/", FTPConfig.port_to);
             takeoutProduct.setImgUrl(uploadUrl);
         }
         StringBuffer property = new StringBuffer();

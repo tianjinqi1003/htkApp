@@ -1,6 +1,7 @@
 package com.htkapp.modules.admin.shopCategory.web;
 
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.AjaxRequestParams;
 import com.htkapp.core.utils.FileUploadUtils;
@@ -136,7 +137,7 @@ public class ShopCategoryController {
     @ResponseBody
     public String uploadCategoryPhoto(MultipartFile file, HttpServletRequest request) {
         try {
-            return FileUploadUtils.appUploadAvatarImg(file, "admin/shopCategory/");
+            return FileUploadUtils.appUploadAvatarImg(file, "admin/shopCategory/", FTPConfig.port_to);
         } catch (Exception e) {
             return "";
         }

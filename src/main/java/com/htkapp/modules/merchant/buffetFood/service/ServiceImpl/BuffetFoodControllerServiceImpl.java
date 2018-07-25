@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.htkapp.core.LogUtil;
 import com.htkapp.core.MoreMethodsUtils;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.dto.TableResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.AjaxRequestParams;
@@ -76,7 +77,7 @@ public class BuffetFoodControllerServiceImpl implements BuffetFoodControllerServ
         try {
             //处理产品图片
             if (imgFile != null) {
-                String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/buffetFood/");
+                String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/buffetFood/", FTPConfig.port_bf);
                 product.setImgUrl(uploadUrl);
             }
             LoginUser user = OtherUtils.getLoginUserByRequest();
@@ -176,7 +177,7 @@ public class BuffetFoodControllerServiceImpl implements BuffetFoodControllerServ
     public void saveProductEdit(BuffetFoodProduct product, MultipartFile imgFile) throws Exception {
         //处理产品图片
         if (imgFile != null&&!imgFile.isEmpty()) {
-            String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/takeout/");
+            String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/buffetFood/", FTPConfig.port_bf);
             product.setImgUrl(uploadUrl);
         }
         try {

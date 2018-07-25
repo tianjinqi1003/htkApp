@@ -33,7 +33,7 @@ public class GetImagesByUrl {
             long time = System.currentTimeMillis();
             String timeStr = String.valueOf(time);
             String fileName = timeStr + ".jpg" ;
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
             String writeTempPath = "D:\\resource";
             FileUtils.copyInputStreamToFile(inputStream, new File(writeTempPath, fileName));
             uploadFileForFTP(client, fileName, writeTempPath + "\\" + fileName, "Resource\\htkApp\\upload\\" + "app\\account");

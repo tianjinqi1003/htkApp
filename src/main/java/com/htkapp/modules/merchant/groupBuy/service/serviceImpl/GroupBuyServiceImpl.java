@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import com.htkapp.core.MethodsParamsEntity.PushMesEntity;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.MoreMethodsUtils;
 import com.htkapp.core.OtherUtils;
 import com.htkapp.core.dto.TableResponseModel;
@@ -174,7 +175,7 @@ public class GroupBuyServiceImpl implements GroupBuyService {
             LoginUser user = OtherUtils.getLoginUserByRequest();
             Shop shop = shopService.getShopDataByAccountShopIdAndMark(user.getUserId(),Globals.DEFAULT_G_SHOP);
             //处理图片
-            String uploadImgUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/groupBuy/");
+            String uploadImgUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/groupBuy/", FTPConfig.port_to);
             buyPackage.setImgUrl(uploadImgUrl);
             buyPackage.setShopId(shop.getShopId());
             if(buyPackage.getValidityTime() == null){
@@ -367,7 +368,7 @@ public class GroupBuyServiceImpl implements GroupBuyService {
                 Shop shop = shopService.getShopDataByAccountShopIdAndMark(user.getUserId(),Globals.DEFAULT_G_SHOP);
                 if(imgFile.getSize() > 0){
                     //处理图片
-                    String uploadImgUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/groupBuy/");
+                    String uploadImgUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/groupBuy/", FTPConfig.port_to);
                     buyPackage.setImgUrl(uploadImgUrl);
                 }
                 buyPackage.setShopId(shop.getShopId());

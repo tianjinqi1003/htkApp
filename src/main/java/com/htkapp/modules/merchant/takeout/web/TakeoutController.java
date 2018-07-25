@@ -69,7 +69,12 @@ public class TakeoutController {
         if (StringUtils.isNotEmpty(label3)) {
             label.append(label3);
         }
-        takeoutService.addProduct(takeoutProduct, imgFile, label, productList, propertyList);
+        try {
+			takeoutService.addProduct(takeoutProduct, imgFile, label, productList, propertyList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return "redirect:/merchant/takeout/product/homePage";
     }
 

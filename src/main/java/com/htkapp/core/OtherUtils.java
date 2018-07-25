@@ -116,7 +116,7 @@ public class OtherUtils {
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
             uploadFileForFTP(client, fileName, writeTempPath + "/" + fileName, "Resource\\htkApp\\upload\\" + folder);
             String rootPath = Globals.PROJECT_URL + Globals.PHOTO_URL + folder;
             return rootPath + fileName;
@@ -144,7 +144,7 @@ public class OtherUtils {
             File file = new File("D:\\resource", timeStr);
             Path path = file.toPath();
             MatrixToImageWriter.writeToPath(matrix, "PNG", path);
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
             uploadFileForFTP(client, timeStr, writeTempPath + "\\" + timeStr, "Resource\\htkApp\\upload\\" + folder);
             String rootPath = Globals.PROJECT_URL + Globals.PHOTO_URL + folder;
             return rootPath + timeStr;
@@ -155,7 +155,7 @@ public class OtherUtils {
 
     //获取根路径
     public static String getRootDirectory() {
-        return "http://120.27.5.36:8500/";
+        return "http://120.27.5.36:8080/";
     }
 
     //获取当前项目路径
