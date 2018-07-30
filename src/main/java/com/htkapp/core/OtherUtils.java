@@ -144,7 +144,7 @@ public class OtherUtils {
             File file = new File("D:\\resource", timeStr);
             Path path = file.toPath();
             MatrixToImageWriter.writeToPath(matrix, "PNG", path);
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_dq, FTPConfig.userName, FTPConfig.password);
             uploadFileForFTP(client, timeStr, writeTempPath + "\\" + timeStr, "Resource\\htkApp\\upload\\" + folder);
             String rootPath = Globals.PROJECT_URL + Globals.PHOTO_URL + folder;
             return rootPath + timeStr;

@@ -519,4 +519,11 @@ public class IntegralAPIServiceImpl implements IntegralAPIService {
     }
 
     /* =============接口结束================= */
+    /*
+    public static void main(String[] args) {
+    	String downloadUrl1="htkApp/upload/app/apk/account/2.0/htkAccount.apk";
+    	String downloadUrl = OtherUtils.getDataQrImgUrl(OtherUtils.getRootDirectory() + downloadUrl1, "/app/apk/account/downloadQrImg/");
+    	System.out.println("downloadUrl============"+downloadUrl);
+	}
+	*/
 }

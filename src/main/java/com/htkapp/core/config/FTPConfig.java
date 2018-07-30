@@ -8,6 +8,7 @@ public class FTPConfig {
     //端口
     public static final int port_to = 21;//takeout外卖的ftp端口号
     public static final int port_bf = 22;
+    public static final int port_dq = 23;//下载二维码端口号
     //用户名
     public static final String userName = "htk";
     //密码
