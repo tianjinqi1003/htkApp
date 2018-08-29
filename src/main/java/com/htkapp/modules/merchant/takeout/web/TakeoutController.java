@@ -17,6 +17,9 @@ import com.htkapp.modules.merchant.takeout.entity.TakeoutProduct;
 import com.htkapp.modules.merchant.takeout.service.TakeoutCategoryServiceI;
 import com.htkapp.modules.merchant.takeout.service.TakeoutProductServiceI;
 import com.htkapp.modules.merchant.takeout.service.TakeoutService;
+import com.htkapp.modules.merchant.uupaotui.service.UUPaoTuiService;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +42,8 @@ public class TakeoutController {
     private HttpServletRequest request;
     @Resource
     private TakeoutService takeoutService;
+    @Resource
+    private UUPaoTuiService uuPaoTuiService;
     @Resource
     private TakeoutCategoryServiceI takeoutCategoryService;
     @Resource
@@ -237,7 +242,22 @@ public class TakeoutController {
     @RequestMapping("/order/needHelp")
     @ResponseBody
     public AjaxResponseModel needHelp(String orderNumber){
-        return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, "==成功调用方法==");
+    	
+    	JSONObject opJO = uuPaoTuiService.getOrderPrice(orderNumber);
+    	if("ok".equals(opJO.getString("return_code"))) {
+    		String priceToken = opJO.getString("price_token");
+    		String orderPrice = opJO.getString("total_money");
+    		String balancePaymoney = opJO.getString("need_paymoney");
+    		JSONObject aoJO = uuPaoTuiService.addOrder(priceToken,orderPrice,balancePaymoney);
+    		if("ok".equals(aoJO.getString("return_code"))) {
+    			return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, opJO.getString("return_msg"));
+    		}
+    		else
+        		return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, opJO.getString("return_msg"));
+    	}
+    	else
+    		return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, opJO.getString("return_msg"));
+        //return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, "==成功调用方法==");
     }
     //回复催单接口
     @RequestMapping("/order/replyMessage")

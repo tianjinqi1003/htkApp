@@ -200,7 +200,7 @@ public class ShopInfoControllerServiceImpl implements ShopInfoControllerService 
         if(params != null){
             try {
                 //上传图片到FTP服务器，返回的图片地址更新到数据库
-                String filePath = FileUploadUtils.appUploadAvatarImg(params.getFile(), "shop/common/", FTPConfig.port_to);
+                String filePath = FileUploadUtils.appUploadAvatarImg(params.getFile(), "shop/common/", FTPConfig.port_common);
                 Shop shop = new Shop();
                 shop.setLogoUrl(filePath);
                 LoginUser user = OtherUtils.getLoginUserByRequest();

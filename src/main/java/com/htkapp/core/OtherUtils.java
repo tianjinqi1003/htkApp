@@ -116,7 +116,7 @@ public class OtherUtils {
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }
-            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_to, FTPConfig.userName, FTPConfig.password);
+            FTPClient client = getFTPClient(FTPConfig.host, FTPConfig.port_qrcode, FTPConfig.userName, FTPConfig.password);
             uploadFileForFTP(client, fileName, writeTempPath + "/" + fileName, "Resource\\htkApp\\upload\\" + folder);
             String rootPath = Globals.PROJECT_URL + Globals.PHOTO_URL + folder;
             return rootPath + fileName;
