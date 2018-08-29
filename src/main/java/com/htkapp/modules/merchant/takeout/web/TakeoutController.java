@@ -241,14 +241,14 @@ public class TakeoutController {
     //外招配送商品接口
     @RequestMapping("/order/needHelp")
     @ResponseBody
-    public AjaxResponseModel needHelp(String orderNumber){
+    public AjaxResponseModel needHelp(String orderNumber, String receiverPhone, String toAddress, String pubUserMobile){
     	
-    	JSONObject opJO = uuPaoTuiService.getOrderPrice(orderNumber);
+    	JSONObject opJO = uuPaoTuiService.getOrderPrice(orderNumber,toAddress);
     	if("ok".equals(opJO.getString("return_code"))) {
     		String priceToken = opJO.getString("price_token");
     		String orderPrice = opJO.getString("total_money");
     		String balancePaymoney = opJO.getString("need_paymoney");
-    		JSONObject aoJO = uuPaoTuiService.addOrder(priceToken,orderPrice,balancePaymoney);
+    		JSONObject aoJO = uuPaoTuiService.addOrder(priceToken,orderPrice,balancePaymoney,receiverPhone,pubUserMobile);
     		if("ok".equals(aoJO.getString("return_code"))) {
     			return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, opJO.getString("return_msg"));
     		}

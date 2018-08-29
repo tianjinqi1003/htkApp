@@ -255,7 +255,7 @@
 														<a href="javascript:void(0)" class="delivery"
 															data-num="${each.orderNumber}">自行配送</a>
 															<a href="javascript:void(0)" class="recruit"
-															data-num="${each.orderNumber}">外招配送</a>
+															data-num="${each.orderNumber}" data-call="${each.receivingCall}" data-address="${each.shippingAddress}">外招配送</a>
 													</div>
 													<p class="orderSn">${fn:substring(each.orderTime,5 , 19)}
 														下单 | 订单编号：${each.orderNumber}</p>
@@ -672,6 +672,8 @@
     });
 	$(".recruit").on("click",function(){
 		var orderNumber = $(this).attr("data-num");
+		var receivingCall = $(this).attr("data-call");
+		var shippingAddress = $(this).attr("data-address");
 		$.confirm({
             title: '确认外招配送吗？',
             content: '点击确定马上开始寻找空闲配送员!',
@@ -679,7 +681,7 @@
             cancelButton: '取消',
             confirm: function () {
                 var url = baseUrl + "/merchant/takeout/order/needHelp";
-                var params = {orderNumber: orderNumber};
+                var params = {orderNumber: orderNumber,receiverPhone:receivingCall,toAddress:shippingAddress,pubUserMobile:'${merchantUser.userName}'};
                 $.post(url, params, function (result, status) {
                     if (status === 'success') {
                         if (result && result.code === 0) {
