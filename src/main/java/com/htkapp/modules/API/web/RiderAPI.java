@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.utils.Globals;
+import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.RiderService;
 
 @Controller
@@ -22,8 +23,19 @@ public class RiderAPI {
 	@ResponseBody
 	public APIResponseModel login(APIRequestParams params) {
 		
-		System.out.println("phone======="+params.getPhone());
-		System.out.println("password======="+params.getPassword());
 		return riderService.findByPhonePwd(params.getPhone(), params.getPassword());
+	}
+	
+	@RequestMapping(value="/register")
+	@ResponseBody
+	public APIResponseModel register(APIRequestParams params) {
+		
+		Rider rider = new Rider();
+		rider.setPhone(params.getPhone());
+		rider.setTrueName(params.getTrueName());
+		rider.setCardID(params.getCardID());
+		rider.setPassword(params.getPassword());
+		
+		return riderService.register(rider);
 	}
 }

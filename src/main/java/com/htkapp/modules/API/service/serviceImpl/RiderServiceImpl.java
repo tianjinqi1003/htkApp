@@ -27,4 +27,20 @@ public class RiderServiceImpl implements RiderService {
 		else
 			return new APIResponseModel<String>(Globals.API_FAIL, "手机号或密码有误");
 	}
+
+	@Override
+	public APIResponseModel register(Rider rider) {
+		// TODO Auto-generated method stub
+		int count = 0;
+		count = riderMapper.checkIfExist(rider.getPhone());
+		if(count==0)
+			count = riderMapper.register(rider);
+		else
+			return new APIResponseModel<String>(Globals.API_FAIL, "该用户已被注册");
+		
+		if(count==0)
+			return new APIResponseModel<String>(Globals.API_FAIL, "用户注册失败");
+		else
+			return new APIResponseModel<String>(Globals.API_SUCCESS, "用户注册成功");
+	}
 }

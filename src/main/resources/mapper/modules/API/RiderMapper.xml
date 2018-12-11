@@ -4,4 +4,10 @@
 	<select id="findByPhonePwd" resultType="com.htkapp.modules.API.entity.Rider">
 		select phone,password,true_name,card_id,bank_card_id,create_time,state from Rider where phone=#{0} and password=#{1}
 	</select>
+	<select id="checkIfExist" resultType="java.lang.Integer">
+		select count(*) from Rider where phone=#{0}
+	</select>
+	<update id="register" parameterType="com.htkapp.modules.API.entity.Rider">
+		insert into Rider (phone,password,true_name,card_id,create_time,state) values (#{phone},#{password},#{trueName},#{cardID},now(),0)
+	</update>
 </mapper>

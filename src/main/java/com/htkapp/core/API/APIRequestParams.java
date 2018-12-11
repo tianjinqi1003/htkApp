@@ -63,6 +63,10 @@ public class APIRequestParams<T> {
     private Integer state;  //状态
 
     private Integer ticketId;  //优惠券id
+    
+    private String trueName;  //真实姓名
+
+	private String cardID;  //身份证号
 
     public String getToken() {
         return token;
@@ -279,4 +283,20 @@ public class APIRequestParams<T> {
     public void setTicketId(Integer ticketId) {
         this.ticketId = ticketId;
     }
+    
+    public String getTrueName() {
+		return trueName;
+	}
+
+	public void setTrueName(String trueName) {
+		this.trueName = trueName;
+	}
+
+	public String getCardID() {
+		return cardID;
+	}
+
+	public void setCardID(String cardID) {
+		this.cardID = cardID;
+	}
 }
