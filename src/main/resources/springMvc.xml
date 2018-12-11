@@ -137,6 +137,7 @@
                         <value>/htkApp/API/AccountMessage/appAccountLoginByCode</value>
                         <value>/htkApp/API/buffetFoodAPI/</value>
                         <value>/htkApp/API/appMemberAPI/</value>
+                        <value>/htkApp/API/riderAPI/</value>
                         <!-- 商户app放开的公共接口 -->
                         <value>/htkApp/API/accountShopMessageAPI/appAccountShopLoginByUserName
                         </value>
