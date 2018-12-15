@@ -38,4 +38,11 @@ public class RiderAPI {
 		
 		return riderService.register(rider);
 	}
+	
+	@RequestMapping(value="/getDaiQiangDan")
+	@ResponseBody
+	public APIResponseModel getDaiQiangDan(APIRequestParams params) {
+		
+		return riderService.getDaiQiangDan();
+	}
 }

@@ -8,4 +8,6 @@ public interface RiderService {
 	APIResponseModel findByPhonePwd(String phone, String password);
 
 	APIResponseModel register(Rider rider);
+
+	APIResponseModel getDaiQiangDan();
 }

@@ -1,5 +1,7 @@
 package com.htkapp.modules.API.service.serviceImpl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.dao.RiderMapper;
+import com.htkapp.modules.API.entity.DaiQiangDan;
 import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.RiderService;
 
@@ -42,5 +45,13 @@ public class RiderServiceImpl implements RiderService {
 			return new APIResponseModel<String>(Globals.API_FAIL, "用户注册失败");
 		else
 			return new APIResponseModel<String>(Globals.API_SUCCESS, "用户注册成功");
+	}
+
+	@Override
+	public APIResponseModel getDaiQiangDan() {
+		// TODO Auto-generated method stub
+		
+		List<DaiQiangDan> list = riderMapper.getDaiQiangDan();
+		return new APIResponseModel<List<DaiQiangDan>>(Globals.API_SUCCESS, "查询待抢单成功", list);
 	}
 }
