@@ -12,6 +12,7 @@ import com.htkapp.modules.API.dao.RiderMapper;
 import com.htkapp.modules.API.entity.DaiQiangDan;
 import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.RiderService;
+import com.htkapp.modules.merchant.pay.entity.OrderProduct;
 
 @Service
 public class RiderServiceImpl implements RiderService {
@@ -53,5 +54,13 @@ public class RiderServiceImpl implements RiderService {
 		
 		List<DaiQiangDan> list = riderMapper.getDaiQiangDan();
 		return new APIResponseModel<List<DaiQiangDan>>(Globals.API_SUCCESS, "查询待抢单成功", list);
+	}
+
+	@Override
+	public APIResponseModel getDaiQiangDanDetail(String orderNumber) {
+		// TODO Auto-generated method stub
+		
+		List<OrderProduct> list = riderMapper.getDaiQiangDanDetail(orderNumber);
+		return new APIResponseModel<List<OrderProduct>>(Globals.API_SUCCESS, "查询待抢单明细成功", list);
 	}
 }

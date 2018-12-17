@@ -45,4 +45,11 @@ public class RiderAPI {
 		
 		return riderService.getDaiQiangDan();
 	}
+	
+	@RequestMapping(value="/getDaiQiangDanDetail")
+	@ResponseBody
+	public APIResponseModel getDaiQiangDanDetail(APIRequestParams params) {
+		
+		return riderService.getDaiQiangDanDetail(params.getOrderNumber());
+	}
 }

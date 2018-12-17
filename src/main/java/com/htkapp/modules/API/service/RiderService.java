@@ -10,4 +10,6 @@ public interface RiderService {
 	APIResponseModel register(Rider rider);
 
 	APIResponseModel getDaiQiangDan();
+
+	APIResponseModel getDaiQiangDanDetail(String orderNumber);
 }
