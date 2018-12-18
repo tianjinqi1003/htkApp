@@ -13,6 +13,9 @@
 	<select id="getDaiQiangDanDetail" resultType="com.htkapp.modules.merchant.pay.entity.OrderProduct">
 		select p.product_name,p.quantity,p.price from order_record r,order_product p where r.id=p.order_id and r.order_number=#{0}
 	</select>
+	<select id="getDaiQuHuo" resultType="com.htkapp.modules.API.entity.DaiQuHuo">
+		select s.address qh_address,o.shipping_address sh_address,o.order_number,sum(quantity*price) price from shop s,order_record o,order_product p where s.shop_id=o.shop_id and o.id=p.order_id and s.mark=0 GROUP BY o.order_number
+	</select>
 	<update id="register" parameterType="com.htkapp.modules.API.entity.Rider">
 		insert into Rider (phone,password,true_name,card_id,create_time,state) values (#{phone},#{password},#{trueName},#{cardID},now(),0)
 	</update>

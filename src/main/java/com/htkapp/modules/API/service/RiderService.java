@@ -12,4 +12,6 @@ public interface RiderService {
 	APIResponseModel getDaiQiangDan();
 
 	APIResponseModel getDaiQiangDanDetail(String orderNumber);
+
+	APIResponseModel getDaiQuHuo();
 }

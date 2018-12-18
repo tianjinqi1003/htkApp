@@ -10,6 +10,7 @@ import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.dao.RiderMapper;
 import com.htkapp.modules.API.entity.DaiQiangDan;
+import com.htkapp.modules.API.entity.DaiQuHuo;
 import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.RiderService;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
@@ -62,5 +63,13 @@ public class RiderServiceImpl implements RiderService {
 		
 		List<OrderProduct> list = riderMapper.getDaiQiangDanDetail(orderNumber);
 		return new APIResponseModel<List<OrderProduct>>(Globals.API_SUCCESS, "查询待抢单明细成功", list);
+	}
+
+	@Override
+	public APIResponseModel getDaiQuHuo() {
+		// TODO Auto-generated method stub
+		
+		List<DaiQuHuo> list = riderMapper.getDaiQuHuo();
+		return new APIResponseModel<List<DaiQuHuo>>(Globals.API_SUCCESS, "查询待取货成功", list);
 	}
 }

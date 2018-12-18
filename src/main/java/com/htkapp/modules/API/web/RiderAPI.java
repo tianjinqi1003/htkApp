@@ -52,4 +52,11 @@ public class RiderAPI {
 		
 		return riderService.getDaiQiangDanDetail(params.getOrderNumber());
 	}
+
+	@RequestMapping(value="/getDaiQuHuo")
+	@ResponseBody
+	public APIResponseModel getDaiQuHuo(APIRequestParams params) {
+		
+		return riderService.getDaiQuHuo();
+	}
 }
