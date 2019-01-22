@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.API.dao.WXScanUserMapper">
+	<select id="checkIfExist" resultType="java.lang.Integer">
+		select count(*) from wx_scan_user where open_id=#{0}
+	</select>
+	<select id="findByOpenID" resultType="com.htkapp.modules.API.entity.WXScanUser">
+		select token from wx_scan_user where open_id=#{0}
+	</select>
+	<update id="register" parameterType="com.htkapp.modules.API.entity.WXScanUser">
+		insert into wx_scan_user (open_id,token) values(#{openID},#{token})
+	</update>
+</mapper>
