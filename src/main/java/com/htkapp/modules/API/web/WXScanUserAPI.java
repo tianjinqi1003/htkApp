@@ -112,8 +112,11 @@ public class WXScanUserAPI {
 		}
 	}
 	
-	public static void main(String[] args) {
-		System.out.println("{'session_key':'CveRfVRdx8t7CbtwT9tNdQ==','openid':'ozw7j5Bm6sw5OiFHLk2fHB8uyTnU'}".replaceAll("'", "\\\'"));
-	}
-
+	//通过店铺id获得店铺信息
+    @RequestMapping("/getShopShowInfoById")
+	@ResponseBody
+    public APIResponseModel getShopShowInfoById(Integer shopId) {
+        //先根据传入的店铺id查询出店铺信息
+        return wxScanUserService.getShopShowInfoById(shopId);
+    }
 }

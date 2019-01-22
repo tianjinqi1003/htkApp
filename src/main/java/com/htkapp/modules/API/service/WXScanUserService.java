@@ -6,4 +6,6 @@ public interface WXScanUserService {
 
 	APIResponseModel login(String openID);
 
+	APIResponseModel getShopShowInfoById(Integer shopId);
+
 }
