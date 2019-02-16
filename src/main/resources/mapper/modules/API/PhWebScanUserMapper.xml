@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htkapp.modules.API.dao.PhWebScanUserMapper">
+	<select id="checkIfExist" resultType="java.lang.Integer">
+		select count(*) from ph_web_scan_user where zhuo_no=#{0}
+	</select>
+	<select id="findByZhuoNo" resultType="com.htkapp.modules.API.entity.PhWebScanUser">
+		select token from ph_web_scan_user where zhuo_no=#{0}
+	</select>
+	<update id="register" parameterType="com.htkapp.modules.API.entity.PhWebScanUser">
+		insert into ph_web_scan_user (zhuo_no,token) values(#{zhuoNo},#{token})
+	</update>
+</mapper>
