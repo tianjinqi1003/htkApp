@@ -208,6 +208,7 @@ public class ShopInfoControllerServiceImpl implements ShopInfoControllerService 
                 shopService.updateShopImg(shop);
                 return new AjaxResponseModel<>(Globals.COMMON_SUCCESSFUL_OPERATION,"成功",filePath);
             }catch (Exception e){
+            	e.printStackTrace();
                 return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED);
             }
         }else {

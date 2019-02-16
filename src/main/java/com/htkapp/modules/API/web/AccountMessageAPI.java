@@ -2,7 +2,7 @@ package com.htkapp.modules.API.web;
 
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
-import com.htkapp.core.params.AjaxRequestParams;
+import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.entity.AppShippingAddress;
 import com.htkapp.modules.API.service.AccountServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class AccountMessageAPI {
     public APIResponseModel appAccountLoginByCode(APIRequestParams params) {
         return accountService.appAccountLoginByCode(params.getPhone(), String.valueOf(params.getCode()));
     }
-
+    
     //登陆通过用户名和密码登陆
     @RequestMapping("/appAccountLoginByUserName")
     public APIResponseModel appAccountLoginByUserName(APIRequestParams params) {
