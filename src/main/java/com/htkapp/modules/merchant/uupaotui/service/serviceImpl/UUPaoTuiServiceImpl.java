@@ -23,8 +23,8 @@ public class UUPaoTuiServiceImpl implements UUPaoTuiService {
 		mydic.Add("nonce_str", UUCommonFun.NewGuid());
 		mydic.Add("timestamp", UUCommonFun.getTimeStamp());
 		mydic.Add("openid", ApiConfig.OpenID);
-		//mydic.Add("from_address", "金水路与玉凤路交汇处浦发国际金融中心");
-		mydic.Add("from_address", "青岛市北区连云港路33号万达商务楼B座821");
+		//mydic.Add("from_address", "青岛市北区连云港路33号万达商务楼B座821");
+		mydic.Add("from_address", "青岛市黄岛新区双珠路288号东方金石大厦807");
 		//mydic.Add("from_usernote", "万达商务楼B座821");
 		//mydic.Add("to_address", "中原路与嵩山路交叉处绿城广场");
 		mydic.Add("to_address", toAddress);

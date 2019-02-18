@@ -331,7 +331,8 @@ public class ShopDataServiceImpl implements ShopDataService {
                             .setLocationAddress(shop.getLocation() + shop.getAddress())
                             .setMonthlySalesVolume(shop.getMonthlySalesVolume())
                             .setOpeningTime(shop.getOpeningTime())
-                            .setScore(shop.getScore());
+                            .setScore(shop.getScore())
+                    		.setMobilePhone(shop.getMobilePhone());
 
                     /**
                      * @author 马鹏昊

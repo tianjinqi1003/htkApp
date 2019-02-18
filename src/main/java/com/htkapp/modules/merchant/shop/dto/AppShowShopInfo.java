@@ -39,8 +39,10 @@ public class AppShowShopInfo {
     private Double perCapitaPrice;  //人均价格
 
     private String phone;  //商铺电话
+    
+    private String mobilePhone;  //手机号
 
-    private boolean collection;  //是否已收藏
+	private boolean collection;  //是否已收藏
 
     private List<ShopConsumptionActivities> shopConsumptionActivities;  //店铺消费活动列表
 
@@ -183,6 +185,14 @@ public class AppShowShopInfo {
         this.phone = phone;
         return this;
     }
+
+    public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
 
     public boolean getCollection() {
         return collection;

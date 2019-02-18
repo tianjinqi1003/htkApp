@@ -250,10 +250,10 @@ public class TakeoutController {
     		String balancePaymoney = opJO.getString("need_paymoney");
     		JSONObject aoJO = uuPaoTuiService.addOrder(priceToken,orderPrice,balancePaymoney,receiverPhone,pubUserMobile);
     		if("ok".equals(aoJO.getString("return_code"))) {
-    			return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, opJO.getString("return_msg"));
+    			return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, aoJO.getString("return_msg"));
     		}
     		else
-        		return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, opJO.getString("return_msg"));
+        		return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, aoJO.getString("return_msg"));
     	}
     	else
     		return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, opJO.getString("return_msg"));
