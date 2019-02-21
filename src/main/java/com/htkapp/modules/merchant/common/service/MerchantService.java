@@ -37,7 +37,7 @@ public interface MerchantService {
     //外卖下历史订单查询
     void getOrderListByAIdAndMark(int mark, Model model, int pageNo, String startDate, String endDate);
     //外卖下实时订单查询
-    void getTakeoutRealTimeOrderByCondition(Model model, int shopId, String startDate, String endDate, int statusCode);
+    void getTakeoutRealTimeOrderByCondition(Model model, int shopId, String startDate, String endDate, int statusCode, double longitude, double latitude);
     //查找商户通知中心消息
     void getNotifyDataByToken(Model model, String token, int pageNo, int status);
     //外卖评论页面列表

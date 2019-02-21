@@ -11,7 +11,9 @@ import com.htkapp.core.params.RequestParams;
 import com.htkapp.core.redisCache.JedisServiceCache;
 import com.htkapp.core.shiro.common.utils.LoggerUtils;
 import com.htkapp.core.utils.Globals;
+import com.htkapp.core.utils.LocationUtil;
 import com.htkapp.core.utils.StringUtils;
+import com.htkapp.core.utils.LocationUtil.Point;
 import com.htkapp.modules.API.entity.Account;
 import com.htkapp.modules.API.entity.AccountFocus;
 import com.htkapp.modules.API.service.AccountFocusService;
@@ -373,13 +375,32 @@ public class MerchantServiceImpl implements MerchantService {
 
 	//外卖下实时订单查询
 	@Override
-	public void getTakeoutRealTimeOrderByCondition(Model model, int shopId, String startDate, String endDate, int statusCode) {
+	public void getTakeoutRealTimeOrderByCondition(Model model, int shopId, String startDate, String endDate, int statusCode, double mLon1, double mLat1) {
 		try {
 			List<OrderRecord> resultList = orderRecordService.getTakeoutRealTimeOrderByCondition(shopId, startDate, endDate, statusCode);
 			if (resultList != null) {
 				for (OrderRecord each : resultList) {
 					List<OrderProduct> productList = orderProductService.getProductListByOrderId(each.getId());
 					each.setProductLists(productList);
+					
+					double mLon2 = each.getLongitude();
+					double mLat2 = each.getLatitude();
+					String distanceVal = null;
+					float distance = LocationUtil.distance(new Point(mLon1,mLat1), new Point(mLon2,mLat2));
+					if (distance == 0){
+						distanceVal = "未知";
+			        }
+				    else {
+					    DecimalFormat df = new DecimalFormat("#.00");
+			            if (distance >= 1000) {
+			            	distance=distance/1000;
+			            	distanceVal = df.format(distance)+" km";
+			            }
+			            else {
+			            	distanceVal = df.format(distance)+" m";
+			            }
+			        }
+					each.setDistance(distanceVal);
 				}
 				model.addAttribute("data", resultList);
 			} else {

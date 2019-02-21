@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.htkapp.modules.API.dao.AppShippingAddressMapper">
   <sql id="Base_Column_List">
-  address_id, user_name, sex, phone, location, address, token
+  address_id, user_name, sex, phone, longitude, latitude, location, address, token
   </sql>
 
   <!-- ================接口开始===================== -->
@@ -24,6 +24,12 @@
       <if test="phone != null">
         phone,
       </if>
+      <if test="longitude != null">
+      	longitude,
+      </if>
+      <if test="latitude != null">
+      	latitude,
+      </if>
       <if test="location != null">
         location,
       </if>
@@ -43,6 +49,12 @@
       </if>
       <if test="phone != null">
         #{phone},
+      </if>
+      <if test="longitude != null">
+      	#{longitude},
+      </if>
+      <if test="latitude != null">
+      	#{latitude},
       </if>
       <if test="location != null">
         #{location},
@@ -66,6 +78,12 @@
       </if>
       <if test="phone != null">
         phone = #{phone},
+      </if>
+      <if test="longitude != null">
+      	longitude = #{longitude},
+      </if>
+      <if test="latitude != null">
+      	latitude = #{latitude},
       </if>
       <if test="location != null">
         location = #{location},

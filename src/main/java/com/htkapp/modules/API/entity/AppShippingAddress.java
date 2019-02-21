@@ -13,6 +13,10 @@ public class AppShippingAddress {
     private Short sex;  //性别
 
     private Long phone;   //手机号
+    
+    private Float longitude;//精度
+
+	private Float latitude;//纬度
 
     private String location;  //地址
 
@@ -71,6 +75,22 @@ public class AppShippingAddress {
     public void setPhone(Long phone) {
         this.phone = phone;
     }
+    
+    public Float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Float longitude) {
+		this.longitude = longitude;
+	}
+
+	public Float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Float latitude) {
+		this.latitude = latitude;
+	}
 
     public String getLocation() {
         return location;

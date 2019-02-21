@@ -133,6 +133,7 @@
 														<%--<p>${beginPhoeNumber}*****${endPhoneNumber}</p>--%>
 														<p>${each.receivingCall}</p>
 														<p>${each.shippingAddress}</p>
+														<p>送餐距离：${each.distance}</p>
 														<p>备注：${each.remark}</p>
 													</div>
 													<div class="goodsInfo">
@@ -211,6 +212,7 @@
 														<%--<p>${beginPhoeNumber}*****${endPhoneNumber}</p>--%>
 														<p>${each.receivingCall}</p>
 														<p>${each.shippingAddress}</p>
+														<p>送餐距离：${each.distance}</p>
 														<p>备注：${each.remark}</p>
 													</div>
 													<div class="goodsInfo">
@@ -291,6 +293,7 @@
 														<%--<p>${beginPhoeNumber}*****${endPhoneNumber}</p>--%>
 														<p>${each.receivingCall}</p>
 														<p>${each.shippingAddress}</p>
+														<p>送餐距离：${each.distance}</p>
 														<p>备注：${each.remark}</p>
 													</div>
 													<div class="goodsInfo">
@@ -369,6 +372,7 @@
 														<%--<p>${beginPhoeNumber}*****${endPhoneNumber}</p>--%>
 														<p>${each.receivingCall}</p>
 														<p>${each.shippingAddress}</p>
+														<p>送餐距离：${each.distance}</p>
 														<p>备注：${each.remark}</p>
 													</div>
 													<div class="goodsInfo">
@@ -447,6 +451,7 @@
 														<%--<p>${beginPhoeNumber}*****${endPhoneNumber}</p>--%>
 														<p>${each.receivingCall}</p>
 														<p>${each.shippingAddress}</p>
+														<p>送餐距离：${each.distance}</p>
 														<p>备注：${each.remark}</p>
 													</div>
 													<div class="goodsInfo">
@@ -524,6 +529,7 @@
 														<%--<p>${beginPhoeNumber}*****${endPhoneNumber}</p>--%>
 														<p>${each.receivingCall}</p>
 														<p>${each.shippingAddress}</p>
+														<p>送餐距离：${each.distance}</p>
 														<p>备注：${each.remark}</p>
 													</div>
 													<div class="goodsInfo">

@@ -15,6 +15,8 @@ import com.htkapp.core.params.RequestParams;
 import com.htkapp.core.shiro.common.utils.LoggerUtils;
 import com.htkapp.core.shiro.common.utils.StringUtils;
 import com.htkapp.core.utils.Globals;
+import com.htkapp.core.utils.LocationUtil;
+import com.htkapp.core.utils.LocationUtil.Point;
 import com.htkapp.core.utils.OrderNumGen;
 import com.htkapp.modules.common.dto.AjaxReturnLoginData;
 import com.htkapp.modules.common.entity.LoginUser;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,13 +77,13 @@ public class MerchantController {
     private OtherUtils otherUtilsMethod;
 
     public final static String mDirectory = "merchant/";
-
-
+    
     //==============================================================商户登陆、退出、主页
 
     //商户登陆页面GET
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String merchantLogin(String userName, Model model) {
+    	
         if (StringUtils.isNotEmpty(userName)) {
             model.addAttribute("userName", userName);
         }
@@ -132,6 +135,8 @@ public class MerchantController {
                 //店铺名字
                 //TODO留个坐标检检测用
                 session.setAttribute("shopName", shop.getShopName().toString());
+                session.setAttribute("latitude", shop.getLatitude().toString());
+                session.setAttribute("longitude", shop.getLongitude().toString());
                 //店铺是否营业状态（0停止营业 1营业中）
                 session.setAttribute("status", shop.getState().toString());
 
@@ -173,6 +178,13 @@ public class MerchantController {
         }
         return mDirectory + "hmPage";
     }
+    
+    @RequestMapping(value = "/autoEnterReceipt", method = RequestMethod.GET)
+    public String autoEnterReceipt() {
+		
+    	System.out.println("ooooooooooo");
+    	return "redirect:index";
+	}
 
     //通知中心－消息
     @RequestMapping(value = "/getNotificationCenterView", method = RequestMethod.GET)
@@ -345,7 +357,7 @@ public class MerchantController {
 
     //====外卖订单（实时订单）
     @RequestMapping(value = "/takeout/order/realTimeTakeoutOrder", method = RequestMethod.GET)
-    public String realTimeTakeoutOrder(Model model,
+    public String realTimeTakeoutOrder(HttpSession session, Model model,
                                        @RequestParam(value = "statusCode", required = false, defaultValue = "0") Integer statusCode) throws Exception {
         //默认查找新订单,并返回数据给前台
         //前端点击事件处理，get方式请求后台查询数据，并把查询的条件返回给前台，显示上一请求后台的条件
@@ -377,8 +389,9 @@ public class MerchantController {
         //此处是外卖，所以mark是0
         Shop shop = shopService.getShopByAccountShopIdAndMark(user.getUserId(), 0);
 
-
-        merchantService.getTakeoutRealTimeOrderByCondition(model, shop.getShopId(), startDate, endDate, statusCode);
+        double longitude = Double.parseDouble(session.getAttribute("longitude").toString());
+        double latitude = Double.parseDouble(session.getAttribute("latitude").toString());
+        merchantService.getTakeoutRealTimeOrderByCondition(model, shop.getShopId(), startDate, endDate, statusCode, longitude, latitude);
         return mDirectory + "order_takeout_realTime";
     }
 
@@ -966,5 +979,55 @@ public class MerchantController {
         params.setModel(model);
         merchantService.manageSeatInfo(params);
         return mDirectory + "seat_Info_Manager";
+    }
+    
+    
+    static double DEF_PI180= 0.01745329252; // PI/180.0
+    static double DEF_R =6370693.5; // radius of earth
+    public static double GetLongDistance(double lon1, double lat1, double lon2, double lat2)
+    {
+    double ew1, ns1, ew2, ns2;
+    double distance;
+    // 角度转换为弧度
+    ew1 = lon1 * DEF_PI180;
+    ns1 = lat1 * DEF_PI180;
+    ew2 = lon2 * DEF_PI180;
+    ns2 = lat2 * DEF_PI180;
+    // 求大圆劣弧与球心所夹的角(弧度)
+    distance = Math.sin(ns1) * Math.sin(ns2) + Math.cos(ns1) * Math.cos(ns2) * Math.cos(ew1 - ew2);
+    // 调整到[-1..1]范围内，避免溢出
+    if (distance > 1.0)
+    distance = 1.0;
+    else if (distance < -1.0)
+    distance = -1.0;
+    // 求大圆劣弧长度
+    distance = DEF_R * Math.acos(distance);
+    return distance;
+    }
+    
+    public static void main(String[] args) {
+	    double mLat1 = 35.875715; // point1纬度
+	    double mLon1 = 120.048473; // point1经度
+	    double mLat2 = 35.875723;// point2纬度
+	    double mLon2 = 120.048399;// point2经度
+	    
+	    /*
+	    double distance = MerchantController.GetLongDistance(mLon1, mLat1, mLon2, mLat2);
+	    
+	    if (distance == 0){
+            //helper.setText(R.id.tv_distance , "未知");
+        }
+	    else {
+            if (distance >= 1000)
+            	distance=distance/1000;
+        }
+
+	    DecimalFormat df = new DecimalFormat("#.00");
+	    String distance1 = df.format(distance);
+	    System.out.println("distance==="+distance1);
+	    */
+	    
+	    float distance = LocationUtil.distance(new Point(mLon1,mLat1), new Point(mLon2,mLat2));
+	    System.out.println("distance==="+distance);
     }
 }

@@ -72,9 +72,19 @@ public class OrderRecord {
 
     private String lastUpdateTime;  //最后修改时间
 
-    private List<OrderBuyPackageContent> orderBuyPackageContentList;  //团购订单产品列表
+	private List<OrderBuyPackageContent> orderBuyPackageContentList;  //团购订单产品列表
 
     private Integer couponId ;
+    
+    private String distance;
+
+    public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(String distance) {
+		this.distance = distance;
+	}
 
     public Integer getCouponId() {
         return couponId;
