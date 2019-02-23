@@ -534,6 +534,7 @@
           select
           gmt_create, account_token
           from order_record
+          <!-- 
         union
           select
           gmt_create, account_token
@@ -542,6 +543,7 @@
           select
           gmt_create, account_token
           from buffet_food_order
+           -->
         ) as common where gmt_create&lt;date_sub(now(), interval 6 hour)
     </select>
 

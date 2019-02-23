@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.http.util.TextUtils;
@@ -182,7 +184,11 @@ public class MerchantController {
 
     //商户主页(homePage)
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(Model model, RequestParams params) {
+    public String index(HttpSession session, Model model, RequestParams params) {
+
+    	Object status = session.getAttribute("status");
+    	if(status==null)
+    		return mDirectory + "login";
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("m_index", true);
@@ -208,27 +214,38 @@ public class MerchantController {
     @RequestMapping(value = "/autoEnterReceipt", method = RequestMethod.POST)
     public void autoEnterReceipt() {
     	
-    	//System.out.println("llllllllllll");
-    	List<OrderRecord> tokenList=orderRecordService.getUnReceiptAccountToken();
-    	for (OrderRecord orderRecord : tokenList) {
-    		String token = orderRecord.getToken();
-    		APIResponseModel model = shopDataService.getOrderRecordList(token, 1);
-    		List childList = (List)model.getData();
-    		for (Object childObject : childList) {
-    			JSONObject childJO = JSONObject.fromObject(childObject);
-    			Integer mark = childJO.getInt("mark");
-    			Integer orderState = childJO.getInt("orderState");
-    			if(mark==0&&orderState==3) {
-    				String orderNumber = childJO.getString("orderNumber");
-    				//if("1902165089910874".equals(orderNumber)) {
-    					String productListStr = childJO.getString("productList");
-    					//System.out.println("token==="+tokenList.get(0).getToken());
-    					//System.out.println("orderNumber==="+orderNumber);
-    					//System.out.println("productListStr==="+productListStr);
-    					accountService.enterReceipt(null,orderNumber,token);
-    				//}
-    			}
-    		}
+    	try {
+			//System.out.println("llllllllllll");
+			List<OrderRecord> tokenList=orderRecordService.getUnReceiptAccountToken();
+			for (OrderRecord orderRecord : tokenList) {
+				String token = orderRecord.getToken();
+				System.out.println("token===");
+				if(token!=null) {
+					APIResponseModel model = shopDataService.getOrderRecordList(token, 1);
+					List childList = (List)model.getData();
+					for (Object childObject : childList) {
+						JSONObject childJO = JSONObject.fromObject(childObject);
+						//System.out.println("childJO==="+childJO.toString());
+						Integer mark = childJO.getInt("mark");
+						Object orderState = childJO.get("orderState");
+						System.out.println("mark===="+mark);
+						System.out.println("orderState===="+orderState);
+						if(mark==0&&"3".equals(orderState.toString())) {
+							String orderNumber = childJO.getString("orderNumber");
+							//if("1902165089910874".equals(orderNumber)) {
+								String productListStr = childJO.getString("productList");
+								//System.out.println("token==="+tokenList.get(0).getToken());
+								//System.out.println("orderNumber==="+orderNumber);
+								System.out.println("productListStr==="+productListStr);
+								accountService.enterReceipt(null,orderNumber,token);
+							//}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
     }
     

@@ -57,7 +57,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 		Date date = calendar.getTime();//第一次执行定时任务的时间  
 		//如果第一次执行定时任务的时间 小于当前的时间  
 		if(date.before(new Date())) {
-			date=com.htkapp.core.utils.DateUtil.getAddDay(date, 1);//此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行
+			//date=com.htkapp.core.utils.DateUtil.getAddDay(date, 1);//此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行
 		}
 		Timer timer=new Timer();
 		OrderRecordTask task=new OrderRecordTask();
