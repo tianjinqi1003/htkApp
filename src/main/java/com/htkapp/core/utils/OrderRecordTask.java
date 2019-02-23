@@ -27,7 +27,8 @@ public class OrderRecordTask extends TimerTask {
 		try {
 			Desktop dt = Desktop.getDesktop();
 			try {
-				dt.browse(new URI("http://127.0.0.1:8088/htkApp/merchant/goAutoEnterReceipt"));
+				//dt.browse(new URI("http://127.0.0.1:8088/htkApp/merchant/goAutoEnterReceipt"));
+				dt.browse(new URI("http://120.27.5.36:8080/htkApp/merchant/goAutoEnterReceipt"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
