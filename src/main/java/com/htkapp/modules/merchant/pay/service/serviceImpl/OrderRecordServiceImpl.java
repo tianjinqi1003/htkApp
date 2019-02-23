@@ -6,6 +6,7 @@ import com.htkapp.core.curdException.DeleteException;
 import com.htkapp.core.exception.costom.NullDataException;
 import com.htkapp.core.exception.order.OrderException;
 import com.htkapp.core.utils.Globals;
+import com.htkapp.core.utils.OrderRecordTask;
 import com.htkapp.modules.merchant.integral.entity.AccountTicketList;
 import com.htkapp.modules.merchant.integral.service.AccountTicketListService;
 import com.htkapp.modules.merchant.pay.dao.OrderRecordMapper;
@@ -17,12 +18,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 import static com.xiaoleilu.hutool.date.DateUtil.NORM_DATETIME_PATTERN;
 import static com.xiaoleilu.hutool.date.DateUtil.format;
-import static com.xiaoleilu.hutool.date.DateUtil.now;
 
 /**
  * Created by yinqilei on 17-6-29.
@@ -37,6 +44,38 @@ public class OrderRecordServiceImpl implements OrderRecordService {
     private AccountTicketListService ticketListService;
 
     Class<? extends Object> cls = OrderRecordServiceImpl.class;
+    
+    //时间间隔(一小时)  
+    //private static final long PERIOD_DAY = 30 * 1000;
+    private static final long PERIOD_DAY = 1 * 60 * 60 * 1000;
+    
+    static {
+    	Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);//凌晨1点 
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Date date = calendar.getTime();//第一次执行定时任务的时间  
+		//如果第一次执行定时任务的时间 小于当前的时间  
+		if(date.before(new Date())) {
+			date=com.htkapp.core.utils.DateUtil.getAddDay(date, 1);//此时要在 第一次执行定时任务的时间加一天，以便此任务在下个时间点执行。如果不加一天，任务会立即执行
+		}
+		Timer timer=new Timer();
+		OrderRecordTask task=new OrderRecordTask();
+		timer.schedule(task, date, PERIOD_DAY);//安排指定的任务在指定的时间开始进行重复的固定延迟执行
+		
+		/*
+		Desktop dt = Desktop.getDesktop();
+		try {
+			dt.browse(new URI("http://127.0.0.1:8088/htkApp/API/AccountMessage/merchant/autoEnterReceipt"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+    }
 
     /* ================接口开始======================= */
     //支付成功后插入订单信息
@@ -532,6 +571,12 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             row = 0;
         return row;
     }
+
+	@Override
+	public List<OrderRecord> getUnReceiptAccountToken() {
+		// TODO Auto-generated method stub
+		return orderRecordDao.getUnReceiptAccountToken();
+	}
 
     /* ====================JSP页面接口结束========================= */
 }

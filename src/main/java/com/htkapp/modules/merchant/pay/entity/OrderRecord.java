@@ -50,7 +50,9 @@ public class OrderRecord {
 
     private String token;  //app用户token
 
-    private Integer shopId;   //店铺id
+    private String accountToken;//app用户accountToken
+
+	private Integer shopId;   //店铺id
 
     private String orderTime;   //下单时间
 
@@ -189,6 +191,14 @@ public class OrderRecord {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getAccountToken() {
+		return accountToken;
+	}
+
+	public void setAccountToken(String accountToken) {
+		this.accountToken = accountToken;
+	}
 
     public Integer getShopId() {
         return shopId;

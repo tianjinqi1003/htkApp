@@ -127,4 +127,7 @@ public interface OrderRecordService {
      */
     int getOrderQuantities(Integer shopId, String dateStart, String dateEnd);
     /* ====================JSP页面接口结束========================= */
+
+	List<OrderRecord> getUnReceiptAccountToken();
+
 }

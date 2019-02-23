@@ -337,6 +337,8 @@
 													<div class="buttons">
 														<a href="javascript:void(0)"
 															data-num="${each.orderNumber}">配送中。。</a>
+														<a href="javascript:void(0)" class="receipt"
+															data-num="${each.orderNumber}" data-token="${each.accountToken}">确认收货</a>
 													</div>
 													<p class="orderSn">${fn:substring(each.orderTime,5 , 19)}
 														下单 | 订单编号：${each.orderNumber}</p>
@@ -710,6 +712,40 @@
             }
         })
 	})
+	//确认收货
+	$(".receipt").on("click",function(){
+		var orderNumber = $(this).attr("data-num");
+		var token = $(this).attr("data-token");
+		alert(orderNumber);
+		$.confirm({
+			title:'确认收货吗？',
+			content:'点击确定确认收货!',
+			confirmButton:'确定',
+			cancelButton:'取消',
+			confirm:function(){
+				var url = baseUrl + "/merchant/enterReceipt";
+				var params={orderNumber: orderNumber,token:token};
+				$.post(url, params, function (result, status){
+					alert(result);
+					if (status === 'success') {
+                        if (result && result.code === 0) {
+                            layer_msg(result.message, "success");
+                            setTimeout(function () {
+                                window.location.href = window.location.href;
+                            }, 1500)
+                        } else {
+                            layer_msg(result.message, "error");
+                            setTimeout(function () {
+                                window.location.href = window.location.href;
+                            }, 3000)
+                        }
+                    } else {
+                        layer_msg("网络连接失败", 'exception');
+                    }
+				}, "json");
+			}
+		});
+	});
     //待配送
     $(".delivery").on("click", function () {
         var orderNumber = $(this).attr("data-num");

@@ -1,5 +1,27 @@
 package com.htkapp.modules.merchant.common.web;
 
+import static com.xiaoleilu.hutool.date.DateUtil.NORM_DATETIME_PATTERN;
+import static com.xiaoleilu.hutool.date.DateUtil.NORM_DATE_PATTERN;
+import static com.xiaoleilu.hutool.date.DateUtil.format;
+
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.http.util.TextUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
@@ -10,18 +32,22 @@ import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.htkapp.core.OtherUtils;
 import com.htkapp.core.config.AlipayConfig;
 import com.htkapp.core.customShiro.CusTokenManage;
+import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.RequestParams;
 import com.htkapp.core.shiro.common.utils.LoggerUtils;
 import com.htkapp.core.shiro.common.utils.StringUtils;
 import com.htkapp.core.utils.Globals;
-import com.htkapp.core.utils.LocationUtil;
-import com.htkapp.core.utils.LocationUtil.Point;
 import com.htkapp.core.utils.OrderNumGen;
+import com.htkapp.modules.API.service.AccountServiceI;
+import com.htkapp.modules.API.service.ShopDataService;
 import com.htkapp.modules.common.dto.AjaxReturnLoginData;
 import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.common.service.MerchantService;
+import com.htkapp.modules.merchant.pay.entity.OrderProduct;
+import com.htkapp.modules.merchant.pay.entity.OrderRecord;
 import com.htkapp.modules.merchant.pay.service.BillBalanceSheetService;
+import com.htkapp.modules.merchant.pay.service.OrderRecordService;
 import com.htkapp.modules.merchant.shop.entity.AccountShop;
 import com.htkapp.modules.merchant.shop.entity.AccountShopReplyComments;
 import com.htkapp.modules.merchant.shop.entity.Shop;
@@ -31,25 +57,8 @@ import com.htkapp.modules.merchant.shop.service.ShopInfoControllerService;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.lang.Base64;
-import org.apache.http.util.TextUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.xiaoleilu.hutool.date.DateUtil.*;
+import net.sf.json.JSONObject;
 
 /**
  * Created by yinqilei on 17-7-11.
@@ -73,6 +82,15 @@ public class MerchantController {
 
     @Resource
     private MerchantService merchantService;
+    
+    @Resource
+    private OrderRecordService orderRecordService;
+    
+    @Resource
+    private ShopDataService shopDataService;
+    
+    @Resource
+    private AccountServiceI accountService;
     @Resource
     private OtherUtils otherUtilsMethod;
 
@@ -179,11 +197,45 @@ public class MerchantController {
         return mDirectory + "hmPage";
     }
     
-    @RequestMapping(value = "/autoEnterReceipt", method = RequestMethod.GET)
-    public String autoEnterReceipt() {
+    //去确认收货页面
+    @RequestMapping(value = "/goAutoEnterReceipt", method = RequestMethod.GET)
+    public String goAutoEnterReceipt() {
 		
-    	System.out.println("ooooooooooo");
-    	return "redirect:index";
+    	return mDirectory + "auto_enter_receipt";
+	}
+    
+    //自动确认收货
+    @RequestMapping(value = "/autoEnterReceipt", method = RequestMethod.POST)
+    public void autoEnterReceipt() {
+    	
+    	//System.out.println("llllllllllll");
+    	List<OrderRecord> tokenList=orderRecordService.getUnReceiptAccountToken();
+    	for (OrderRecord orderRecord : tokenList) {
+    		String token = orderRecord.getToken();
+    		APIResponseModel model = shopDataService.getOrderRecordList(token, 1);
+    		List childList = (List)model.getData();
+    		for (Object childObject : childList) {
+    			JSONObject childJO = JSONObject.fromObject(childObject);
+    			Integer mark = childJO.getInt("mark");
+    			Integer orderState = childJO.getInt("orderState");
+    			if(mark==0&&orderState==3) {
+    				String orderNumber = childJO.getString("orderNumber");
+    				//if("1902165089910874".equals(orderNumber)) {
+    					String productListStr = childJO.getString("productList");
+    					//System.out.println("token==="+tokenList.get(0).getToken());
+    					//System.out.println("orderNumber==="+orderNumber);
+    					//System.out.println("productListStr==="+productListStr);
+    					accountService.enterReceipt(null,orderNumber,token);
+    				//}
+    			}
+    		}
+		}
+    }
+    
+    //确认收货
+    @RequestMapping(value = "/enterReceipt", method = RequestMethod.POST)
+    public APIResponseModel enterReceipt(String orderNumber, String token) {
+    	return accountService.enterReceipt(null,orderNumber, token);
 	}
 
     //通知中心－消息
@@ -389,8 +441,14 @@ public class MerchantController {
         //此处是外卖，所以mark是0
         Shop shop = shopService.getShopByAccountShopIdAndMark(user.getUserId(), 0);
 
-        double longitude = Double.parseDouble(session.getAttribute("longitude").toString());
-        double latitude = Double.parseDouble(session.getAttribute("latitude").toString());
+        Object longitudeObj = session.getAttribute("longitude");
+        double longitude = 0;
+        if(longitudeObj!=null)
+        	longitude = Double.parseDouble(longitudeObj.toString());
+        Object latitudeObj = session.getAttribute("latitude");
+        double latitude = 0;
+        if(latitudeObj!=null)
+        	latitude = Double.parseDouble(latitudeObj.toString());
         merchantService.getTakeoutRealTimeOrderByCondition(model, shop.getShopId(), startDate, endDate, statusCode, longitude, latitude);
         return mDirectory + "order_takeout_realTime";
     }
@@ -981,28 +1039,29 @@ public class MerchantController {
         return mDirectory + "seat_Info_Manager";
     }
     
-    
+    /*
     static double DEF_PI180= 0.01745329252; // PI/180.0
     static double DEF_R =6370693.5; // radius of earth
+    
     public static double GetLongDistance(double lon1, double lat1, double lon2, double lat2)
     {
-    double ew1, ns1, ew2, ns2;
-    double distance;
-    // 角度转换为弧度
-    ew1 = lon1 * DEF_PI180;
-    ns1 = lat1 * DEF_PI180;
-    ew2 = lon2 * DEF_PI180;
-    ns2 = lat2 * DEF_PI180;
-    // 求大圆劣弧与球心所夹的角(弧度)
-    distance = Math.sin(ns1) * Math.sin(ns2) + Math.cos(ns1) * Math.cos(ns2) * Math.cos(ew1 - ew2);
-    // 调整到[-1..1]范围内，避免溢出
-    if (distance > 1.0)
-    distance = 1.0;
-    else if (distance < -1.0)
-    distance = -1.0;
-    // 求大圆劣弧长度
-    distance = DEF_R * Math.acos(distance);
-    return distance;
+	    double ew1, ns1, ew2, ns2;
+	    double distance;
+	    // 角度转换为弧度
+	    ew1 = lon1 * DEF_PI180;
+	    ns1 = lat1 * DEF_PI180;
+	    ew2 = lon2 * DEF_PI180;
+	    ns2 = lat2 * DEF_PI180;
+	    // 求大圆劣弧与球心所夹的角(弧度)
+	    distance = Math.sin(ns1) * Math.sin(ns2) + Math.cos(ns1) * Math.cos(ns2) * Math.cos(ew1 - ew2);
+	    // 调整到[-1..1]范围内，避免溢出
+	    if (distance > 1.0)
+	    distance = 1.0;
+	    else if (distance < -1.0)
+	    distance = -1.0;
+	    // 求大圆劣弧长度
+	    distance = DEF_R * Math.acos(distance);
+	    return distance;
     }
     
     public static void main(String[] args) {
@@ -1011,7 +1070,6 @@ public class MerchantController {
 	    double mLat2 = 35.875723;// point2纬度
 	    double mLon2 = 120.048399;// point2经度
 	    
-	    /*
 	    double distance = MerchantController.GetLongDistance(mLon1, mLat1, mLon2, mLat2);
 	    
 	    if (distance == 0){
@@ -1025,9 +1083,9 @@ public class MerchantController {
 	    DecimalFormat df = new DecimalFormat("#.00");
 	    String distance1 = df.format(distance);
 	    System.out.println("distance==="+distance1);
-	    */
 	    
 	    float distance = LocationUtil.distance(new Point(mLon1,mLat1), new Point(mLon2,mLat2));
 	    System.out.println("distance==="+distance);
     }
+	*/
 }

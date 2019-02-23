@@ -137,6 +137,20 @@ public class DateUtil {
 		}
 		 return null;
 	}
+	
+	/**
+	 * 增加或减少天数
+	 * @param date
+	 * @param num
+	 * @return
+	 */
+    public static Date getAddDay(Date date, int num) {  
+        Calendar startDT = Calendar.getInstance();  
+        startDT.setTime(date);  
+        startDT.add(Calendar.DAY_OF_MONTH, num);  
+        return startDT.getTime();  
+    }  
+	
 //	public static void main(String[] args) {
 //		 System.out.println(getThisYM());
 //		 System.out.println(getThisYLM());

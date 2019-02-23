@@ -88,6 +88,10 @@ public interface AccountServiceI {
     List<Account> getAccountListByCondition(Account account, int pageNo, int pageLimit) throws Exception;
     //查找用户列表(无条件)
     List<Account> getAccountList(int pageNo, int pageLimit) throws Exception;
+	/**
+	 * 系统自动确认收货
+	 */
+	void autoEnterReceipt();
 
     /* =======================jsp页面接口结束============================= */
 

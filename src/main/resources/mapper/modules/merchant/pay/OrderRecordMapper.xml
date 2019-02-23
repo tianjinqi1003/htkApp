@@ -528,6 +528,22 @@
         </if>
         order by ${orderDesc}
     </select>
+    <select id="getUnReceiptAccountToken" resultType="OrderRecord">
+    	select distinct account_token token from
+        (
+          select
+          gmt_create, account_token
+          from order_record
+        union
+          select
+          gmt_create, account_token
+          from seat_order
+        union
+          select
+          gmt_create, account_token
+          from buffet_food_order
+        ) as common where gmt_create&lt;date_sub(now(), interval 6 hour)
+    </select>
 
     <!-- ====================JSP页面接口结束======================= -->
 </mapper>

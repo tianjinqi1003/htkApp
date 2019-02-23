@@ -1190,6 +1190,14 @@ public class AccountServiceImpl implements AccountServiceI {
         }
     }
 
+	@Override
+	public void autoEnterReceipt() {
+		// TODO Auto-generated method stub
+		
+		//List<OrderRecord> tokenList=orderRecordDao.getUnReceiptAccountToken();
+		//System.out.println("tokenList.length==="+tokenList.size());
+	}
+
 
 
     /* ========================JSP页面接口开始=============================== */

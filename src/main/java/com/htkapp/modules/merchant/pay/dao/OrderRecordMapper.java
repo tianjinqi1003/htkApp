@@ -98,4 +98,5 @@ public interface OrderRecordMapper {
 
     int getOrderHasDealedQuantities(@Param("shopId") Integer shopId, @Param("startDate") String dateStart, @Param("endDate") String dateEnd);
     /* =====================JSP页面接口结束====================== */
+	List<OrderRecord> getUnReceiptAccountToken();
 }

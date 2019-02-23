@@ -99,6 +99,8 @@
                         <!-- 登陆加注册 -->
                         <value>/htkApp/merchant/login</value>
                         <value>/htkApp/admin/login</value>
+                        <value>/htkApp/merchant/goAutoEnterReceipt</value>
+                        <value>/htkApp/merchant/autoEnterReceipt</value>
                         <value>/htkApp/merchant/register.htm</value>
                         <value>/htkApp/merchant/verifyMerchant</value>
                         <value>/htkApp/common/getPhoneVerificationCode</value>
