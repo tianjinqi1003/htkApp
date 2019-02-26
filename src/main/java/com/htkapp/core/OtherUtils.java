@@ -196,7 +196,7 @@ public class OtherUtils {
             loginUser.setUserId(curUser.getUserId());
             loginUser.setUseStartTime(curUser.getUseStartTime());
             loginUser.setUseEndTime(curUser.getUseEndTime());
-            System.out.println("商户信息");
+            System.out.println("商户信息===========");
             return loginUser;
         } else {
             throw new Exception();

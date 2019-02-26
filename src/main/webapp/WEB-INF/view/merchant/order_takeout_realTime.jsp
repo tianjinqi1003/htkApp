@@ -716,7 +716,6 @@
 	$(".receipt").on("click",function(){
 		var orderNumber = $(this).attr("data-num");
 		var token = $(this).attr("data-token");
-		alert(orderNumber);
 		$.confirm({
 			title:'确认收货吗？',
 			content:'点击确定确认收货!',
@@ -726,9 +725,9 @@
 				var url = baseUrl + "/merchant/enterReceipt";
 				var params={orderNumber: orderNumber,token:token};
 				$.post(url, params, function (result, status){
-					alert(result);
 					if (status === 'success') {
                         if (result && result.code === 0) {
+        					$(".receipt").hide();
                             layer_msg(result.message, "success");
                             setTimeout(function () {
                                 window.location.href = window.location.href;

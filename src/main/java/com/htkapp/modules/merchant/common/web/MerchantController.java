@@ -219,7 +219,7 @@ public class MerchantController {
 			List<OrderRecord> tokenList=orderRecordService.getUnReceiptAccountToken();
 			for (OrderRecord orderRecord : tokenList) {
 				String token = orderRecord.getToken();
-				System.out.println("token===");
+				//System.out.println("token===");
 				if(token!=null) {
 					APIResponseModel model = shopDataService.getOrderRecordList(token, 1);
 					List childList = (List)model.getData();
@@ -228,15 +228,15 @@ public class MerchantController {
 						//System.out.println("childJO==="+childJO.toString());
 						Integer mark = childJO.getInt("mark");
 						Object orderState = childJO.get("orderState");
-						System.out.println("mark===="+mark);
-						System.out.println("orderState===="+orderState);
+						//System.out.println("mark===="+mark);
+						//System.out.println("orderState===="+orderState);
 						if(mark==0&&"3".equals(orderState.toString())) {
 							String orderNumber = childJO.getString("orderNumber");
 							//if("1902165089910874".equals(orderNumber)) {
 								String productListStr = childJO.getString("productList");
 								//System.out.println("token==="+tokenList.get(0).getToken());
 								//System.out.println("orderNumber==="+orderNumber);
-								System.out.println("productListStr==="+productListStr);
+								//System.out.println("productListStr==="+productListStr);
 								accountService.enterReceipt(null,orderNumber,token);
 							//}
 						}
@@ -251,8 +251,10 @@ public class MerchantController {
     
     //确认收货
     @RequestMapping(value = "/enterReceipt", method = RequestMethod.POST)
-    public APIResponseModel enterReceipt(String orderNumber, String token) {
-    	return accountService.enterReceipt(null,orderNumber, token);
+    @ResponseBody
+    public AjaxResponseModel enterReceipt(String orderNumber, String token) {
+    	APIResponseModel apiResponseModel = accountService.enterReceipt(null,orderNumber, token);
+    	return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, apiResponseModel.getMessage());
 	}
 
     //通知中心－消息

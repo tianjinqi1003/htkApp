@@ -968,6 +968,7 @@ public class AccountServiceImpl implements AccountServiceI {
 
                 return new APIResponseModel<>(Globals.API_SUCCESS, "成功", orderRecord.getId());
             } catch (Exception e) {
+            	e.printStackTrace();
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new APIResponseModel(Globals.API_FAIL);
             }
