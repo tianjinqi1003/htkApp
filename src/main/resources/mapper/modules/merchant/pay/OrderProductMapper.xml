@@ -3,15 +3,15 @@
 <mapper namespace="com.htkapp.modules.merchant.pay.dao.OrderProductMapper">
 
     <sql id="Base_Column_List">
-        id, product_id, product_name, quantity, price, order_id
+        id, product_id, product_name, quantity, price, price_canhe, order_id
     </sql>
 
     <!-- ================接口开始======================== -->
     <insert id="insertProductInfoByOrderDAO">
         insert into order_product
-        (product_id,product_name, quantity, price, order_id)
+        (product_id,product_name, quantity, price, price_canhe, order_id)
         values
-        (#{productId}, #{productName}, #{quantity}, #{price}, #{orderId})
+        (#{productId}, #{productName}, #{quantity}, #{price}, #{priceCanhe}, #{orderId})
     </insert>
     <select id="getProductListByOrderIdDAO" resultType="OrderProduct">
         select

@@ -14,8 +14,10 @@ public class OrderProduct {
     private Integer quantity;  //产品数量
 
     private Double price;   //价格
+    
+    private Double priceCanhe;   //餐盒费
 
-    private Integer productId;  //产品id
+	private Integer productId;  //产品id
 
     private Integer orderId;  //订单id
 
@@ -42,6 +44,14 @@ public class OrderProduct {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    public Double getPriceCanhe() {
+		return priceCanhe;
+	}
+
+	public void setPriceCanhe(Double priceCanhe) {
+		this.priceCanhe = priceCanhe;
+	}
 
     public Integer getOrderId() {
         return orderId;

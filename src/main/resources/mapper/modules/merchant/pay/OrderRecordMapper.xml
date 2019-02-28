@@ -532,7 +532,7 @@
     	select distinct account_token token from
         (
           select
-          gmt_create, account_token
+          order_state, gmt_create, account_token
           from order_record
           <!-- 
         union
@@ -544,7 +544,7 @@
           gmt_create, account_token
           from buffet_food_order
            -->
-        ) as common where gmt_create&lt;date_sub(now(), interval 6 hour)
+        ) as common where order_state=3 and gmt_create&lt;date_sub(now(), interval 6 hour)
     </select>
 
     <!-- ====================JSP页面接口结束======================= -->
