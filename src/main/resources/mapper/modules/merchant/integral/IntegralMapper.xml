@@ -66,10 +66,20 @@
         left join shop on integral.shop_id = shop.shop_id
         left join account_shop on shop.account_shop_id = account_shop.id
         where account_shop.token = #{token}
+        <choose>
+        	<when test="condition != null">
+            	and integral.account_token = #{condition} group by integral.account_token
+        	</when>
+        	<otherwise>
+        		group by integral.account_token
+        	</otherwise>
+        </choose>
+        <!-- 
         group by integral.account_token
         <if test="condition != null">
             and integral.account_token = #{condition} group by integral.account_token
         </if>
+         -->
         order by ${orderDesc}
     </select>
     <select id="getIntegralValByAccountTokenDAO" resultType="java.lang.Integer">
