@@ -620,8 +620,9 @@
     function checkValCode(){
     	var flag=false;
     	var url = baseUrl + '/API/AccountMessage/appAccountLoginByCode';
+    	var phone='${merchantUser.userName}';
     	var code=$("#valCode").val();
-    	var params = {phone: "18765943028",code:code};
+    	var params = {phone: phone,code:code};
     	$.ajaxSetup({async:false});
     	$.post(url,params,function(result, status){
     		if (status === 'success'){
