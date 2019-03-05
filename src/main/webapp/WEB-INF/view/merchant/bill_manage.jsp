@@ -510,6 +510,32 @@
             "                            </span>\n" +
             "                        </div>\n" +
             "                    </div>\n" +
+            "                    <div class=\"contentTop\" style=\"padding-bottom: 20px;\">\n" +
+            "                        <div class=\"topDiv\">\n" +
+            "                            <span class=\"textSpan\">\n" +
+            "                                <span class=\"spanItem\" style=\"padding: 8px 0\">\n" +
+            "                                    <span class=\"firstName\" style=\"font-size: 16px;\">手机号:</span>\n" +
+            "                                    <span class=\"\" style=\"font-size: 16px;\">"+'${merchantUser.userName}'+"</span>\n" +
+            "                                    <span class=\"firstName\" style=\"font-size: 16px;\">"+
+            "                          <button class='toSendSms' id='toSendSms'" +
+            " style=\"width: 100px;height: 30px;font-size: 16px;background-color: orange;border: 1px solid #fff; border-radius: 5px;font-weight: bold\">\n" +
+            "                                发送验证码\n" +
+            "                          </button>" +
+            " 									 </span>\n" +
+            "                                </span>\n" +
+            "                            </span>\n" +
+            "                        </div>\n" +
+            "                    </div>\n" +
+            "                    <div class=\"contentTop\" style=\"padding-bottom: 20px;\">\n" +
+            "                        <div class=\"topDiv\">\n" +
+            "                            <span class=\"textSpan\">\n" +
+            "                                <span class=\"spanItem\" style=\"padding: 8px 0\">\n" +
+            "                                    <span class=\"firstName\" style=\"font-size: 16px;\">验证码:</span>\n" +
+            "                                    <input style='ime-mode:disabled\"' onpaste=\"return false;\"  class=\"valCode\" id=\"valCode\" value=\"\">\n" +
+            "                                </span>\n" +
+            "                            </span>\n" +
+            "                        </div>\n" +
+            "                    </div>\n" +
             "                    <div style=\"text-align: center;padding-top: 15px;\">\n" +
             "                          <button class='toConfirmSwitch' id='toConfirmSwitch'" +
             " style=\"width: 200px;height: 40px;font-size: 20px;background-color: orange;border: 1px solid #fff; border-radius: 5px;font-weight: bold\">\n" +
@@ -529,6 +555,9 @@
 
     //为确认修改支付宝账户按钮绑定点击事件
     $(document).on("click", ".toConfirmSwitch", function () {
+    	if(!checkValCode()){
+    		return false;
+    	}
         //@author 马鹏昊
         // 向后台发起post请求，修改商户支付账户
         var url = baseUrl + '/merchant/modifyAccount';
@@ -552,7 +581,61 @@
             }
         }, "json");
     });
-
+    
+    var endTime=60;
+    
+    $(document).on("click",".toSendSms",function(){
+    	//alert(checkValCode());
+    	//startTimeCount();
+    	var phone='${merchantUser.userName}';
+    	var url = baseUrl + '/API/AccountMessage/sendSms/'+phone;
+    	var params = {phone: phone};
+    	$.post(url,params,function(result, status){
+    		//alert(result+","+status);
+    		if (status === 'success'){
+    			startTimeCount();
+    		}
+    	},"json");
+    });
+    
+    function startTimeCount(){
+    	$("#toSendSms").attr("disabled",true);
+    	setTimeout("setToSendSmsText()",1000);
+    }
+    
+    function setToSendSmsText(){
+    	//console.log(endTime);
+    	if(endTime<=0){
+    		endTime=60;
+        	$("#toSendSms").attr("disabled",false);
+	    	$("#toSendSms").text("重新验证");
+    	}
+    	else{
+	    	endTime--;
+	    	$("#toSendSms").text(endTime+"s");
+	    	setTimeout("setToSendSmsText()",1000);
+    	}
+    }
+    
+    function checkValCode(){
+    	var flag=false;
+    	var url = baseUrl + '/API/AccountMessage/appAccountLoginByCode';
+    	var code=$("#valCode").val();
+    	var params = {phone: "18765943028",code:code};
+    	$.ajaxSetup({async:false});
+    	$.post(url,params,function(result, status){
+    		if (status === 'success'){
+        		if(result.code==100){
+        			flag=true;
+        		}
+        		else{
+        			alert("验证码错误！");
+        			flag=false;
+        		}
+    		}
+    	},"json");
+    	return flag;
+    }
 
     //确认输入金额按钮
     $(document).on("click", ".enterA", function () {
