@@ -38,5 +38,41 @@ public class DaiQuHuo {
 
     private String shAddress;
     private String orderNumber;
+    public Double getQhLongitude() {
+		return qhLongitude;
+	}
+
+	public void setQhLongitude(Double qhLongitude) {
+		this.qhLongitude = qhLongitude;
+	}
+
+	public Double getQhLatitude() {
+		return qhLatitude;
+	}
+
+	public void setQhLatitude(Double qhLatitude) {
+		this.qhLatitude = qhLatitude;
+	}
+
+	public Double getShLongitude() {
+		return shLongitude;
+	}
+
+	public void setShLongitude(Double shLongitude) {
+		this.shLongitude = shLongitude;
+	}
+
+	public Double getShLatitude() {
+		return shLatitude;
+	}
+
+	public void setShLatitude(Double shLatitude) {
+		this.shLatitude = shLatitude;
+	}
+
+	private Double qhLongitude;
+	private Double qhLatitude;
+	private Double shLongitude;
+	private Double shLatitude;
 
 }

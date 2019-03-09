@@ -30,5 +30,33 @@ public class DaiQiangDan {
 	private String qcAddress;
 	private String scAddress;
 	private String orderNumber;
+	private Double qcLongitude;
+	private Double qcLatitude;
+	private Double scLongitude;
+	private Double scLatitude;
+	public Double getQcLongitude() {
+		return qcLongitude;
+	}
+	public void setQcLongitude(Double qcLongitude) {
+		this.qcLongitude = qcLongitude;
+	}
+	public Double getQcLatitude() {
+		return qcLatitude;
+	}
+	public void setQcLatitude(Double qcLatitude) {
+		this.qcLatitude = qcLatitude;
+	}
+	public Double getScLongitude() {
+		return scLongitude;
+	}
+	public void setScLongitude(Double scLongitude) {
+		this.scLongitude = scLongitude;
+	}
+	public Double getScLatitude() {
+		return scLatitude;
+	}
+	public void setScLatitude(Double scLatitude) {
+		this.scLatitude = scLatitude;
+	}
 
 }

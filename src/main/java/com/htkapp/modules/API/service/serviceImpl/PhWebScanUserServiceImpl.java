@@ -2,6 +2,8 @@ package com.htkapp.modules.API.service.serviceImpl;
 
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.htkapp.core.dto.APIResponseModel;
@@ -13,6 +15,7 @@ import com.htkapp.modules.API.service.PhWebScanUserService;
 @Service
 public class PhWebScanUserServiceImpl implements PhWebScanUserService {
 
+	@Resource
 	private PhWebScanUserMapper phWebScanUserMapper;
 	
 	@Override
