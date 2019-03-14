@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.htkapp.modules.API.entity.DaiQiangDan;
 import com.htkapp.modules.API.entity.DaiQuHuo;
+import com.htkapp.modules.API.entity.DaiSongDa;
 import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
 
@@ -20,4 +21,6 @@ public interface RiderMapper {
 	List<OrderProduct> getDaiQiangDanDetail(String orderNumber);
 
 	List<DaiQuHuo> getDaiQuHuo();
+
+	List<DaiSongDa> getDaiSongDa();
 }

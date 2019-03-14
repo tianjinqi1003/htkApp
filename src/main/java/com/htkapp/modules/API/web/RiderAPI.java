@@ -59,4 +59,11 @@ public class RiderAPI {
 		
 		return riderService.getDaiQuHuo();
 	}
+	
+	@RequestMapping(value="/getDaiSongDa")
+	@ResponseBody
+	public APIResponseModel getDaiSongDa(APIRequestParams params) {
+		
+		return riderService.getDaiSongDa();
+	}
 }
