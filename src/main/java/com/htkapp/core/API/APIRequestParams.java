@@ -11,8 +11,10 @@ import java.io.File;
 public class APIRequestParams<T> {
 
     private String token;  //用户的唯一标识
+    
+    private String accountToken;  //用户的accountToken
 
-    private String role;   //身份验证
+	private String role;   //身份验证
 
     private Integer pageNumber;  //页数
 
@@ -85,6 +87,14 @@ public class APIRequestParams<T> {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getAccountToken() {
+		return accountToken;
+	}
+
+	public void setAccountToken(String accountToken) {
+		this.accountToken = accountToken;
+	}
 
     public String getRole() {
         return role;

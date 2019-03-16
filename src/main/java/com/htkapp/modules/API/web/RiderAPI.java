@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.htkapp.core.API.APIRequestParams;
@@ -11,6 +12,7 @@ import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.entity.Rider;
+import com.htkapp.modules.API.service.AccountServiceI;
 import com.htkapp.modules.API.service.RiderService;
 import com.htkapp.modules.merchant.takeout.service.TakeoutService;
 
@@ -22,6 +24,8 @@ public class RiderAPI {
 	private RiderService riderService;
     @Resource
     private TakeoutService takeoutService;
+    @Resource
+    private AccountServiceI accountService;
 	
 	@RequestMapping(value="/login")
 	@ResponseBody
@@ -84,4 +88,12 @@ public class RiderAPI {
     public AjaxResponseModel itemsToShip(APIRequestParams params){
         return takeoutService.itemsToShip(params.getOrderNumber());
     }
+    
+    //确认收货
+    @RequestMapping(value = "/enterReceipt", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResponseModel enterReceipt(APIRequestParams params) {
+    	APIResponseModel apiResponseModel = accountService.enterReceipt(null,params.getOrderNumber(), params.getAccountToken());
+    	return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, apiResponseModel.getMessage());
+	}
 }
