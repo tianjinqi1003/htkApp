@@ -67,8 +67,18 @@ public class APIRequestParams<T> {
     private String trueName;  //真实姓名
 
 	private String cardID;  //身份证号
+	
+	private Integer riderId;
 
-    public String getToken() {
+    public Integer getRiderId() {
+		return riderId;
+	}
+
+	public void setRiderId(Integer riderId) {
+		this.riderId = riderId;
+	}
+
+	public String getToken() {
         return token;
     }
 

@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.dao.RiderMapper;
@@ -67,10 +68,10 @@ public class RiderServiceImpl implements RiderService {
 	}
 
 	@Override
-	public APIResponseModel getDaiQuHuo() {
+	public APIResponseModel getDaiQuHuo(Integer riderId) {
 		// TODO Auto-generated method stub
 		
-		List<DaiQuHuo> list = riderMapper.getDaiQuHuo();
+		List<DaiQuHuo> list = riderMapper.getDaiQuHuo(riderId);
 		return new APIResponseModel<List<DaiQuHuo>>(Globals.API_SUCCESS, "查询待取货成功", list);
 	}
 
@@ -80,5 +81,16 @@ public class RiderServiceImpl implements RiderService {
 
 		List<DaiSongDa> list = riderMapper.getDaiSongDa();
 		return new APIResponseModel<List<DaiSongDa>>(Globals.API_SUCCESS, "查询待送达成功", list);
+	}
+
+	@Override
+	public APIResponseModel confirmQiangDan(String orderNumber, Integer riderId) {
+		// TODO Auto-generated method stub
+		int count = 0;
+		count = riderMapper.confirmQiangDan(orderNumber,riderId);
+		if(count==0)
+			return new APIResponseModel<String>(Globals.API_FAIL, "抢单失败");
+		else
+			return new APIResponseModel<String>(Globals.API_SUCCESS, "抢单成功");
 	}
 }

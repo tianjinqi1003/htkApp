@@ -1,5 +1,6 @@
 package com.htkapp.modules.API.service;
 
+import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.modules.API.entity.Rider;
 
@@ -13,7 +14,9 @@ public interface RiderService {
 
 	APIResponseModel getDaiQiangDanDetail(String orderNumber);
 
-	APIResponseModel getDaiQuHuo();
+	APIResponseModel getDaiQuHuo(Integer riderId);
 
 	APIResponseModel getDaiSongDa();
+
+	APIResponseModel confirmQiangDan(String orderNumber, Integer riderId);
 }

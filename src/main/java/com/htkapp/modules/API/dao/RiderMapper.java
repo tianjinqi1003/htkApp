@@ -23,4 +23,8 @@ public interface RiderMapper {
 	List<DaiQuHuo> getDaiQuHuo();
 
 	List<DaiSongDa> getDaiSongDa();
+
+	int confirmQiangDan(String orderNumber, Integer riderId);
+
+	List<DaiQuHuo> getDaiQuHuo(Integer riderId);
 }

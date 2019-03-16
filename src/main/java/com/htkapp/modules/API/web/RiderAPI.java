@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
+import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.RiderService;
+import com.htkapp.modules.merchant.takeout.service.TakeoutService;
 
 @Controller
 @RequestMapping("/API/riderAPI")
@@ -18,6 +20,8 @@ public class RiderAPI {
 
 	@Resource
 	private RiderService riderService;
+    @Resource
+    private TakeoutService takeoutService;
 	
 	@RequestMapping(value="/login")
 	@ResponseBody
@@ -57,7 +61,7 @@ public class RiderAPI {
 	@ResponseBody
 	public APIResponseModel getDaiQuHuo(APIRequestParams params) {
 		
-		return riderService.getDaiQuHuo();
+		return riderService.getDaiQuHuo(params.getRiderId());
 	}
 	
 	@RequestMapping(value="/getDaiSongDa")
@@ -66,4 +70,18 @@ public class RiderAPI {
 		
 		return riderService.getDaiSongDa();
 	}
+	
+	@RequestMapping(value="/confirmQiangDan")
+	@ResponseBody
+	public APIResponseModel confirmQiangDan(APIRequestParams params) {
+		
+		return riderService.confirmQiangDan(params.getOrderNumber(),params.getRiderId());
+	}
+	
+	//配送商品接口
+    @RequestMapping("/order/itemsToShip")
+    @ResponseBody
+    public AjaxResponseModel itemsToShip(APIRequestParams params){
+        return takeoutService.itemsToShip(params.getOrderNumber());
+    }
 }
