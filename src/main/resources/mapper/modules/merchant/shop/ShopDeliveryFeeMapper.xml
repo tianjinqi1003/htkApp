@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htkapp.modules.merchant.shop.dao.ShopDeliveryFeeMapper">
+	<select id="getDataListByShopId" resultType="com.htkapp.modules.merchant.shop.entity.ShopDeliveryFee">
+		select id,min_radii,max_radii,delivery_fee,shop_id from shop_delivery_fee where shop_id=#{0}
+	</select>
+	<insert id="insertDeliverFeeDAO">
+		insert into shop_delivery_fee(min_radii,max_radii,delivery_fee,shop_id) values(#{minRadii},#{maxRadii},#{deliveryFee},#{shopId})
+	</insert>
+	<update id="updateDeliverFeeDAO">
+		update shop_delivery_fee set min_radii=#{minRadii},max_radii=#{maxRadii},delivery_fee=#{deliveryFee},shop_id=#{shopId} where id=#{id}
+	</update>
+</mapper>
