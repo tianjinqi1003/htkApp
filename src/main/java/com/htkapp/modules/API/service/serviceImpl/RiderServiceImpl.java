@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.utils.Globals;
@@ -16,6 +17,7 @@ import com.htkapp.modules.API.entity.DaiSongDa;
 import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.RiderService;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
+import com.htkapp.modules.merchant.shop.entity.AccountShop;
 
 @Service
 public class RiderServiceImpl implements RiderService {
@@ -29,7 +31,7 @@ public class RiderServiceImpl implements RiderService {
 			if("0".equals(rider.getState()))
 				return new APIResponseModel<String>(Globals.API_FAIL, "用户未审核");
 			else
-				return new APIResponseModel<String>(Globals.API_SUCCESS, "登录成功");
+				return new APIResponseModel<Rider>(Globals.API_SUCCESS, "登录成功",rider);
 		}
 		else
 			return new APIResponseModel<String>(Globals.API_FAIL, "手机号或密码有误");
@@ -92,5 +94,17 @@ public class RiderServiceImpl implements RiderService {
 			return new APIResponseModel<String>(Globals.API_FAIL, "抢单失败");
 		else
 			return new APIResponseModel<String>(Globals.API_SUCCESS, "抢单成功");
+	}
+
+	@Override
+	public List<Rider> getRiderList(int pageNo, int pageLimit) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(pageNo, pageLimit);
+        List<Rider> riderList = riderMapper.getRiderListDAO();
+        if (riderList != null && riderList.size() > 0) {
+            return riderList;
+        } else {
+            return null;
+        }
 	}
 }

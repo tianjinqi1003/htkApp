@@ -41,10 +41,14 @@ public class AjaxRequestParams {
     private String intro;  //公告
 
     private String des;  //简介
+    
+    private Double minRadii;  //最小配送半径
+    
+    private Double maxRadii;  //最大配送半径
 
     private Double deliveryFee;  //配送费
 
-    private String time;
+	private String time;
 
     private String token;
 
@@ -175,6 +179,22 @@ public class AjaxRequestParams {
     public void setDes(String des) {
         this.des = des;
     }
+
+    public Double getMinRadii() {
+		return minRadii;
+	}
+
+	public void setMinRadii(Double minRadii) {
+		this.minRadii = minRadii;
+	}
+
+	public Double getMaxRadii() {
+		return maxRadii;
+	}
+
+	public void setMaxRadii(Double maxRadii) {
+		this.maxRadii = maxRadii;
+	}
 
     public Double getDeliveryFee() {
         return deliveryFee;

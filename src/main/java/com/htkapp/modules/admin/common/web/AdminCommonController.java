@@ -159,6 +159,21 @@ public class AdminCommonController {
         adminCommonControllerService.getManageUserData(model, pageNum, params);
         return adminDirector + "manage_user";
     }
+    
+    //骑手管理
+    @RequestMapping(value="/riderPage", method=RequestMethod.GET)
+    public String riderPage(Model model,@RequestParam(value="page",defaultValue="1",required=false) Integer page,
+    							@RequestParam(value="pageNum", required = false, defaultValue = "1") Integer pageNum) {
+		
+    	model.addAttribute("date", new Date().getTime());
+        model.addAttribute("rider_page", true);
+        RequestParams params = new RequestParams();
+        params.setModel(model);
+        params.setPage(page);
+        params.setPageNum(pageNum);
+        adminCommonControllerService.getRiderData(params);
+    	return adminDirector + "rider";
+	}
 
     //==================================分类管理
 

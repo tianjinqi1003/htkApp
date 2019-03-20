@@ -51,6 +51,7 @@ import com.htkapp.modules.merchant.shop.entity.*;
 import com.htkapp.modules.merchant.shop.service.AccountShopReplyCommentsService;
 import com.htkapp.modules.merchant.shop.service.AccountShopServiceI;
 import com.htkapp.modules.merchant.shop.service.RegisterApplyService;
+import com.htkapp.modules.merchant.shop.service.ShopDeliveryFeeService;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
 import com.xiaoleilu.hutool.date.BetweenFormater;
 import com.xiaoleilu.hutool.date.DateUnit;
@@ -91,6 +92,8 @@ public class MerchantServiceImpl implements MerchantService {
 	private SMSBaseServiceI smsService;
 	@Resource
 	private ShopServiceI shopService;
+	@Resource
+	private ShopDeliveryFeeService shopDeliveryFeeService;
 	@Resource
 	private OrderRecordService orderRecordService;
 	@Resource
@@ -1365,8 +1368,10 @@ public class MerchantServiceImpl implements MerchantService {
 					}
 					//商户使用剩余时间
 					String useRemainingTime = DateUtil.formatBetween(new Date(), DateUtil.parse(accountShop.getUseEndTime()), BetweenFormater.Level.MINUTE);
+					List<ShopDeliveryFee> deliveryFeeList = shopDeliveryFeeService.getDataListByShopId(shop.getShopId());
 					model.addAttribute("data", shop);
 					model.addAttribute("useRemainingTime", useRemainingTime);
+					model.addAttribute("deliveryFeeList", deliveryFeeList);
 				}
 			} catch (Exception e) {
 				return;

@@ -7,7 +7,9 @@ import com.htkapp.core.params.AjaxRequestParams;
 import com.htkapp.core.params.RequestParams;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.entity.Account;
+import com.htkapp.modules.API.entity.Rider;
 import com.htkapp.modules.API.service.AccountServiceI;
+import com.htkapp.modules.API.service.RiderService;
 import com.htkapp.modules.admin.common.dao.AdminMapper;
 import com.htkapp.modules.admin.common.entity.Admin;
 import com.htkapp.modules.admin.common.service.AdminCommonControllerServiceI;
@@ -47,6 +49,8 @@ public class AdminCommonControllerServiceImpl implements AdminCommonControllerSe
     private AccountShopRoleService accountShopRoleService;
     @Resource
     private ShopServiceI shopService;
+    @Resource
+    private RiderService riderService;
 
     /* ===================接口开始===================== */
     //改变用户登陆状态
@@ -90,6 +94,30 @@ public class AdminCommonControllerServiceImpl implements AdminCommonControllerSe
             e.printStackTrace();
         }
     }
+
+	@Override
+	public void getRiderData(RequestParams params) {
+		// TODO Auto-generated method stub
+		if (params.getPageNum() != null) {
+			int pageLimit;
+            int pageNumber;
+            if (params.getPageNum() > 1) {
+                pageLimit = params.getPageNum();
+            } else {
+                pageLimit = Globals.DEFAULT_PAGE_LIMIT;
+            }
+            if (params.getPage()!=null&&params.getPage() > 1) {
+                pageNumber = params.getPage();
+            }else {
+                pageNumber = Globals.DEFAULT_PAGE_NO;
+            }
+
+            List<Rider> riderList = riderService.getRiderList(pageNumber, pageLimit);
+            Model model = params.getModel();
+            model.addAttribute("data", riderList);
+            model.addAttribute("page", new PageInfo<>(riderList));
+		}
+	}
 
     //注册申请列表
     @Override

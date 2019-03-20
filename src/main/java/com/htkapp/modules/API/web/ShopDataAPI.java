@@ -2,11 +2,18 @@ package com.htkapp.modules.API.web;
 
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
+import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.service.ShopDataService;
+import com.htkapp.modules.merchant.shop.dto.AppShowShopInfo;
+import com.htkapp.modules.merchant.shop.entity.ShopDeliveryFee;
+import com.htkapp.modules.merchant.shop.service.ShopDeliveryFeeService;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +29,8 @@ public class ShopDataAPI {
 
     @Resource
     private ShopDataService shopDataService;
+    @Resource
+    private ShopDeliveryFeeService shopDeliveryFeeService;
 
     //获取app首页的商铺分类信息
     @RequestMapping("/category")
@@ -52,6 +61,17 @@ public class ShopDataAPI {
         //先根据传入的店铺id查询出店铺信息
         return shopDataService.getShopShowInfoById(shopId, token);
     }
+    
+    /**
+     * 通过店铺id获得配送费
+     * @param shopId
+     * @return
+     */
+    @RequestMapping("/getDeliveryFeeByShopId")
+    public APIResponseModel getDeliveryFeeByShopId(Integer shopId) {
+		List<ShopDeliveryFee> shopDeliveryFeeList = shopDeliveryFeeService.getDataListByShopId(shopId);
+		return new APIResponseModel<List<ShopDeliveryFee>>(Globals.API_SUCCESS, "成功", shopDeliveryFeeList);
+	}
 
     //通过传入的店铺id获得店铺商品信息
     @RequestMapping("/getGoodsListByShopId")

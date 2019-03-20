@@ -31,6 +31,8 @@ public class ShopInfoControllerServiceImpl implements ShopInfoControllerService 
     @Resource
     private ShopServiceI shopService;
     @Resource
+    private ShopDeliveryFeeService shopDeliveryFeeService;
+    @Resource
     private AccountShopServiceI accountShopService;
     @Resource
     private ShopBulletinService shopBulletinService;
@@ -297,12 +299,24 @@ public class ShopInfoControllerServiceImpl implements ShopInfoControllerService 
     public AjaxResponseModel updateDeliveryFee(AjaxRequestParams params) {
         if(params != null){
             try {
+            	/*
                 ShopMessage shopMessage = new ShopMessage();
                 shopMessage.setDeliveryFee(params.getDeliveryFee());
                 LoginUser user = OtherUtils.getLoginUserByRequest();
                 Shop shop = shopService.getShopByAccountShopIdAndMark(user.getUserId(),0);
                 shopMessage.setShopId(shop.getShopId());
                 shopMessageService.updateDeliverFee(shopMessage);
+                */
+                
+                ShopDeliveryFee shopDeliveryFee = new ShopDeliveryFee();
+                shopDeliveryFee.setId(params.getId());
+                shopDeliveryFee.setMinRadii(params.getMinRadii());
+                shopDeliveryFee.setMaxRadii(params.getMaxRadii());
+                shopDeliveryFee.setDeliveryFee(params.getDeliveryFee());
+                LoginUser user = OtherUtils.getLoginUserByRequest();
+                Shop shop = shopService.getShopByAccountShopIdAndMark(user.getUserId(),0);
+                shopDeliveryFee.setShopId(shop.getShopId());
+                shopDeliveryFeeService.updateDeliverFee(shopDeliveryFee);
                 return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION);
             }catch (Exception e){
                 return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED);

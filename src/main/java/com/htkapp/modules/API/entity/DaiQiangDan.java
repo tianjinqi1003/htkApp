@@ -21,6 +21,12 @@ public class DaiQiangDan {
 	public void setScAddress(String scAddress) {
 		this.scAddress = scAddress;
 	}
+	public String getOrderTime() {
+		return orderTime;
+	}
+	public void setOrderTime(String orderTime) {
+		this.orderTime = orderTime;
+	}
 	public String getOrderNumber() {
 		return orderNumber;
 	}
@@ -29,6 +35,7 @@ public class DaiQiangDan {
 	}
 	private String qcAddress;
 	private String scAddress;
+	private String orderTime;
 	private String orderNumber;
 	private Double qcLongitude;
 	private Double qcLatitude;

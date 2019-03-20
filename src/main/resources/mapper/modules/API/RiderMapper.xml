@@ -8,7 +8,7 @@
 		select count(*) from Rider where phone=#{0}
 	</select>
 	<select id="getDaiQiangDan" resultType="com.htkapp.modules.API.entity.DaiQiangDan">
-		select s.shop_name qc_shop_name,s.address qc_address,s.longitude qc_longitude,s.latitude qc_latitude,o.shipping_address sc_address,o.longitude sc_longitude,o.latitude sc_latitude,o.order_number from shop s,order_record o,order_product p where s.shop_id=o.shop_id and o.id=p.order_id and s.mark=0 and o.order_state=2 and o.rider_id is null
+		select s.shop_name qc_shop_name,s.address qc_address,s.longitude qc_longitude,s.latitude qc_latitude,o.shipping_address sc_address,o.longitude sc_longitude,o.latitude sc_latitude,DATE_FORMAT(o.order_time,'%H:%i') order_time,o.order_number from shop s,order_record o,order_product p where s.shop_id=o.shop_id and o.id=p.order_id and s.mark=0 and o.order_state=2 and o.rider_id is null
 	</select>
 	<select id="getDaiQiangDanDetail" resultType="com.htkapp.modules.merchant.pay.entity.OrderProduct">
 		select p.product_name,p.quantity,p.price from order_record r,order_product p where r.id=p.order_id and r.order_number=#{0}
@@ -18,6 +18,9 @@
 	</select>
 	<select id="getDaiSongDa" resultType="com.htkapp.modules.API.entity.DaiSongDa">
 		select s.address qh_address,s.longitude qh_longitude,s.latitude qh_latitude,o.shipping_address sh_address,o.longitude sh_longitude,o.latitude sh_latitude,o.account_token,o.order_number,sum(quantity*price) price from shop s,order_record o,order_product p where s.shop_id=o.shop_id and o.id=p.order_id and s.mark=0 and o.order_state=3 GROUP BY o.order_number
+	</select>
+	<select id="getRiderListDAO" resultType="com.htkapp.modules.API.entity.Rider">
+		select rider_id,phone,password,true_name,card_id,bank_card_id,create_time,state from rider where state=0 or state=2
 	</select>
 	<update id="register" parameterType="com.htkapp.modules.API.entity.Rider">
 		insert into Rider (phone,password,true_name,card_id,create_time,state) values (#{phone},#{password},#{trueName},#{cardID},now(),0)

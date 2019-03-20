@@ -306,13 +306,33 @@
                                 <hr/>
                                 <div class="busSetItem">
                                     <label class="promptName">配送费</label>
+                                    <c:forEach items="${deliveryFeeList}" var="each" varStatus="index">
                                     <div class="itemContent clearfix">
                                         <div class="leftContent">
-                                            <span class="contentText" id="deliveryFee">${data.deliveryFee}</span>
+                                        	<input type="hidden" id="deliveryId${index }" value="${each.id}"/>
+                                            <span class="contentText" id="minRadii${index }">${each.minRadii}</span>-
+                                            <span class="contentText" id="maxRadii${index }">${each.maxRadii}</span>km
+                                            <span class="contentText" id="deliveryFee${index }" style="margin-left:100px;">${each.deliveryFee}</span>
                                         </div>
                                         <div class="rightContent">
-                                            <a class="textClickA" data-clickType="deliveryFee">
+                                            <a class="textClickA" data-clickType="deliveryFee" data-index="${index }">
                                                 <span class="textSpan">修改
+                                                    <i class="fa fa-chevron-right pad-left" aria-hidden="true"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    </c:forEach>
+                                    <div class="itemContent clearfix">
+                                        <div class="leftContent">
+                                        	<input type="hidden" id="deliveryId" value=""/>
+                                            <span class="contentText" id="minRadii"></span>
+                                            <span class="contentText" id="maxRadii"></span>
+                                            <span class="contentText" id="deliveryFee" style="margin-left:100px;"></span>
+                                        </div>
+                                        <div class="rightContent">
+                                            <a class="textClickA" data-clickType="deliveryFee" data-index="-1">
+                                                <span class="textSpan">添加
                                                     <i class="fa fa-chevron-right pad-left" aria-hidden="true"></i>
                                                 </span>
                                             </a>
@@ -380,7 +400,8 @@
                 window.location.href = baseUrl + "/merchant/shopInfo/shopAlbumPage";
                 break;
             case "deliveryFee":
-                deliveryFee();
+            	const index = aEle.attr("data-index");
+                deliveryFee(index);
             default:
                 break;
         }
@@ -510,13 +531,41 @@
     }
 
     //配送费
-    function deliveryFee() {
-        var deliveryFee = $("#deliveryFee").text().trim();
+    function deliveryFee(index) {
+    	var deliveryId;
+    	var minRadii;
+    	var maxRadii;
+        var deliveryFee;
+        if(index==-1){
+        	deliveryId = $("input[id='deliveryId']").val().trim();
+        	minRadii = $("span[id='minRadii']").text().trim();
+        	maxRadii = $("span[id='maxRadii']").text().trim();
+        	deliveryFee = $("span[id='deliveryFee']").text().trim();
+        }
+        else{
+        	deliveryId = $("input[id='deliveryId"+index+"']").val().trim();
+        	minRadii = $("span[id='minRadii"+index+"']").text().trim();
+        	maxRadii = $("span[id='maxRadii"+index+"']").text().trim();
+        	deliveryFee = $("span[id='deliveryFee"+index+"']").text().trim();
+        }
         var contentStr = "<div style='margin-top: 20px;font-size: 14px;font-weight: 600'>\n" +
             "<div style='width:80%;margin: auto'>" +
+            "<input type=\"hidden\" value='"+deliveryId+"' id='deliveryId'/>"+
             "<div>" +
-            "<label style='width:80px;text-align:right'>输入配送费</label>" +
-            "<div style='display:inline-block;padding-left: 20px;width: 80%;'>" +
+            "<label style='width:120px;text-align:right'>输入最小配送距离</label>" +
+            "<div style='display:inline-block;padding-left: 20px;width: 60%;'>" +
+            "<input name='minRadii' value='"+minRadii+"' id='minRadii' style='border-radius: 3px;border: 1px solid #cec7c7;height: 30px;' />"+
+            "</div>" +
+            "</div>" +
+            "<div style=\"margin-top:20px;\">" +
+            "<label style='width:120px;text-align:right'>输入最大配送距离</label>" +
+            "<div style='display:inline-block;padding-left: 20px;width: 60%;'>" +
+            "<input name='maxRadii' value='"+maxRadii+"' id='maxRadii' style='border-radius: 3px;border: 1px solid #cec7c7;height: 30px;' />"+
+            "</div>" +
+            "</div>" +
+            "<div style=\"margin-top:20px;\">" +
+            "<label style='width:120px;text-align:right'>输入配送费</label>" +
+            "<div style='display:inline-block;padding-left: 20px;width: 60%;'>" +
             "<input name='deliverFee' value='"+deliveryFee+"' id='deliverFee' style='border-radius: 3px;border: 1px solid #cec7c7;height: 30px;' />"+
             "</div>" +
             "</div>" +
@@ -531,7 +580,7 @@
             fixed: true,
             area: {
                 width: '550px',
-                height: '190px'
+                height: '290px'
             }
         };
         index = layer_pageTier(params)
@@ -640,8 +689,18 @@
     //配送费确认按钮
     $(document).on("click", ".deliveryFee", function () {
         const url = baseUrl + "/merchant/shopInfo/updateDeliveryFee";
-        var deliveryFee = $("#deliverFee").val();
+        var id = $("input[id='deliveryId']").val();
+        var minRadii = $("input[id='minRadii']").val();
+        var maxRadii = $("input[id='maxRadii']").val();
+        var deliveryFee = $("input[id='deliverFee']").val();
+        console.log("id==="+id);
+        console.log("minRadii==="+minRadii);
+        console.log("maxRadii==="+maxRadii);
+        console.log("deliveryFee==="+deliveryFee);
         var params = {
+        	id : id,
+        	minRadii : minRadii,
+        	maxRadii : maxRadii,
             deliveryFee: deliveryFee
         };
         $.post(url, params, function (result, status) {

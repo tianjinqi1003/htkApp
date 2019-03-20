@@ -19,6 +19,11 @@ public interface AdminCommonControllerServiceI {
     /* =======================JSP页面接口开始============================ */
     //用户管理页面数据
     void getManageUserData(Model model, int pageNum, RequestParams params);
+	/**
+	 * 骑手管理页面数据
+	 * @param params 
+	 */
+	void getRiderData(RequestParams params);
     //注册申请列表
     void getRegisterApply(RequestParams params);
     //获取店铺角色列表

@@ -34,6 +34,7 @@
             <li class="layui-nav-item ${category_page ? "layui-this" : ""}"><a href="${sysPath}admin/category/takeoutCategory">分类管理</a></li>
             <li class="layui-nav-item ${permission_page ? "layui-this" : ""}"><a href="${sysPath}admin/permissionPage">权限管理</a></li>
             <li class="layui-nav-item ${registerApp_page ? "layui-this" : ""}"><a href="${sysPath}admin/registerApplyList">注册申请列表</a></li>
+            <li class="layui-nav-item ${rider_page ? "layui-this" : ""}"><a href="${sysPath}admin/riderPage">骑手管理</a></li>
         </ul>
     </div>
 </div>
