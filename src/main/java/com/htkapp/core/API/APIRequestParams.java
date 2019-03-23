@@ -19,8 +19,10 @@ public class APIRequestParams<T> {
     private Integer pageNumber;  //页数
 
     private String phone;   //手机号
+    
+    private Integer userId;//登录用户Id
 
-    private String userName; //登陆用户名
+	private String userName; //登陆用户名
 
     private String password; //登陆密码
 
@@ -71,8 +73,18 @@ public class APIRequestParams<T> {
 	private String cardID;  //身份证号
 	
 	private Integer riderId;
+	
+	private Integer statusCode;
 
-    public Integer getRiderId() {
+    public Integer getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(Integer statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	public Integer getRiderId() {
 		return riderId;
 	}
 
@@ -111,6 +123,14 @@ public class APIRequestParams<T> {
     public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
     }
+
+    public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
     public String getUserName() {
         return userName;

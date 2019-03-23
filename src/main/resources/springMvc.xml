@@ -142,6 +142,7 @@
                         <value>/htkApp/API/riderAPI/</value>
                         <value>/htkApp/API/wxScanUserAPI/</value>
                         <value>/htkApp/API/phWebScanUserAPI/</value>
+                        <value>/htkApp/API/merchantAppAPI/</value>
                         <!-- 商户app放开的公共接口 -->
                         <value>/htkApp/API/accountShopMessageAPI/appAccountShopLoginByUserName
                         </value>
