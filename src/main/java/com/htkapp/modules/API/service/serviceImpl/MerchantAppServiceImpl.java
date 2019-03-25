@@ -36,7 +36,7 @@ public class MerchantAppServiceImpl implements MerchantAppService {
 				return new APIResponseModel<List<OrderRecord>>(Globals.API_SUCCESS, "查询新订单成功", resultList);
 			}
 			else {
-				return new APIResponseModel<List<OrderRecord>>(Globals.API_SUCCESS, "查询新订单成功", null);
+				return new APIResponseModel<List<OrderRecord>>(Globals.API_FAIL, "查询新订单失败", null);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

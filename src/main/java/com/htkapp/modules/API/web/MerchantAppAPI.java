@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
+import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.modules.API.service.MerchantAppService;
 import com.htkapp.modules.merchant.shop.entity.Shop;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
+import com.htkapp.modules.merchant.takeout.service.TakeoutService;
 import com.xiaoleilu.hutool.date.DateUtil;
 
 @Controller
@@ -23,6 +25,8 @@ public class MerchantAppAPI {
 	private MerchantAppService merchantService;
 	@Resource
     private ShopServiceI shopService;
+    @Resource
+    private TakeoutService takeoutService;
 	
 	@RequestMapping(value="/getNewOrderList")
 	@ResponseBody
@@ -34,5 +38,11 @@ public class MerchantAppAPI {
 		//此处是外卖，所以mark是0
 		Shop shop = shopService.getShopByAccountShopIdAndMark(params.getUserId(), 0);
         return merchantService.getNewOrderList(shop.getShopId(), startDate, endDate, params.getStatusCode());
+	}
+	
+	@RequestMapping(value="/confirmTheOrder")
+	@ResponseBody
+	public AjaxResponseModel confirmTheOrder(APIRequestParams params) {
+		return takeoutService.confirmTheOrderSuc(params.getOrderNumber());
 	}
 }
