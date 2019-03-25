@@ -31,6 +31,13 @@ public interface OrderRecordService {
     //取消支付成功的订单并改变订单状态
     boolean changeOrderStateByOrderNumber(String orderNumber, int orderState) throws OrderException;
 
+	/**
+	 * 更改订单是已确认状态
+	 * @param orderNumber
+	 * @return
+	 */
+	boolean changeConfirmedByAppByOrderNumber(String orderNumber);
+
     //通过商铺id查询商铺下的所有订单
     List<OrderRecord> getOrderListByShopId(Integer shopId, Integer mark, int pageNo, int pageLimit) throws Exception;
 
@@ -129,5 +136,17 @@ public interface OrderRecordService {
     /* ====================JSP页面接口结束========================= */
 
 	List<OrderRecord> getUnReceiptAccountToken();
+
+	/**
+	 * 查询已完成的商家app订单
+	 * @param shopId
+	 * @param startDate
+	 * @param endDate
+	 * @param statusCode
+	 * @return
+	 */
+	List<OrderRecord> getFinishedMerchantAppOrderList(Integer shopId, String startDate, String endDate,
+			Integer statusCode) throws Exception;
+
 
 }

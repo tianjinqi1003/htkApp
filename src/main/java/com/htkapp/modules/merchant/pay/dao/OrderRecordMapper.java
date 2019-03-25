@@ -25,6 +25,12 @@ public interface OrderRecordMapper {
     OrderRecord getOrderRecordByOrderIdDAO(int orderId);
     //取消支付成功的订单并改变订单状态
     int changeOrderStateByOrderNumberDAO(@Param("orderNumber") String orderNumber, @Param("orderState") int orderState);
+	/**
+	 * 更改已确认订单状态
+	 * @param orderNumber
+	 * @return
+	 */
+	int changeConfirmedByAppByOrderNumberDAO(String orderNumber);
     //通过商铺id查询商铺下的所有订单
     List<OrderRecord> getOrderListByShopIdDAO(@Param("shopId") Integer shopId, @Param("mark") int mark);
     //通过商铺id和商铺类型mark　查询订单列表
@@ -85,6 +91,15 @@ public interface OrderRecordMapper {
     List<OrderRecord> getOrderPageDataByConditionDAO(@Param("shopId") int shopId,@Param("mark") int mark,@Param("startDate") String startDate,@Param("endDate") String endDate,@Param("status") int status, @Param("orderDesc") String orderDesc);
     //外卖订单－实时订单条件查询
     List<OrderRecord> getTakeoutRealTimeOrderByConditionDAO(@Param("shopId") int shopId, @Param("startDate")String startDate, @Param("endDate") String endDate, @Param("statusCode") int statusCode);
+	/**
+	 * 查询商家app端已完成的订单
+	 * @param shopId
+	 * @param startDate
+	 * @param endDate
+	 * @param statusCode
+	 * @return
+	 */
+	List<OrderRecord> getFinishedMerchantAppOrderList(Integer shopId, String startDate, String endDate, Integer statusCode);
     //根据时间统计已接订单数量
     int statisticalOrderQuantityByStateIdAndDateDAO(Integer shopId, Integer stateId, String startTime, String endTime);
     //根据时间统计订单总收入

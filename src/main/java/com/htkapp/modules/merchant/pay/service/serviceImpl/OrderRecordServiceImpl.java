@@ -61,7 +61,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 		}
 		Timer timer=new Timer();
 		OrderRecordTask task=new OrderRecordTask();
-		timer.schedule(task, date, PERIOD_DAY);//安排指定的任务在指定的时间开始进行重复的固定延迟执行
+		//timer.schedule(task, date, PERIOD_DAY);//安排指定的任务在指定的时间开始进行重复的固定延迟执行
 		
 		/*
 		Desktop dt = Desktop.getDesktop();
@@ -182,6 +182,17 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             throw new OrderException(Globals.CALL_DATABASE_ERROR);
         }
     }
+
+	@Override
+	public boolean changeConfirmedByAppByOrderNumber(String orderNumber) {
+		// TODO Auto-generated method stub
+		try {
+            int row = orderRecordDao.changeConfirmedByAppByOrderNumberDAO(orderNumber);
+            return row > 0;
+        } catch (OrderException e) {
+            throw new OrderException(Globals.CALL_DATABASE_ERROR);
+        }
+	}
 
     //通过商铺id查询商铺下的所有订单
     @Override
@@ -500,6 +511,22 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             throw new Exception(e.getMessage());
         }
     }
+
+	@Override
+	public List<OrderRecord> getFinishedMerchantAppOrderList(Integer shopId, String startDate, String endDate,
+			Integer statusCode) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+            List<OrderRecord> resultList = orderRecordDao.getFinishedMerchantAppOrderList(shopId, startDate, endDate, statusCode);
+            if (resultList != null && resultList.size() > 0) {
+                return resultList;
+            }
+            return null;
+        } catch (Exception e) {
+            LogUtil.error(cls, e.getMessage(), e);
+            throw new Exception(e.getMessage());
+        }
+	}
 
     //根据日期查找是否已有订单记录（用于插入序号）
     @Override

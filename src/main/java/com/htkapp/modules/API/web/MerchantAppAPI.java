@@ -22,7 +22,7 @@ import com.xiaoleilu.hutool.date.DateUtil;
 public class MerchantAppAPI {
 
 	@Resource
-	private MerchantAppService merchantService;
+	private MerchantAppService merchantAppService;
 	@Resource
     private ShopServiceI shopService;
     @Resource
@@ -37,12 +37,30 @@ public class MerchantAppAPI {
         String endDate = DateUtil.endOfDay(new Date()).toString();
 		//此处是外卖，所以mark是0
 		Shop shop = shopService.getShopByAccountShopIdAndMark(params.getUserId(), 0);
-        return merchantService.getNewOrderList(shop.getShopId(), startDate, endDate, params.getStatusCode());
+        return merchantAppService.getNewOrderList(shop.getShopId(), startDate, endDate, params.getStatusCode());
+	}
+	
+	@RequestMapping(value="/getFinishedOrderList")
+	@ResponseBody
+	public APIResponseModel getFinishedOrderList(APIRequestParams params) throws Exception {
+		
+		//String startDate = DateUtil.beginOfDay(new Date()).toString();
+		String startDate = "2019-03-01";
+		String endDate = DateUtil.endOfDay(new Date()).toString();
+		//此处是外卖，所以mark是0
+		Shop shop = shopService.getShopByAccountShopIdAndMark(params.getUserId(), 0);
+		return merchantAppService.getFinishedOrderList(shop.getShopId(), startDate, endDate, params.getStatusCode());
 	}
 	
 	@RequestMapping(value="/confirmTheOrder")
 	@ResponseBody
 	public AjaxResponseModel confirmTheOrder(APIRequestParams params) {
 		return takeoutService.confirmTheOrderSuc(params.getOrderNumber());
+	}
+	
+	@RequestMapping(value="/confirmFinishedOrder")
+	@ResponseBody
+	public AjaxResponseModel confirmFinishedOrder(APIRequestParams params) {
+		return merchantAppService.confirmFinishedOrder(params.getOrderNumber());
 	}
 }

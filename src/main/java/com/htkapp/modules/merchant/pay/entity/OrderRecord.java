@@ -39,8 +39,10 @@ public class OrderRecord {
     private Integer mark;  //标记  0是外卖   1是团购
 
     private Integer orderState;  //订单状态  1:用户下单成功   2:商家接单成功   3:派送中   4:用户收货成功 5取消订单
+    
+    private Integer confirmedByApp;//是否已被商家app确认过  1.确认过   0.没有确认过
 
-    private List<OrderProduct> productLists; //产品集合
+	private List<OrderProduct> productLists; //产品集合
 
     private OrderBuyPackage orderBuyPackage; //团购套餐对象
 
@@ -159,6 +161,14 @@ public class OrderRecord {
     public void setOrderState(Integer orderState) {
         this.orderState = orderState;
     }
+
+    public Integer getConfirmedByApp() {
+		return confirmedByApp;
+	}
+
+	public void setConfirmedByApp(Integer confirmedByApp) {
+		this.confirmedByApp = confirmedByApp;
+	}
 
     public String getOrderTime() {
         return orderTime;

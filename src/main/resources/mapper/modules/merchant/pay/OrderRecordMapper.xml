@@ -182,6 +182,11 @@
         set order_state = #{orderState}
         where order_number = #{orderNumber}
     </update>
+    <update id="changeConfirmedByAppByOrderNumberDAO">
+    	update order_record
+        set confirmed_by_app = '1'
+        where order_number = #{orderNumber}
+    </update>
     <select id="getOrderListByShopIdDAO" resultType="OrderRecord">
         select
         id,account_token as token
@@ -482,6 +487,11 @@
             </otherwise>
         </choose>
         group by order_record.id order by order_record.gmt_create desc
+    </select>
+    <select id="getFinishedMerchantAppOrderList">
+    	select * from order_record
+    	where shop_id = #{shopId} and mark = 0 and confirmed_by_app='0' and 
+        order_record.gmt_create between #{startDate} and #{endDate} and order_state = 4
     </select>
     <select id="verifyOrderExitByDateDAO" resultType="OrderRecord">
         select
