@@ -1,5 +1,6 @@
 package com.htkapp.modules.API.service.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,10 +11,15 @@ import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.service.MerchantAppService;
+import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
 import com.htkapp.modules.merchant.pay.entity.OrderRecord;
 import com.htkapp.modules.merchant.pay.service.OrderProductService;
 import com.htkapp.modules.merchant.pay.service.OrderRecordService;
+import com.htkapp.modules.merchant.shop.dao.AccountShopMapper;
+import com.htkapp.modules.merchant.shop.dao.ShopMapper;
+import com.htkapp.modules.merchant.shop.entity.Shop;
+import com.xiaoleilu.hutool.date.DateUtil;
 
 @Service
 public class MerchantAppServiceImpl implements MerchantAppService {
@@ -22,6 +28,10 @@ public class MerchantAppServiceImpl implements MerchantAppService {
 	private OrderRecordService orderRecordService;
 	@Resource
 	private OrderProductService orderProductService;
+	@Resource
+    private AccountShopMapper accountShopDao;
+	@Resource
+    private ShopMapper shopDao;
 
 	@Override
 	public APIResponseModel getNewOrderList(Integer shopId, String startDate, String endDate, Integer statusCode) {
@@ -77,6 +87,22 @@ public class MerchantAppServiceImpl implements MerchantAppService {
             return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, "确认订单成功!");
         }
         return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, "确认订单失败!");
+	}
+
+	@Override
+	public AjaxResponseModel findByUserNamePwd(String userName, String password) {
+		// TODO Auto-generated method stub
+		LoginUser loginUser = accountShopDao.getAccountShopByNameAndPwdDAO(userName, password);
+		Date endTime = DateUtil.parse(loginUser.getUseEndTime());
+        Date nowTime = new Date();
+        if (nowTime.getTime() > endTime.getTime()) {
+            return new AjaxResponseModel(Globals.API_FAIL, "帐号使用时间过期");
+        }
+        
+        Shop shop = shopDao.getShopByAccountShopIdAndMarkDAO(loginUser.getUserId(), 0);
+        loginUser.setState(shop.getState());
+        loginUser.setShopName(shop.getShopName());
+		return new AjaxResponseModel<LoginUser>(Globals.API_SUCCESS, "成功", loginUser);
 	}
 
 }

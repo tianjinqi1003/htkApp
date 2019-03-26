@@ -16,4 +16,6 @@ public interface MerchantAppService {
 	 */
 	AjaxResponseModel confirmFinishedOrder(String orderNumber);
 
+	AjaxResponseModel findByUserNamePwd(String userName, String password);
+
 }
