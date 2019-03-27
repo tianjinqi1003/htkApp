@@ -513,7 +513,7 @@ public class OrderRecordServiceImpl implements OrderRecordService {
     }
 
 	@Override
-	public List<OrderRecord> getFinishedMerchantAppOrderList(Integer shopId, String startDate, String endDate,
+	public List<OrderRecord> getFinishedMerchantAppOrderList(int shopId, String startDate, String endDate,
 			Integer statusCode) throws Exception {
 		// TODO Auto-generated method stub
 		try {

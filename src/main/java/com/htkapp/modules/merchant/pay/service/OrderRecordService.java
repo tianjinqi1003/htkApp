@@ -145,7 +145,7 @@ public interface OrderRecordService {
 	 * @param statusCode
 	 * @return
 	 */
-	List<OrderRecord> getFinishedMerchantAppOrderList(Integer shopId, String startDate, String endDate,
+	List<OrderRecord> getFinishedMerchantAppOrderList(int shopId, String startDate, String endDate,
 			Integer statusCode) throws Exception;
 
 

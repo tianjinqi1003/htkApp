@@ -57,7 +57,7 @@ public class MerchantAppServiceImpl implements MerchantAppService {
 	}
 
 	@Override
-	public APIResponseModel getFinishedOrderList(Integer shopId, String startDate, String endDate, Integer statusCode) {
+	public APIResponseModel getFinishedOrderList(int shopId, String startDate, String endDate, Integer statusCode) {
 		// TODO Auto-generated method stub
 
 		try {

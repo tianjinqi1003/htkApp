@@ -7,7 +7,7 @@ public interface MerchantAppService {
 
 	APIResponseModel getNewOrderList(Integer shopId, String startDate, String endDate, Integer statusCode);
 
-	APIResponseModel getFinishedOrderList(Integer shopId, String startDate, String endDate, Integer statusCode);
+	APIResponseModel getFinishedOrderList(int shopId, String startDate, String endDate, Integer statusCode);
 
 	/**
 	 * 确认已完成订单

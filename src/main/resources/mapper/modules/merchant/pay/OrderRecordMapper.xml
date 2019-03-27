@@ -488,7 +488,7 @@
         </choose>
         group by order_record.id order by order_record.gmt_create desc
     </select>
-    <select id="getFinishedMerchantAppOrderList">
+    <select id="getFinishedMerchantAppOrderList" resultType="OrderRecord">
     	select * from order_record
     	where shop_id = #{shopId} and mark = 0 and confirmed_by_app='0' and 
         order_record.gmt_create between #{startDate} and #{endDate} and order_state = 4

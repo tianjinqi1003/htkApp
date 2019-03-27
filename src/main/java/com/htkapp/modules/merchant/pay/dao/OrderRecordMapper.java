@@ -99,7 +99,7 @@ public interface OrderRecordMapper {
 	 * @param statusCode
 	 * @return
 	 */
-	List<OrderRecord> getFinishedMerchantAppOrderList(Integer shopId, String startDate, String endDate, Integer statusCode);
+	List<OrderRecord> getFinishedMerchantAppOrderList(@Param("shopId") int shopId, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("statusCode") int statusCode);
     //根据时间统计已接订单数量
     int statisticalOrderQuantityByStateIdAndDateDAO(Integer shopId, Integer stateId, String startTime, String endTime);
     //根据时间统计订单总收入
