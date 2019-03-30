@@ -75,8 +75,28 @@ public class APIRequestParams<T> {
 	private Integer riderId;
 	
 	private Integer statusCode;
+	
+    private String actionName; //动作名称
+    
+    private String selectedIds; //选中的id
 
-    public Integer getStatusCode() {
+    public String getSelectedIds() {
+		return selectedIds;
+	}
+
+	public void setSelectedIds(String selectedIds) {
+		this.selectedIds = selectedIds;
+	}
+
+	public String getActionName() {
+		return actionName;
+	}
+
+	public void setActionName(String actionName) {
+		this.actionName = actionName;
+	}
+
+	public Integer getStatusCode() {
 		return statusCode;
 	}
 
