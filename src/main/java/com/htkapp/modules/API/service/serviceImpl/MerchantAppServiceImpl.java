@@ -1,15 +1,19 @@
 package com.htkapp.modules.API.service.serviceImpl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.htkapp.core.OtherUtils;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.utils.Globals;
+import com.htkapp.modules.API.entity.ProductDetail;
 import com.htkapp.modules.API.service.MerchantAppService;
 import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
@@ -19,6 +23,10 @@ import com.htkapp.modules.merchant.pay.service.OrderRecordService;
 import com.htkapp.modules.merchant.shop.dao.AccountShopMapper;
 import com.htkapp.modules.merchant.shop.dao.ShopMapper;
 import com.htkapp.modules.merchant.shop.entity.Shop;
+import com.htkapp.modules.merchant.takeout.entity.TakeoutCategory;
+import com.htkapp.modules.merchant.takeout.entity.TakeoutProduct;
+import com.htkapp.modules.merchant.takeout.service.TakeoutCategoryServiceI;
+import com.htkapp.modules.merchant.takeout.service.TakeoutProductServiceI;
 import com.xiaoleilu.hutool.date.DateUtil;
 
 @Service
@@ -32,6 +40,10 @@ public class MerchantAppServiceImpl implements MerchantAppService {
     private AccountShopMapper accountShopDao;
 	@Resource
     private ShopMapper shopDao;
+    @Resource
+    private TakeoutCategoryServiceI takeoutCategoryService;
+    @Resource
+    private TakeoutProductServiceI takeoutProductService;
 
 	@Override
 	public APIResponseModel getNewOrderList(Integer shopId, String startDate, String endDate, Integer statusCode) {
@@ -103,6 +115,26 @@ public class MerchantAppServiceImpl implements MerchantAppService {
         loginUser.setState(shop.getState());
         loginUser.setShopName(shop.getShopName());
 		return new AjaxResponseModel<LoginUser>(Globals.API_SUCCESS, "成功", loginUser);
+	}
+
+	@Override
+	public APIResponseModel getProductDetailByPID(Integer userId, Integer productId) {
+		// TODO Auto-generated method stub
+		List<TakeoutCategory> resultList=null;
+		TakeoutProduct takeoutProduct=null;
+		try {
+            resultList = takeoutCategoryService.getTakeoutCategoryListByAccountShopId(userId);
+            //dataMap.put("data", resultList);
+            takeoutProduct = takeoutProductService.getTakeoutProductById(userId, productId);
+            if (takeoutProduct != null) {
+                takeoutProduct.setImgUrl(OtherUtils.getRootDirectory() + takeoutProduct.getImgUrl());
+            }
+            //dataMap.put("dataPro", takeoutProduct);
+        } catch (Exception e) {
+            //model.addAttribute("dataPro", null);
+            return new APIResponseModel(Globals.API_FAIL, "失败");
+        }
+		return new APIResponseModel<ProductDetail>(Globals.API_SUCCESS, "成功", new ProductDetail(resultList,takeoutProduct));
 	}
 
 }

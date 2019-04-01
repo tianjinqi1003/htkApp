@@ -18,4 +18,12 @@ public interface MerchantAppService {
 
 	AjaxResponseModel findByUserNamePwd(String userName, String password);
 
+	/**
+	 * 根据产品id查找出商品详情
+	 * @param userId 
+	 * @param productId
+	 * @return
+	 */
+	APIResponseModel getProductDetailByPID(Integer userId, Integer productId);
+
 }

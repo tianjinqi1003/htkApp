@@ -101,18 +101,27 @@ public class MerchantAppAPI {
         try {
             return  takeoutService.takeOnProduct(null, params.getSelectedIds());
         } catch (Exception e) {
-            return new AjaxResponseModel<>(Globals.COMMON_OPERATION_FAILED, "下架失败");
+            return new AjaxResponseModel<>(Globals.COMMON_OPERATION_FAILED, "上架失败");
         }
     }
     
     //外卖商品下架页面
-    @RequestMapping(value = "/product/takeOff")
+    @RequestMapping(value = "/takeout/product/takeOff")
     @ResponseBody
     public AjaxResponseModel takeOff(APIRequestParams params) {
         try {
-                return takeoutService.takeOffProduct(null, params.getSelectedIds());
+            return takeoutService.takeOffProduct(null, params.getSelectedIds());
         } catch (Exception e) {
             return new AjaxResponseModel<>(Globals.COMMON_OPERATION_FAILED, "下架失败");
         }
+    }
+    
+
+    //编辑商品页面
+    @RequestMapping(value = "/takeout/product/editProduct")
+    @ResponseBody
+    public APIResponseModel editProduct(APIRequestParams params) {
+        //根据产品id查找出商品详情
+        return merchantAppService.getProductDetailByPID(params.getUserId(),params.getProductId());
     }
 }
