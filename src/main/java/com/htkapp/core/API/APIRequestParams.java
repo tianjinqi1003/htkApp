@@ -35,8 +35,10 @@ public class APIRequestParams<T> {
     private short loginWay;  //登陆方式
 
     private MultipartFile avaImgFile;
+    
+    private MultipartFile imgFile;
 
-    private String nickName;
+	private String nickName;
 
     private String weChatToken;  //接入第三方微信登陆返回的标识
 
@@ -79,8 +81,28 @@ public class APIRequestParams<T> {
     private String actionName; //动作名称
     
     private String selectedIds; //选中的id
+    
+    private String takeoutProductJOStr;
+    
+    private String takeoutProductPropertyJAStr;
 
-    public String getSelectedIds() {
+    public String getTakeoutProductPropertyJAStr() {
+		return takeoutProductPropertyJAStr;
+	}
+
+	public void setTakeoutProductPropertyJAStr(String takeoutProductPropertyJAStr) {
+		this.takeoutProductPropertyJAStr = takeoutProductPropertyJAStr;
+	}
+
+	public String getTakeoutProductJOStr() {
+		return takeoutProductJOStr;
+	}
+
+	public void setTakeoutProductJOStr(String takeoutProductJOStr) {
+		this.takeoutProductJOStr = takeoutProductJOStr;
+	}
+
+	public String getSelectedIds() {
 		return selectedIds;
 	}
 
@@ -215,6 +237,14 @@ public class APIRequestParams<T> {
     public void setAvaImgFile(MultipartFile avaImgFile) {
         this.avaImgFile = avaImgFile;
     }
+
+    public MultipartFile getImgFile() {
+		return imgFile;
+	}
+
+	public void setImgFile(MultipartFile imgFile) {
+		this.imgFile = imgFile;
+	}
 
     public String getNickName() {
         return nickName;
