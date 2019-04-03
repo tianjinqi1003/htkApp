@@ -84,7 +84,17 @@ public class APIRequestParams<T> {
     
     private String takeoutProductJOStr;
     
-    private String takeoutProductPropertyJAStr;
+    private String takeoutProductJAStr;
+    
+    public String getTakeoutProductJAStr() {
+		return takeoutProductJAStr;
+	}
+
+	public void setTakeoutProductJAStr(String takeoutProductJAStr) {
+		this.takeoutProductJAStr = takeoutProductJAStr;
+	}
+
+	private String takeoutProductPropertyJAStr;
 
     public String getTakeoutProductPropertyJAStr() {
 		return takeoutProductPropertyJAStr;

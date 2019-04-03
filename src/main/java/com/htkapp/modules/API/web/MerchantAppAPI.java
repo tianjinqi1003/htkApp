@@ -27,9 +27,13 @@ import com.htkapp.modules.API.service.MerchantAppService;
 import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.shop.entity.Shop;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
+import com.htkapp.modules.merchant.takeout.dto.AddProductList;
+import com.htkapp.modules.merchant.takeout.dto.ListProperty;
 import com.htkapp.modules.merchant.takeout.dto.Property;
 import com.htkapp.modules.merchant.takeout.dto.PropertyList;
+import com.htkapp.modules.merchant.takeout.entity.TakeoutCategory;
 import com.htkapp.modules.merchant.takeout.entity.TakeoutProduct;
+import com.htkapp.modules.merchant.takeout.service.TakeoutCategoryServiceI;
 import com.htkapp.modules.merchant.takeout.service.TakeoutService;
 import com.xiaoleilu.hutool.date.DateUtil;
 
@@ -136,7 +140,11 @@ public class MerchantAppAPI {
         return merchantAppService.getProductDetailByPID(params.getUserId(),params.getProductId());
     }
     
-    //保存外卖商品修改接口
+    /**
+     * 保存外卖商品修改接口
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/takeout/product/saveProduct")
     @ResponseBody
     public APIResponseModel saveProduct(APIRequestParams params) {
@@ -148,7 +156,7 @@ public class MerchantAppAPI {
 	    	String tppJAStr = params.getTakeoutProductPropertyJAStr();
 	    	//String tppJAStr = "[{\"propertyE\":\"微辣\"}]";
 	    	JSONArray tppJA = JSONArray.fromObject(tppJAStr);
-	    	List<Property> propertyList = new ArrayList<>();
+	    	List<Property> propertyList = new ArrayList<Property>();
 	    	for (Object tppObj : tppJA) {
 		    	Property pro = new Property();
 		    	JSONObject tppJO = (JSONObject)tppObj;
@@ -162,7 +170,63 @@ public class MerchantAppAPI {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+	        return new APIResponseModel(Globals.API_FAIL, "失败");
 		}
         return new APIResponseModel(Globals.API_SUCCESS, "成功");
     }
+    
+    /**
+     * 新增外卖商品
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/takeout/product/addProduct")
+    @ResponseBody
+    public APIResponseModel addProduct(APIRequestParams params) {
+    	MultipartFile imgFile = params.getImgFile();
+    	JSONObject takeoutProductJO = JSONObject.fromObject(params.getTakeoutProductJOStr());
+    	TakeoutProduct product = (TakeoutProduct)JSONObject.toBean(takeoutProductJO, TakeoutProduct.class);
+
+    	String tpJAStr = params.getTakeoutProductJAStr();
+    	JSONArray tpJA = JSONArray.fromObject(tpJAStr);
+    	List<ListProperty> lpList = new ArrayList<ListProperty>();
+    	for (Object tpObj : tpJA) {
+    		ListProperty lp = new ListProperty();
+    		JSONObject tpJO = (JSONObject)tpObj;
+    		lp.setPrice(tpJO.getDouble("price"));
+    		lp.setPriceCanhe(tpJO.getDouble("priceCanhe"));
+    		lp.setInventory(tpJO.getInt("inventory"));
+    		lp.setInventoryCount(tpJO.getInt("inventoryCount"));
+    		lpList.add(lp);
+		}
+    	
+    	String tppJAStr = params.getTakeoutProductPropertyJAStr();
+    	JSONArray tppJA = JSONArray.fromObject(tppJAStr);
+    	List<Property> propertyList = new ArrayList<>();
+    	for (Object tppObj : tppJA) {
+	    	Property pro = new Property();
+	    	JSONObject tppJO = (JSONObject)tppObj;
+	    	pro.setPropertyE(tppJO.getString("propertyE"));
+	    	propertyList.add(pro);
+		}
+    	try {
+    		merchantAppService.addTakeoutProduct(product, imgFile, null, new AddProductList(lpList), new PropertyList(propertyList),params.getUserId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+            return new APIResponseModel(Globals.API_FAIL, "失败");
+		}
+    	return new APIResponseModel(Globals.API_SUCCESS, "成功");
+    }
+    
+    @RequestMapping(value = "/takeout/getCategoryListById")
+    @ResponseBody
+    public APIResponseModel getCategoryListById(APIRequestParams params) {
+		
+    	List<TakeoutCategory> resultList = merchantAppService.getTakeoutCategoryListByAccountShopId(params.getUserId());
+        if (resultList == null) {
+            return new APIResponseModel(Globals.API_FAIL, "失败");
+        }
+    	return new APIResponseModel(Globals.API_SUCCESS, "成功",resultList);
+	}
 }

@@ -2,16 +2,22 @@ package com.htkapp.modules.API.service.serviceImpl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.htkapp.core.LogUtil;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
+import com.htkapp.core.utils.FileUploadUtils;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.entity.ProductDetail;
 import com.htkapp.modules.API.service.MerchantAppService;
@@ -23,6 +29,11 @@ import com.htkapp.modules.merchant.pay.service.OrderRecordService;
 import com.htkapp.modules.merchant.shop.dao.AccountShopMapper;
 import com.htkapp.modules.merchant.shop.dao.ShopMapper;
 import com.htkapp.modules.merchant.shop.entity.Shop;
+import com.htkapp.modules.merchant.shop.service.ShopServiceI;
+import com.htkapp.modules.merchant.takeout.dto.AddProductList;
+import com.htkapp.modules.merchant.takeout.dto.ListProperty;
+import com.htkapp.modules.merchant.takeout.dto.Property;
+import com.htkapp.modules.merchant.takeout.dto.PropertyList;
 import com.htkapp.modules.merchant.takeout.entity.TakeoutCategory;
 import com.htkapp.modules.merchant.takeout.entity.TakeoutProduct;
 import com.htkapp.modules.merchant.takeout.service.TakeoutCategoryServiceI;
@@ -40,6 +51,8 @@ public class MerchantAppServiceImpl implements MerchantAppService {
     private AccountShopMapper accountShopDao;
 	@Resource
     private ShopMapper shopDao;
+    @Resource
+    private ShopServiceI shopService;
     @Resource
     private TakeoutCategoryServiceI takeoutCategoryService;
     @Resource
@@ -135,6 +148,71 @@ public class MerchantAppServiceImpl implements MerchantAppService {
             return new APIResponseModel(Globals.API_FAIL, "失败");
         }
 		return new APIResponseModel<ProductDetail>(Globals.API_SUCCESS, "成功", new ProductDetail(resultList,takeoutProduct));
+	}
+
+	@Override
+	public List<TakeoutCategory> getTakeoutCategoryListByAccountShopId(Integer userId) {
+		// TODO Auto-generated method stub
+		List<TakeoutCategory> tcList=null;
+		try {
+			tcList = takeoutCategoryService.getTakeoutCategoryListByAccountShopId(userId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			return tcList;
+		}
+	}
+
+	@Override
+	public void addTakeoutProduct(TakeoutProduct takeoutProduct, MultipartFile imgFile,
+            String label, AddProductList productList, PropertyList propertyList, Integer userId) throws Exception {
+		// TODO Auto-generated method stub
+		//商品名称
+        //店内分类
+        //图片
+        //描述
+        //标签
+        //价格与库存
+        //属性
+        //售卖时间(全时段售卖，　自定义时间售卖)
+        //按照规格来添加商品(几个规格添加几个商品)
+        //处理产品图片
+        if (imgFile != null) {
+            String uploadUrl = FileUploadUtils.appUploadAvatarImg(imgFile, "shop/takeout/", FTPConfig.port_to);
+            takeoutProduct.setImgUrl(uploadUrl);
+        }
+        String labels = String.valueOf(label);
+        takeoutProduct.setLabel(labels);
+        //产品属性集合
+        Set<String> propertyLists = new HashSet<>();
+        StringBuffer property = new StringBuffer();
+        if (propertyList != null && propertyList.getPropertyList() != null) {
+            for (Property every : propertyList.getPropertyList()) {
+                propertyLists.add(every.getPropertyE());
+            }
+            for (String ever : propertyLists) {
+                property.append(ever).append(",");
+            }
+        }
+        Shop shop = shopService.getShopIdByAccountShopId(userId, takeoutProduct.getMark());
+        if (productList != null && productList.getList().size() > 0) {
+            for (ListProperty each : productList.getList()) {
+                takeoutProduct.setShopId(shop.getShopId());
+                takeoutProduct.setPrice(each.getPrice());
+                takeoutProduct.setPriceCanhe(each.getPriceCanhe());
+                takeoutProduct.setProperty(String.valueOf(property));
+                takeoutProduct.setInventory(each.getInventory());
+                takeoutProduct.setInventoryCount(each.getInventoryCount());
+                takeoutProductService.addTakeoutProduct(takeoutProduct);
+            }
+        } else {
+            takeoutProduct.setShopId(shop.getShopId());
+            takeoutProduct.setProperty(String.valueOf(property));
+            takeoutProductService.addTakeoutProduct(takeoutProduct);
+        }
+		
 	}
 
 }
