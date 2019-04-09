@@ -22,8 +22,10 @@ import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.utils.FileUploadUtils;
 import com.htkapp.core.utils.Globals;
+import com.htkapp.core.utils.Jpush;
 import com.htkapp.core.utils.StringUtils;
 import com.htkapp.modules.API.service.MerchantAppService;
+import com.htkapp.modules.API.service.PaymentInterfaceService;
 import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.shop.entity.Shop;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
@@ -50,6 +52,8 @@ public class MerchantAppAPI {
     private ShopServiceI shopService;
     @Resource
     private TakeoutService takeoutService;
+    @Resource
+    private PaymentInterfaceService paymentInterfaceService;
     
     @RequestMapping(value = "/login")
     @ResponseBody
@@ -87,6 +91,14 @@ public class MerchantAppAPI {
 	public AjaxResponseModel confirmTheOrder(APIRequestParams params) {
 		return takeoutService.confirmTheOrderSuc(params.getOrderNumber());
 	}
+
+    //调起退款
+    @RequestMapping(value = "/callUpRefundInterface")
+    @ResponseBody
+    public APIResponseModel callUpRefundInterface(APIRequestParams params) {
+    	params.setToken(params.getAccountToken());
+        return paymentInterfaceService.callUpRefundInterfaceHTK(params, params.getOrderNumber());
+    }
 	
 	@RequestMapping(value="/confirmFinishedOrder")
 	@ResponseBody
@@ -228,5 +240,14 @@ public class MerchantAppAPI {
             return new APIResponseModel(Globals.API_FAIL, "失败");
         }
     	return new APIResponseModel(Globals.API_SUCCESS, "成功",resultList);
+	}
+    
+    @RequestMapping(value = "/sendNotification")
+    @ResponseBody
+    public APIResponseModel sendNotification(APIRequestParams params) {
+
+    	//Jpush.jPushMethodToMerchantApp("f8030831-996d-4a42-8ac3-df1b3793de19", "自助点餐订单下单成功", "ALERT", "商家接单app");
+    	Jpush.jPushMethodToMerchantApp(params.getMobilePhone(), "外卖订单下单成功", "ALERT", "商家接单app");//这里为了方便，token用phone代替，每个商家由phone区分开，和用token做标识推送一样
+    	return new APIResponseModel(Globals.API_SUCCESS, "成功");
 	}
 }

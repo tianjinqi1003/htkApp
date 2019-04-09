@@ -65,6 +65,31 @@ public class Jpush {
             System.out.println("商家推送"+e.getStatus());
         }
     }
+    
+    public static void jPushMethodToMerchantApp(String token, String pushContent,String c, String title){
+    	JPushClient jpushClient = new JPushClient(JpushConfig.M_APP_MASTER_SECRET, JpushConfig.M_APP_APP_KEY, null, ClientConfig.getInstance());
+    	PushPayload payload = null;
+    	if(c.equals("ALERT")){
+    		//通知
+    		payload = buildPushObject_android_alias_alertWithTitle(token.replaceAll("-",""), pushContent, title);
+    	}else {
+    		//消息
+    		payload = buildPushObject_android_alias_mesWithTitle(token.replaceAll("-",""), pushContent);
+    	}
+    	try {
+    		PushResult result = jpushClient.sendPush(payload);
+    		System.out.println("商家App推送"+result);
+    	} catch (APIConnectionException e) {
+    		System.out.println("商家App推送"+e);
+    		
+    	} catch (APIRequestException e) {
+    		e.printStackTrace();
+    		System.out.println("商家App推送"+e.getErrorCode());
+    		System.out.println("商家App推送"+e);
+    		System.out.println("商家App推送"+e.getErrorMessage());
+    		System.out.println("商家App推送"+e.getStatus());
+    	}
+    }
 
 
     //构建推送对象：平台是 Android，目标是 tag 为 "tag1" 的设备，内容是 Android 通知 ALERT，并且标题为 TITLE。

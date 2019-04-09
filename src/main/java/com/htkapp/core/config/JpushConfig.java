@@ -14,6 +14,11 @@ public class JpushConfig {
     public static final String M_APP_KEY = "9009f9d77cbb9383c7aeed4e";
 
     public static final String M_MASTER_SECRET = "d544418535ffcdad9b623077";
+    
+
+    public static final String M_APP_APP_KEY = "a9ebbacf10b5ef258ea9d824";
+    
+    public static final String M_APP_MASTER_SECRET = "8eb5269ef1243c436ee7f56a";
 
 
 }

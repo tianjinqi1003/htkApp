@@ -20,7 +20,9 @@ public class APIRequestParams<T> {
 
     private String phone;   //手机号
     
-    private Integer userId;//登录用户Id
+    private String mobilePhone;   //店铺联系手机号
+
+	private Integer userId;//登录用户Id
 
 	private String userName; //登陆用户名
 
@@ -231,6 +233,14 @@ public class APIRequestParams<T> {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    
+    public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
 
     public short getLoginWay() {
         return loginWay;

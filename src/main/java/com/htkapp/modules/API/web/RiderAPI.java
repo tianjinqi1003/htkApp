@@ -90,7 +90,7 @@ public class RiderAPI {
     }
     
     //确认收货
-    @RequestMapping(value = "/enterReceipt", method = RequestMethod.POST)
+    @RequestMapping(value = "/enterReceipt")
     @ResponseBody
     public AjaxResponseModel enterReceipt(APIRequestParams params) {
     	APIResponseModel apiResponseModel = accountService.enterReceipt(null,params.getOrderNumber(), params.getAccountToken());
