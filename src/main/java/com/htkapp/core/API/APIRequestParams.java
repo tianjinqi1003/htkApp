@@ -52,7 +52,9 @@ public class APIRequestParams<T> {
 
     private Integer flag;  //标记
 
-    private String content; //内容
+    private String title; //标题
+
+	private String content; //内容
 
     private int mark;  //区别：　0外卖　1团购 2自助点餐
 
@@ -313,6 +315,14 @@ public class APIRequestParams<T> {
     public void setFlag(Integer flag) {
         this.flag = flag;
     }
+    
+    public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
     public String getContent() {
         return content;

@@ -2,7 +2,9 @@ package com.htkapp.modules.API.web;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -246,8 +248,10 @@ public class MerchantAppAPI {
     @ResponseBody
     public APIResponseModel sendNotification(APIRequestParams params) {
 
+    	Map<String, String> extras = new HashMap<String, String>();
+    	extras.put("actionName", params.getActionName());
     	//Jpush.jPushMethodToMerchantApp("f8030831-996d-4a42-8ac3-df1b3793de19", "自助点餐订单下单成功", "ALERT", "商家接单app");
-    	Jpush.jPushMethodToMerchantApp(params.getMobilePhone(), "外卖订单下单成功", "ALERT", "商家接单app");//这里为了方便，token用phone代替，每个商家由phone区分开，和用token做标识推送一样
+    	Jpush.jPushMethodToMerchantApp(params.getMobilePhone(), params.getContent(), "ALERT", params.getTitle(),extras);//这里为了方便，token用phone代替，每个商家由phone区分开，和用token做标识推送一样
     	return new APIResponseModel(Globals.API_SUCCESS, "成功");
 	}
 }

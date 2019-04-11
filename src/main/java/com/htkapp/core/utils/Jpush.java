@@ -10,6 +10,9 @@ import cn.jpush.api.push.model.Platform;
 import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.Notification;
+
+import java.util.Map;
+
 import com.htkapp.core.config.JpushConfig;
 
 /**
@@ -66,12 +69,12 @@ public class Jpush {
         }
     }
     
-    public static void jPushMethodToMerchantApp(String token, String pushContent,String c, String title){
+    public static void jPushMethodToMerchantApp(String token, String pushContent,String c, String title,Map<String, String> extras){
     	JPushClient jpushClient = new JPushClient(JpushConfig.M_APP_MASTER_SECRET, JpushConfig.M_APP_APP_KEY, null, ClientConfig.getInstance());
     	PushPayload payload = null;
     	if(c.equals("ALERT")){
     		//通知
-    		payload = buildPushObject_android_alias_alertWithTitle(token.replaceAll("-",""), pushContent, title);
+    		payload = buildPushObject_android_alias_alertWithTitle(token.replaceAll("-",""), pushContent, title, extras);
     	}else {
     		//消息
     		payload = buildPushObject_android_alias_mesWithTitle(token.replaceAll("-",""), pushContent);
@@ -101,6 +104,17 @@ public class Jpush {
                 .setAudience(Audience.alias(token))
                 .setNotification(Notification.android(pushContent, Globals.JPUSH_APP_NAME + title, null))
                 .build();
+    }
+    
+    //构建推送对象：平台是 Android，目标是 tag 为 "tag1" 的设备，内容是 Android 通知 ALERT，并且标题为 TITLE，附带extras参数。
+    private static PushPayload buildPushObject_android_alias_alertWithTitle(String token, String pushContent, String title, Map<String, String> extras) {
+//        Message message = Message.newBuilder().setMsgContent(pushContent)
+//                .setTitle(title).build();
+    	return PushPayload.newBuilder()
+    			.setPlatform(Platform.android())
+    			.setAudience(Audience.alias(token))
+    			.setNotification(Notification.android(pushContent, Globals.JPUSH_APP_NAME + title, extras))
+    			.build();
     }
 
     //构建推送对象：平台是 Android，目标是 tag 为 "tag1" 的设备，内容是 Android 通知 Mes，
