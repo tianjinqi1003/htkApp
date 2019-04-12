@@ -1,5 +1,6 @@
 package com.htkapp.modules.API.service.serviceImpl;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.pay.entity.BillRecord;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
 import com.htkapp.modules.merchant.pay.entity.OrderRecord;
+import com.htkapp.modules.merchant.pay.service.BillBalanceSheetService;
 import com.htkapp.modules.merchant.pay.service.BillRecordService;
 import com.htkapp.modules.merchant.pay.service.OrderProductService;
 import com.htkapp.modules.merchant.pay.service.OrderRecordService;
@@ -61,6 +63,8 @@ public class MerchantAppServiceImpl implements MerchantAppService {
     private TakeoutProductServiceI takeoutProductService;
 	@Resource
 	private BillRecordService billRecordService;
+	@Resource
+	private BillBalanceSheetService billBalanceSheetService;
 
 	@Override
 	public APIResponseModel getNewOrderList(Integer shopId, String startDate, String endDate, Integer statusCode) {
@@ -244,6 +248,21 @@ public class MerchantAppServiceImpl implements MerchantAppService {
             return new APIResponseModel(Globals.API_FAIL, "失败");
         }
     	return new APIResponseModel<List<BillRecord>>(Globals.API_SUCCESS, "成功",billRecordList);
+	}
+
+	@Override
+	public APIResponseModel getBalance(String token) {
+		// TODO Auto-generated method stub
+		
+		Map<String, Object> balanceMap = new HashMap<String, Object>();
+		//商家的提现收款账号
+		String aliPayAccount = accountShopDao.selectByTokenDAO(token).getAlipayAccount();
+		//账户可用余额
+		double accountBalance = billBalanceSheetService.getAccountBalance(token);
+		DecimalFormat df = new DecimalFormat("#.00");
+		balanceMap.put("aliPayAccount", aliPayAccount);
+		balanceMap.put("availableBalance", Double.parseDouble(df.format(accountBalance)));
+		return new APIResponseModel<Map<String, Object>>(Globals.API_SUCCESS, "成功",balanceMap);
 	}
 
 }

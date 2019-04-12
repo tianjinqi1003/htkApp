@@ -56,4 +56,11 @@ public interface MerchantAppService {
 	 */
 	APIResponseModel getBillRecord(String token);
 
+	/**
+	 * 获得提现信息
+	 * @param accountToken
+	 * @return
+	 */
+	APIResponseModel getBalance(String accountToken);
+
 }

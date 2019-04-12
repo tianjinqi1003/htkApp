@@ -251,6 +251,13 @@ public class MerchantAppAPI {
     	
     	return merchantAppService.getBillRecord(params.getAccountToken());//这里必须接收accountToken参数，要是接收token参数，在app端就被过滤掉了，接收不到
     }
+
+    @RequestMapping(value = "/getBalance")
+    @ResponseBody
+    public APIResponseModel getBalance(APIRequestParams params) {
+		
+    	return merchantAppService.getBalance(params.getAccountToken());
+	}
     
     @RequestMapping(value = "/sendNotification")
     @ResponseBody
