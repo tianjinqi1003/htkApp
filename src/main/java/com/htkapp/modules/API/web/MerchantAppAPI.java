@@ -29,6 +29,7 @@ import com.htkapp.core.utils.StringUtils;
 import com.htkapp.modules.API.service.MerchantAppService;
 import com.htkapp.modules.API.service.PaymentInterfaceService;
 import com.htkapp.modules.common.entity.LoginUser;
+import com.htkapp.modules.merchant.pay.entity.BillRecord;
 import com.htkapp.modules.merchant.shop.entity.Shop;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
 import com.htkapp.modules.merchant.takeout.dto.AddProductList;
@@ -243,6 +244,13 @@ public class MerchantAppAPI {
         }
     	return new APIResponseModel(Globals.API_SUCCESS, "成功",resultList);
 	}
+    
+    @RequestMapping(value = "/getBillRecord")
+    @ResponseBody
+    public APIResponseModel getBillRecord(APIRequestParams params) {
+    	
+    	return merchantAppService.getBillRecord(params.getAccountToken());//这里必须接收accountToken参数，要是接收token参数，在app端就被过滤掉了，接收不到
+    }
     
     @RequestMapping(value = "/sendNotification")
     @ResponseBody

@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
+import com.htkapp.modules.merchant.pay.entity.BillRecord;
 import com.htkapp.modules.merchant.takeout.dto.AddProductList;
 import com.htkapp.modules.merchant.takeout.dto.PropertyList;
 import com.htkapp.modules.merchant.takeout.entity.TakeoutCategory;
@@ -47,5 +48,12 @@ public interface MerchantAppService {
 	 */
 	void addTakeoutProduct(TakeoutProduct product, MultipartFile imgFile, String label, AddProductList addProductList,
 			PropertyList propertyList, Integer userId) throws Exception;
+
+	/**
+	 * 查询账单记录
+	 * @param token
+	 * @return
+	 */
+	APIResponseModel getBillRecord(String token);
 
 }

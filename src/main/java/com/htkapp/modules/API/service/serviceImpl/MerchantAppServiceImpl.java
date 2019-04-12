@@ -22,8 +22,10 @@ import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.entity.ProductDetail;
 import com.htkapp.modules.API.service.MerchantAppService;
 import com.htkapp.modules.common.entity.LoginUser;
+import com.htkapp.modules.merchant.pay.entity.BillRecord;
 import com.htkapp.modules.merchant.pay.entity.OrderProduct;
 import com.htkapp.modules.merchant.pay.entity.OrderRecord;
+import com.htkapp.modules.merchant.pay.service.BillRecordService;
 import com.htkapp.modules.merchant.pay.service.OrderProductService;
 import com.htkapp.modules.merchant.pay.service.OrderRecordService;
 import com.htkapp.modules.merchant.shop.dao.AccountShopMapper;
@@ -57,6 +59,8 @@ public class MerchantAppServiceImpl implements MerchantAppService {
     private TakeoutCategoryServiceI takeoutCategoryService;
     @Resource
     private TakeoutProductServiceI takeoutProductService;
+	@Resource
+	private BillRecordService billRecordService;
 
 	@Override
 	public APIResponseModel getNewOrderList(Integer shopId, String startDate, String endDate, Integer statusCode) {
@@ -213,6 +217,33 @@ public class MerchantAppServiceImpl implements MerchantAppService {
             takeoutProductService.addTakeoutProduct(takeoutProduct);
         }
 		
+	}
+
+	@Override
+	public APIResponseModel getBillRecord(String token) {
+		// TODO Auto-generated method stub
+		
+		Map<String, String> map = OtherUtils.getDateMapByNum(Integer.parseInt("2"));
+		String startTime = map.get("startTime");
+		String endTime = map.get("endTime");
+		
+		List<BillRecord> billRecordList = billRecordService.getBillRecordListByDate(token, startTime, endTime);
+
+		/**
+		 * @author 马鹏昊
+		 * @desc 去掉时间.0后缀（java接收DateTime类型字段值原因）
+		 */
+		for (BillRecord bill :billRecordList){
+			String trueGmtCreate = bill.getGmtCreate();
+			String trueGmtModified = bill.getGmtModified();
+			bill.setGmtCreate(trueGmtCreate.substring(0,trueGmtCreate.length()-2));
+			bill.setGmtModified(trueGmtModified.substring(0,trueGmtModified.length()-2));
+		}
+
+    	if (billRecordList == null) {
+            return new APIResponseModel(Globals.API_FAIL, "失败");
+        }
+    	return new APIResponseModel<List<BillRecord>>(Globals.API_SUCCESS, "成功",billRecordList);
 	}
 
 }
