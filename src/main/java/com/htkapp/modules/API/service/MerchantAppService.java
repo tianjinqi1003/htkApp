@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.modules.merchant.pay.entity.BillRecord;
+import com.htkapp.modules.merchant.shop.entity.AccountShop;
 import com.htkapp.modules.merchant.takeout.dto.AddProductList;
 import com.htkapp.modules.merchant.takeout.dto.PropertyList;
 import com.htkapp.modules.merchant.takeout.entity.TakeoutCategory;
@@ -62,5 +63,27 @@ public interface MerchantAppService {
 	 * @return
 	 */
 	APIResponseModel getBalance(String accountToken);
+
+	/**
+	 * 转账
+	 * @param userId
+	 * @return
+	 */
+	AccountShop getAlipayAccount(Integer userId);
+
+	/**
+	 * 获取账户余额
+	 * @param accountShopToken
+	 * @return
+	 */
+	double getAccountBalance(String accountShopToken);
+
+	/**
+	 * 更新账户余额
+	 * @param accountShopToken
+	 * @param newBalance
+	 * @return
+	 */
+	int updateAccountBalance(String accountShopToken,double newBalance);
 
 }

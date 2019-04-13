@@ -84,7 +84,9 @@ public class APIRequestParams<T> {
 	
     private String actionName; //动作名称
     
-    private String selectedIds; //选中的id
+    private String money; //金额
+
+	private String selectedIds; //选中的id
     
     private String takeoutProductJOStr;
     
@@ -130,6 +132,14 @@ public class APIRequestParams<T> {
 
 	public void setActionName(String actionName) {
 		this.actionName = actionName;
+	}
+    
+    public String getMoney() {
+		return money;
+	}
+
+	public void setMoney(String money) {
+		this.money = money;
 	}
 
 	public Integer getStatusCode() {

@@ -32,6 +32,7 @@ import com.htkapp.modules.merchant.pay.service.OrderProductService;
 import com.htkapp.modules.merchant.pay.service.OrderRecordService;
 import com.htkapp.modules.merchant.shop.dao.AccountShopMapper;
 import com.htkapp.modules.merchant.shop.dao.ShopMapper;
+import com.htkapp.modules.merchant.shop.entity.AccountShop;
 import com.htkapp.modules.merchant.shop.entity.Shop;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
 import com.htkapp.modules.merchant.takeout.dto.AddProductList;
@@ -263,6 +264,28 @@ public class MerchantAppServiceImpl implements MerchantAppService {
 		balanceMap.put("aliPayAccount", aliPayAccount);
 		balanceMap.put("availableBalance", Double.parseDouble(df.format(accountBalance)));
 		return new APIResponseModel<Map<String, Object>>(Globals.API_SUCCESS, "成功",balanceMap);
+	}
+
+	@Override
+	public AccountShop getAlipayAccount(Integer id) {
+		// TODO Auto-generated method stub
+		try {
+            return accountShopDao.getAlipayAccount(id);
+        } catch (Exception e) {
+           return  null;
+        }
+	}
+
+	@Override
+	public double getAccountBalance(String accountShopToken) {
+		// TODO Auto-generated method stub
+		return billBalanceSheetService.getAccountBalance(accountShopToken);
+	}
+
+	@Override
+	public int updateAccountBalance(String accountShopToken, double newBalance) {
+		// TODO Auto-generated method stub
+		return billBalanceSheetService.updateAccountBalance(accountShopToken, newBalance);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.htkapp.modules.API.web;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,7 +9,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.http.util.TextUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,20 +19,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
+import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.htkapp.core.MD5Utils;
 import com.htkapp.core.OtherUtils;
 import com.htkapp.core.API.APIRequestParams;
+import com.htkapp.core.config.AlipayConfig;
 import com.htkapp.core.config.FTPConfig;
 import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.utils.FileUploadUtils;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.core.utils.Jpush;
+import com.htkapp.core.utils.OrderNumGen;
 import com.htkapp.core.utils.StringUtils;
 import com.htkapp.modules.API.service.MerchantAppService;
 import com.htkapp.modules.API.service.PaymentInterfaceService;
 import com.htkapp.modules.common.entity.LoginUser;
 import com.htkapp.modules.merchant.pay.entity.BillRecord;
+import com.htkapp.modules.merchant.shop.entity.AccountShop;
 import com.htkapp.modules.merchant.shop.entity.Shop;
 import com.htkapp.modules.merchant.shop.service.ShopServiceI;
 import com.htkapp.modules.merchant.takeout.dto.AddProductList;
@@ -258,6 +268,73 @@ public class MerchantAppAPI {
 		
     	return merchantAppService.getBalance(params.getAccountToken());
 	}
+    
+    /**
+     * 提现(转账)
+     *
+     * @return
+     * @author 马鹏昊
+     */
+    @RequestMapping(value = "/withdraw")
+    @ResponseBody
+    public AjaxResponseModel withdraw(APIRequestParams params) {
+        try {
+            AccountShop accountShop = merchantAppService.getAlipayAccount(params.getUserId());
+
+            String money = params.getMoney();
+            float moneyF = Float.parseFloat(money);
+            //扣除手续费千分之六
+            float realMoney= moneyF*(1f-0.006f);
+            DecimalFormat decimalFormat=new DecimalFormat("0.00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+            String p = decimalFormat.format(realMoney);//format 返回的是字符串
+
+            if (accountShop != null) {
+
+                AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.URL, AlipayConfig.APPID, AlipayConfig.RSA_PRIVATE_KEY, "json",
+                        AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);
+                AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
+                String out_trade_no = OrderNumGen.next().toString();
+                if (TextUtils.isEmpty(out_trade_no)){
+                    return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, "订单号为空");
+                }
+                if (TextUtils.isEmpty(accountShop.getAlipayAccountType())){
+                    return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, "第三方账户类型payee_type为空");
+                }
+                if (TextUtils.isEmpty(accountShop.getAlipayAccount())){
+                    return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, "第三方账户类型payee_account为空");
+                }
+                request.setBizContent("{" +
+                        "\"out_biz_no\":" + "\""+out_trade_no+"\"," +
+                        "\"payee_type\":" + "\""+accountShop.getAlipayAccountType() + "\"," +
+                        "\"payee_account\":" +"\""+ accountShop.getAlipayAccount() + "\"," +
+                        "\"amount\":" +"\""+ p +  "\"," +
+                        "\"payer_show_name\":\"青岛华凌科技有限公司\"," +
+                        //收款方真实姓名（如果传了该值则会校验真实姓名和收款方账户是否一致）
+//                        "\"payee_real_name\":" +"\""+ accountShop.getUserName() +"\"," +
+//                    "\"remark\":\"转账备注\"" +
+                        "\"remark\":\"商家提现\"" +
+                        "}");
+                AlipayFundTransToaccountTransferResponse response = alipayClient.execute(request);
+                if (response.isSuccess()) {
+                    System.out.println("调用成功");
+//                    callAplipayQuery(alipayClient,out_trade_no);
+
+                    //修改数据库里的商家账户余额(减去的是后台输入的提现金额)
+                    double oldBalance = merchantAppService.getAccountBalance(accountShop.getToken());
+                    double newBalance = oldBalance - Double.valueOf(money);
+                    int row = merchantAppService.updateAccountBalance(accountShop.getToken(), newBalance);
+                    return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION, "转账成功");
+                } else {
+                    System.out.println("调用失败");
+//                    callAplipayQuery(alipayClient,out_trade_no);
+                    return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, response.getSubMsg());
+                }
+            }
+            return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, "转账失败");
+        } catch (Exception e) {
+            return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED, e.getMessage());
+        }
+    }
     
     @RequestMapping(value = "/sendNotification")
     @ResponseBody
