@@ -255,6 +255,11 @@ public class MerchantAppAPI {
     	return new APIResponseModel(Globals.API_SUCCESS, "成功",resultList);
 	}
     
+    /**
+     * 查询账单记录
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/getBillRecord")
     @ResponseBody
     public APIResponseModel getBillRecord(APIRequestParams params) {
@@ -262,6 +267,11 @@ public class MerchantAppAPI {
     	return merchantAppService.getBillRecord(params.getAccountToken());//这里必须接收accountToken参数，要是接收token参数，在app端就被过滤掉了，接收不到
     }
 
+    /**
+     * 获得提现信息
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/getBalance")
     @ResponseBody
     public APIResponseModel getBalance(APIRequestParams params) {
@@ -336,6 +346,11 @@ public class MerchantAppAPI {
         }
     }
     
+    /**
+     * 推送消息或通知
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/sendNotification")
     @ResponseBody
     public APIResponseModel sendNotification(APIRequestParams params) {

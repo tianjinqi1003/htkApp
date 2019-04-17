@@ -17,8 +17,12 @@ public class OrderRecord {
     private String orderNumber;  //订单号
 
     private Double orderAmount;  //订单金额
+    
+    private Double priceCanhe;  //餐盒费
+    
+    private Double deliveryFee;  //配送费
 
-    private String receiptName;  //收货人姓名
+	private String receiptName;  //收货人姓名
 
     private Integer sex;   //收货人性别
 
@@ -121,6 +125,22 @@ public class OrderRecord {
     public void setOrderAmount(Double orderAmount) {
         this.orderAmount = orderAmount;
     }
+
+    public Double getPriceCanhe() {
+		return priceCanhe;
+	}
+
+	public void setPriceCanhe(Double priceCanhe) {
+		this.priceCanhe = priceCanhe;
+	}
+
+	public Double getDeliveryFee() {
+		return deliveryFee;
+	}
+
+	public void setDeliveryFee(Double deliveryFee) {
+		this.deliveryFee = deliveryFee;
+	}
 
     public String getReceiptName() {
         return receiptName;

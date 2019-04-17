@@ -34,6 +34,12 @@
             <if test="orderAmount != null">
                 order_amount,
             </if>
+            <if test="priceCanhe != null">
+                price_canhe,
+            </if>
+            <if test="deliveryFee != null">
+                delivery_fee,
+            </if>
             <if test="receiptName != null">
                 receipt_name,
             </if>
@@ -95,6 +101,12 @@
             </if>
             <if test="orderAmount != null">
                 #{orderAmount},
+            </if>
+            <if test="priceCanhe != null">
+                #{priceCanhe},
+            </if>
+            <if test="deliveryFee != null">
+                #{deliveryFee},
             </if>
             <if test="receiptName != null">
                 #{receiptName},

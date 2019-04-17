@@ -132,6 +132,20 @@ public class BillRecordServiceImpl implements BillRecordService {
         }
     }
 
+	@Override
+	public List<BillRecord> getBillRecordListByDateDesc(String accountShopToken, String startTime, String endTime) {
+		// TODO Auto-generated method stub
+		try {
+            List<BillRecord> resultList = billRecordDAO.getBillRecordListByDateDescDAO(accountShopToken, startTime, endTime);
+            if (resultList != null && resultList.size() > 0) {
+                return resultList;
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+	}
+
     //取消订单要删除记录
     @Override
     public void deleteRecordByOrderNumberAndDate(String accountShopToken, String orderNumber) throws Exception {

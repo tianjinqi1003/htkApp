@@ -144,6 +144,13 @@
         where gmt_create between #{1} and #{2}
         and account_shop_token = #{0}
     </select>
+    <select id="getBillRecordListByDateDescDAO" resultType="BillRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from bill_record
+        where gmt_create between #{1} and #{2}
+        and account_shop_token = #{0} order by gmt_create desc
+    </select>
     <delete id="deleteRecordByOrderNumberAndDateDAO">
         delete from
         bill_record

@@ -24,6 +24,14 @@ public interface BillRecordService {
     Double getSpendingOnOrderByDate(String accountShopToken, String startTime, String endTime);
     //根据日期条件查找记录
     List<BillRecord> getBillRecordListByDate(String accountShopToken, String startTime, String endTime);
+	/**
+	 * 根据日期条件查找记录，结果倒序
+	 * @param accountShopToken
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	List<BillRecord> getBillRecordListByDateDesc(String accountShopToken, String startTime, String endTime);
     //取消订单要删除记录
     void deleteRecordByOrderNumberAndDate(String accountShopToken, String orderNumber) throws Exception;
 

@@ -232,7 +232,7 @@ public class MerchantAppServiceImpl implements MerchantAppService {
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
 		
-		List<BillRecord> billRecordList = billRecordService.getBillRecordListByDate(token, startTime, endTime);
+		List<BillRecord> billRecordList = billRecordService.getBillRecordListByDateDesc(token, startTime, endTime);
 
 		/**
 		 * @author 马鹏昊

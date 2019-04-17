@@ -28,6 +28,14 @@ public interface BillRecordMapper {
     Double getSpendingOnOrderByDateDAO(String accountShopToken, String startTime, String endTime);
     //根据日期条件查找记录
     List<BillRecord> getBillRecordListByDateDAO(String accountShopToken, String startTime, String endTime);
+	/**
+	 * 根据日期条件查找记录，结果倒序
+	 * @param accountShopToken
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	List<BillRecord> getBillRecordListByDateDescDAO(String accountShopToken, String startTime, String endTime);
     //取消订单要删除记录
     int deleteRecordByOrderNumberAndDateDAO(String accountShopToken, String orderNumber);
     //查找当天是否存在记录
