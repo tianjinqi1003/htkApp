@@ -212,19 +212,6 @@ public class MerchantAppAPI {
     	JSONObject takeoutProductJO = JSONObject.fromObject(params.getTakeoutProductJOStr());
     	TakeoutProduct product = (TakeoutProduct)JSONObject.toBean(takeoutProductJO, TakeoutProduct.class);
 
-    	String tpJAStr = params.getTakeoutProductJAStr();
-    	JSONArray tpJA = JSONArray.fromObject(tpJAStr);
-    	List<ListProperty> lpList = new ArrayList<ListProperty>();
-    	for (Object tpObj : tpJA) {
-    		ListProperty lp = new ListProperty();
-    		JSONObject tpJO = (JSONObject)tpObj;
-    		lp.setPrice(tpJO.getDouble("price"));
-    		lp.setPriceCanhe(tpJO.getDouble("priceCanhe"));
-    		lp.setInventory(tpJO.getInt("inventory"));
-    		lp.setInventoryCount(tpJO.getInt("inventoryCount"));
-    		lpList.add(lp);
-		}
-    	
     	String tppJAStr = params.getTakeoutProductPropertyJAStr();
     	JSONArray tppJA = JSONArray.fromObject(tppJAStr);
     	List<Property> propertyList = new ArrayList<>();
@@ -235,7 +222,7 @@ public class MerchantAppAPI {
 	    	propertyList.add(pro);
 		}
     	try {
-    		merchantAppService.addTakeoutProduct(product, imgFile, null, new AddProductList(lpList), new PropertyList(propertyList),params.getUserId());
+    		merchantAppService.addTakeoutProduct(product, imgFile, null, new PropertyList(propertyList),params.getUserId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

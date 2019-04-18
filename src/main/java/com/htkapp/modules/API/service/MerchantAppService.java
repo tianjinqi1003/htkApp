@@ -43,11 +43,10 @@ public interface MerchantAppService {
 	 * @param product
 	 * @param imgFile
 	 * @param label
-	 * @param addProductList
 	 * @param propertyList
 	 * @param userId 
 	 */
-	void addTakeoutProduct(TakeoutProduct product, MultipartFile imgFile, String label, AddProductList addProductList,
+	void addTakeoutProduct(TakeoutProduct product, MultipartFile imgFile, String label,
 			PropertyList propertyList, Integer userId) throws Exception;
 
 	/**

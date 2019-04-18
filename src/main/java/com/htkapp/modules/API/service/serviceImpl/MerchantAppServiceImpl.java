@@ -176,7 +176,7 @@ public class MerchantAppServiceImpl implements MerchantAppService {
 
 	@Override
 	public void addTakeoutProduct(TakeoutProduct takeoutProduct, MultipartFile imgFile,
-            String label, AddProductList productList, PropertyList propertyList, Integer userId) throws Exception {
+            String label, PropertyList propertyList, Integer userId) throws Exception {
 		// TODO Auto-generated method stub
 		//商品名称
         //店内分类
@@ -206,21 +206,9 @@ public class MerchantAppServiceImpl implements MerchantAppService {
             }
         }
         Shop shop = shopService.getShopIdByAccountShopId(userId, takeoutProduct.getMark());
-        if (productList != null && productList.getList().size() > 0) {
-            for (ListProperty each : productList.getList()) {
-                takeoutProduct.setShopId(shop.getShopId());
-                takeoutProduct.setPrice(each.getPrice());
-                takeoutProduct.setPriceCanhe(each.getPriceCanhe());
-                takeoutProduct.setProperty(String.valueOf(property));
-                takeoutProduct.setInventory(each.getInventory());
-                takeoutProduct.setInventoryCount(each.getInventoryCount());
-                takeoutProductService.addTakeoutProduct(takeoutProduct);
-            }
-        } else {
-            takeoutProduct.setShopId(shop.getShopId());
-            takeoutProduct.setProperty(String.valueOf(property));
-            takeoutProductService.addTakeoutProduct(takeoutProduct);
-        }
+        takeoutProduct.setShopId(shop.getShopId());
+        takeoutProduct.setProperty(String.valueOf(property));
+        takeoutProductService.addTakeoutProduct(takeoutProduct);
 		
 	}
 
