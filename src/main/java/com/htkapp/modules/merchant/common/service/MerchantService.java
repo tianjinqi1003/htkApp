@@ -1,5 +1,6 @@
 package com.htkapp.modules.merchant.common.service;
 
+import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.RequestParams;
 import com.htkapp.modules.merchant.shop.entity.AccountShop;
@@ -76,6 +77,13 @@ public interface MerchantService {
     void buffetFoodOrderReminder(RequestParams params);
     //自助点餐订座处理
     void getSeatOrder(RequestParams params,String startTime,String endTime,Integer pageNum);
+	/**
+	 * 验证支付宝二维码
+	 * @param phone
+	 * @param valCode
+	 * @return
+	 */
+    AjaxResponseModel checkAlipayValCode(String phone, String valCode);
    
     
     /* ===========================JSP页面接口结束============================== */

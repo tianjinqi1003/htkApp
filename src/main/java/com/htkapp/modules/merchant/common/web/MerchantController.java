@@ -32,6 +32,7 @@ import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.response.AlipayFundTransOrderQueryResponse;
 import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.config.AlipayConfig;
 import com.htkapp.core.customShiro.CusTokenManage;
 import com.htkapp.core.dto.APIResponseModel;
@@ -1032,7 +1033,7 @@ public class MerchantController {
         return mDirectory + "shop_shopInfo";
     }
 
-//座位信息管理
+    //座位信息管理
     @RequestMapping(value = "/shopInfo/setSeatInfo", method = RequestMethod.GET)
     public String setSeatInfo(Model model, RequestParams params) {
         Map<String, Object> map = new HashMap<>();
@@ -1044,6 +1045,7 @@ public class MerchantController {
         merchantService.getSeatInfo(params);
         return mDirectory + "set_Seat_Info";
     }
+    
     //座位管理
     @RequestMapping(value = "/shopInfo/SeatInfoManage", method = RequestMethod.GET)
     public String SeatInfoManage(Model model, RequestParams params) {
@@ -1056,6 +1058,13 @@ public class MerchantController {
         params.setModel(model);
         merchantService.manageSeatInfo(params);
         return mDirectory + "seat_Info_Manager";
+    }
+    
+    //验证支付宝二维码
+    @RequestMapping("/alipay/checkValCode")
+	@ResponseBody
+    public AjaxResponseModel checkAlipayValCode(APIRequestParams params) {
+        return merchantService.checkAlipayValCode(params.getPhone(), String.valueOf(params.getCode()));
     }
     
     /*

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.htkapp.core.MD5Utils;
 import com.htkapp.core.OtherUtils;
+import com.htkapp.core.dto.APIResponseModel;
 import com.htkapp.core.jsAjax.AjaxResponseModel;
 import com.htkapp.core.params.RequestParams;
 import com.htkapp.core.redisCache.JedisServiceCache;
@@ -1452,6 +1453,31 @@ public class MerchantServiceImpl implements MerchantService {
 		}
 	}
 	//撤销订座订单
+
+	@Override
+	public AjaxResponseModel checkAlipayValCode(String phone, String valCode) {
+		// TODO Auto-generated method stub
+		
+		if (StringUtils.isEmpty(String.valueOf(phone)) || StringUtils.isEmpty(valCode)) {
+            return new AjaxResponseModel(Globals.API_REQUEST_BAD, "支付宝账号或验证码为空");
+        } else {
+            try {
+                String codeByPhone = smsService.findValCodeByPhone(String.valueOf(phone));
+                if (!String.valueOf(valCode).equals(codeByPhone)) {
+                    //验证码不匹配
+                    return new AjaxResponseModel(Globals.API_FAIL, "失败验证码不匹配");
+                } else {
+                    try {
+                        return new AjaxResponseModel<String>(Globals.API_SUCCESS, "验证成功");
+                    } catch (Exception e) {
+                        return new AjaxResponseModel(Globals.API_FAIL, e.getMessage());
+                    }
+                }
+            } catch (Exception e) {
+                return new AjaxResponseModel(Globals.API_FAIL, e.getMessage());
+            }
+        }
+	}
 	
 	/* ===================JSP接口结束======================= */
 }

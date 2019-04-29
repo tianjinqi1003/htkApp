@@ -619,7 +619,7 @@
     
     function checkValCode(){
     	var flag=false;
-    	var url = baseUrl + '/API/AccountMessage/appAccountLoginByCode';
+    	var url = baseUrl + '/merchant/alipay/checkValCode';
     	var phone='${merchantUser.userName}';
     	var code=$("#valCode").val();
     	var params = {phone: phone,code:code};
