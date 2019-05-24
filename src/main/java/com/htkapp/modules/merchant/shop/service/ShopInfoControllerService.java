@@ -39,7 +39,14 @@ public interface ShopInfoControllerService {
     AjaxResponseModel updateIntro(AjaxRequestParams params);
     //店铺简介修改
     AjaxResponseModel updateDes(AjaxRequestParams params);
+	/**
+	 * 满多少元起送
+	 * @param params
+	 * @return
+	 */
+	AjaxResponseModel updateStartDeliveryPrice(AjaxRequestParams params);
     //配送费
     AjaxResponseModel updateDeliveryFee(AjaxRequestParams params);
     /* ====================接口结束========================== */
+
 }

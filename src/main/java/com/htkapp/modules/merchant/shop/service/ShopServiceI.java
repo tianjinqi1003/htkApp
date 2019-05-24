@@ -78,6 +78,8 @@ public interface ShopServiceI {
 	void updateDes(Shop shop);
 	//注册shop_message表
 	int initShopMessage(int shopId);
+	//满多少元起送
+	void updateStartDeliveryPrice(Shop shop);
 	//配送费
 	void updateDeliveryFee(Shop shop);
 

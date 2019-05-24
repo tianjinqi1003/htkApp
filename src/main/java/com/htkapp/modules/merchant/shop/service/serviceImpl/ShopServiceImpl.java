@@ -401,6 +401,16 @@ public class ShopServiceImpl implements ShopServiceI {
         }
     }
 
+    //满多少元起送
+	@Override
+	public void updateStartDeliveryPrice(Shop shop) {
+		// TODO Auto-generated method stub
+		int row = shopDao.updateStartDeliveryPriceDAO(shop);
+        if (row <= 0) {
+            throw new UpdateException(Globals.DEFAULT_EXCEPTION_UPDATE_FAILED);
+        }
+	}
+
     //配送费
     @Override
     public void updateDeliveryFee(Shop shop) {

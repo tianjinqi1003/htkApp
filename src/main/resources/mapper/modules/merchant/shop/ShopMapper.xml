@@ -95,7 +95,7 @@
     <select id="getShopShowInfoByIdDAO" resultType="Shop">
         select shop.shop_category_id,shop.shop_id,
         shop_name,logo_url,delivery_fee,longitude,latitude,score,monthly_sales_volume,
-        location,address,opening_time,category_name,per_capita_price,shop.mark,phone,mobile_phone,state,shop.intro
+        location,address,opening_time,category_name,per_capita_price,shop.mark,phone,mobile_phone,start_delivery_price,state,shop.intro
         from (shop right join shop_message on shop.shop_id = shop_message.shop_id)
         left join shop_category on shop_category_id = shop_category.id
         where 1=1 and shop.shop_id = #{shopId}
@@ -331,6 +331,11 @@
     <update id="updateDesDAO">
         update shop
         set des = #{des}
+        where account_shop_id = #{accountShopId}
+    </update>
+    <update id="updateStartDeliveryPriceDAO">
+        update shop
+        set start_delivery_price = #{startDeliveryPrice}
         where account_shop_id = #{accountShopId}
     </update>
     <!-- ==================JSP页面接口结束====================== -->

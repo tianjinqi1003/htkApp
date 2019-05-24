@@ -134,5 +134,12 @@ public class ShopInfoController {
     public AjaxResponseModel updateDeliveryFee(AjaxRequestParams params){
         return controllerService.updateDeliveryFee(params);
     }
+    
+    //满多少元起送
+    @RequestMapping(value = "/updateStartDeliveryPrice", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxResponseModel updateStartDeliveryPrice(AjaxRequestParams params){
+    	return controllerService.updateStartDeliveryPrice(params);
+    }
 
 }

@@ -294,6 +294,26 @@ public class ShopInfoControllerServiceImpl implements ShopInfoControllerService 
         }
     }
 
+    //满多少元起送
+	@Override
+	public AjaxResponseModel updateStartDeliveryPrice(AjaxRequestParams params) {
+		// TODO Auto-generated method stub
+		if(params != null){
+            try {
+                Shop shop = new Shop();
+                shop.setStartDeliveryPrice(params.getStartDeliveryPrice());
+                LoginUser user = OtherUtils.getLoginUserByRequest();
+                shop.setAccountShopId(user.getUserId());
+                shopService.updateStartDeliveryPrice(shop);
+                return new AjaxResponseModel(Globals.COMMON_SUCCESSFUL_OPERATION);
+            }catch (Exception e){
+                return new AjaxResponseModel(Globals.COMMON_OPERATION_FAILED);
+            }
+        }else {
+            return new AjaxResponseModel(Globals.COMMON_PARAMETER_ERROR);
+        }
+	}
+
     //配送费
     @Override
     public AjaxResponseModel updateDeliveryFee(AjaxRequestParams params) {

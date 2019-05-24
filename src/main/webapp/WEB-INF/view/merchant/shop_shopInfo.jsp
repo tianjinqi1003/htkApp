@@ -305,6 +305,22 @@
                                 </div>
                                 <hr/>
                                 <div class="busSetItem">
+                                    <label class="promptName">多少元起送</label>
+                                    <div class="itemContent clearfix">
+                                        <div class="leftContent">
+                                            <span class="contentText" id="startDeliveryPrice">${data.startDeliveryPrice == null ? 0 : data.startDeliveryPrice}</span>
+                                        </div>
+                                        <div class="rightContent">
+                                            <a class="textClickA" data-clickType="startDeliveryPrice">
+                                                <span class="textSpan">修改
+                                                    <i class="fa fa-chevron-right pad-left" aria-hidden="true"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="busSetItem">
                                     <label class="promptName">配送费</label>
                                     <c:forEach items="${deliveryFeeList}" var="each" varStatus="index">
                                     <div class="itemContent clearfix">
@@ -390,6 +406,9 @@
             case "present" :
                 present();
                 break;
+            case "startDeliveryPrice":
+            	startDeliveryPrice();
+            	break;
             case "callPhone":
                 callPhone();
                 break;
@@ -406,6 +425,33 @@
                 break;
         }
     });
+    
+    //满多少元起送
+    function startDeliveryPrice(){
+    	var startDeliveryPrice = $("#startDeliveryPrice").text().trim();
+        var contentStr = "<div style='margin-top: 20px;'>\n" +
+            "<div style='padding-left: 20px'>" +
+            "<div style='padding: 10px 0'>" +
+            "<label style='width: 100px;font-size: 14px;font-weight: 500'>满多少元起送</label>" +
+            "<div style='display: inline-block'>" +
+            "<input placeholder='请输入满多少元起送' id='startDeliveryPrice_' value='"+startDeliveryPrice+"' style='border-radius: 2px;border: 1px solid #d1d1d6; height: 30px;padding-left: 10px;'>" +
+            "</div>" +
+            "</div>" +
+            "<hr style='margin: 15px 0' />" +
+            "<div style='margin-top: 15px;margin-left: 15px'><button class='layui-btn-normal startDeliveryPrice layui-btn-small layui-btn saveBtn'>确认并保存</button></div>" +
+            "            </div>";
+        var params = {
+            title: ["多少元起送", "background-color:#fff;color:#000"],
+            content: contentStr,
+            offset: '250px',
+            fixed: true,
+            area: {
+                width: '550px',
+                height: '280px'
+            }
+        };
+        index = layer_pageTier(params)
+    }
 
     //店铺公告
     function shopPlacard() {
@@ -590,6 +636,25 @@
 //        layer_loadingClose(index)
 //    });
 
+	$(document).on("click",".startDeliveryPrice",function(){
+		const url = baseUrl + "/merchant/shopInfo/updateStartDeliveryPrice";
+        var startDeliveryPrice = $("#startDeliveryPrice_").val();
+        var params = {
+        	startDeliveryPrice: startDeliveryPrice
+        };
+        $.post(url, params, function (result, status) {
+            if(status === 'success'){
+                if(result && result.code === 0){
+                    window.location.reload();
+                }else {
+                    layer_msg(result.message, "error");
+                }
+            }else {
+                layer_msg("网络连接异常", "exception");
+            }
+        });
+	});
+
     //店铺公告确认按钮
     $(document).on("click", ".shopPlacard", function () {
         const url = baseUrl + "/merchant/shopInfo/updateIntro";
@@ -693,10 +758,12 @@
         var minRadii = $("input[id='minRadii']").val();
         var maxRadii = $("input[id='maxRadii']").val();
         var deliveryFee = $("input[id='deliverFee']").val();
+        /*
         console.log("id==="+id);
         console.log("minRadii==="+minRadii);
         console.log("maxRadii==="+maxRadii);
         console.log("deliveryFee==="+deliveryFee);
+        */
         var params = {
         	id : id,
         	minRadii : minRadii,

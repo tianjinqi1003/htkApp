@@ -27,8 +27,10 @@ public class Shop {
     private double score;  //评分数
 
     private Double perCapitaPrice;  //人均价格
+    
+    private Double startDeliveryPrice;//满多少元起送
 
-    private int monthlySalesVolume;  //月售量
+	private int monthlySalesVolume;  //月售量
 
     private boolean collection;   //是否收藏
 
@@ -237,6 +239,14 @@ public class Shop {
     public void setPerCapitaPrice(Double perCapitaPrice) {
         this.perCapitaPrice = perCapitaPrice;
     }
+
+    public Double getStartDeliveryPrice() {
+		return startDeliveryPrice;
+	}
+
+	public void setStartDeliveryPrice(Double startDeliveryPrice) {
+		this.startDeliveryPrice = startDeliveryPrice;
+	}
 
     public String getShopJoinTime() {
         return shopJoinTime;

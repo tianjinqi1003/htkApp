@@ -77,6 +77,8 @@ public interface ShopMapper {
     int updateIntroDAO(Shop shop);
     //店铺简介修改
     int updateDesDAO(Shop shop);
+    //满多少元起送
+	int updateStartDeliveryPriceDAO(Shop shop);
     //配送费
     int updateDeliveryFeeDAO(Shop shop);
     /* ========================JSP页面接品结束=============================== */

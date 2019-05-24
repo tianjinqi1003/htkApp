@@ -45,8 +45,10 @@ public class AjaxRequestParams {
     private Double minRadii;  //最小配送半径
     
     private Double maxRadii;  //最大配送半径
+    
+    private Double startDeliveryPrice;//满多少元起送
 
-    private Double deliveryFee;  //配送费
+	private Double deliveryFee;  //配送费
 
 	private String time;
 
@@ -194,6 +196,14 @@ public class AjaxRequestParams {
 
 	public void setMaxRadii(Double maxRadii) {
 		this.maxRadii = maxRadii;
+	}
+
+    public Double getStartDeliveryPrice() {
+		return startDeliveryPrice;
+	}
+
+	public void setStartDeliveryPrice(Double startDeliveryPrice) {
+		this.startDeliveryPrice = startDeliveryPrice;
 	}
 
     public Double getDeliveryFee() {
