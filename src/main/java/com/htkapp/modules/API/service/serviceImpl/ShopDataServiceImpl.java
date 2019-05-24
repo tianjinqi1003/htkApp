@@ -322,7 +322,7 @@ public class ShopDataServiceImpl implements ShopDataService {
                         return new APIResponseModel(Globals.API_FAIL, e.getMessage());
                     }
                     result.setShopName(shop.getShopName())
-                            .setLogoUrl(OtherUtils.getRootDirectory() + shop.getLogoUrl())
+                    		.setLogoUrl(OtherUtils.getRootDirectory() + shop.getLogoUrl())
                             .setState(shop.getState())
                             .setDeliveryFee(shop.getDeliveryFee())
                             .setCategoryName(shop.getCategoryName())
@@ -332,6 +332,7 @@ public class ShopDataServiceImpl implements ShopDataService {
                             .setMonthlySalesVolume(shop.getMonthlySalesVolume())
                             .setOpeningTime(shop.getOpeningTime())
                             .setScore(shop.getScore())
+                    		.setStartDeliveryPrice(shop.getStartDeliveryPrice())
                     		.setMobilePhone(shop.getMobilePhone());
 
                     /**

@@ -37,8 +37,10 @@ public class AppShowShopInfo {
     private ShopBulletin shopBulletin;   //店铺公告
 
     private Double perCapitaPrice;  //人均价格
+    
+    private Double startDeliveryPrice;//满多少元起送
 
-    private String phone;  //商铺电话
+	private String phone;  //商铺电话
     
     private String mobilePhone;  //手机号
 
@@ -176,6 +178,15 @@ public class AppShowShopInfo {
         this.perCapitaPrice = perCapitaPrice;
         return this;
     }
+
+    public Double getStartDeliveryPrice() {
+		return startDeliveryPrice;
+	}
+
+	public AppShowShopInfo setStartDeliveryPrice(Double startDeliveryPrice) {
+		this.startDeliveryPrice = startDeliveryPrice;
+        return this;
+	}
 
     public String getPhone() {
         return phone;
