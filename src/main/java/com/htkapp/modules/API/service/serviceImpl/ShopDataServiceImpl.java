@@ -622,7 +622,8 @@ public class ShopDataServiceImpl implements ShopDataService {
                         orderInfo.setCommentStatus(statusCode);
                         Date curDate = new Date();
                         if (orderRecord.getOrderState() == 1) {
-                            int value = 1000 * 60 * 5;
+                            //int value = 1000 * 60 * 5;
+                            int value = 1000 * 60 * 15;
                             Date date = DateUtil.parseDateTime(orderRecord.getLastUpdateTime());
                             System.out.println("订单毫秒数" + date.getTime());
                             System.out.println(format(date, NORM_DATETIME_PATTERN));
@@ -789,6 +790,7 @@ public class ShopDataServiceImpl implements ShopDataService {
                     return new APIResponseModel<String>(Globals.API_SUCCESS, "没有外卖订单");
                 }
             } catch (Exception e) {
+            	//e.printStackTrace();
                 return new APIResponseModel(Globals.API_FAIL);
             }
         } else {

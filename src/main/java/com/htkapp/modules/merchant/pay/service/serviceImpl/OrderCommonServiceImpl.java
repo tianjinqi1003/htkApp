@@ -28,6 +28,7 @@ public class OrderCommonServiceImpl implements OrderCommonService {
             }
             return null;
         }catch (Exception e){
+        	e.printStackTrace();
             throw new Exception(Globals.CALL_DATABASE_ERROR);
         }
     }
