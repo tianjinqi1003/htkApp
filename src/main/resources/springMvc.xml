@@ -119,6 +119,8 @@
                         <value>/htkApp/API/shopDataAPI/</value>
                         <value>/htkApp/API/appAPI/</value>
                         <value>/htkApp/API/accountShopMessageAPI/</value>
+                        <value>/htkApp/API/paymentInterfaceAPI/callUpPaymentInterface</value>
+                        <value>/htkApp/API/paymentInterfaceAPI/callUpRefundInterface</value>
                         <value>/htkApp/API/paymentInterfaceAPI/refundByOrderNumber</value>
                         <value>/htkApp/API/paymentInterfaceAPI/weChatPayNotifyInterface
                         </value>
