@@ -105,6 +105,7 @@ public class MerchantController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String merchantLogin(String userName, Model model) {
     	
+    	System.out.println("商户登陆页面GET.......");
         if (StringUtils.isNotEmpty(userName)) {
             model.addAttribute("userName", userName);
         }

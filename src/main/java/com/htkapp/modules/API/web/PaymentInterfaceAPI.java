@@ -2,6 +2,7 @@ package com.htkapp.modules.API.web;
 
 import com.htkapp.core.API.APIRequestParams;
 import com.htkapp.core.dto.APIResponseModel;
+import com.htkapp.core.shiro.common.utils.LoggerUtils;
 import com.htkapp.core.utils.Globals;
 import com.htkapp.modules.API.service.PaymentInterfaceService;
 import com.htkapp.modules.merchant.buffetFood.entity.BuffetFoodOrder;
@@ -29,6 +30,7 @@ public class PaymentInterfaceAPI {
     //调起支付
     @RequestMapping("/callUpPaymentInterface")
     public APIResponseModel callUpPaymentInterface(APIRequestParams params, OrderRecord orderRecord) {
+    	LoggerUtils.fmtDebug(getClass(), "调起支付宝支付.........");
         return paymentInterfaceService.callUpPaymentInterfaceHTK(params, orderRecord);
     }
 
@@ -54,6 +56,7 @@ public class PaymentInterfaceAPI {
     @RequestMapping("/aliPayNotifyInterface")
     @ResponseBody
     public String aliPayNotifyUrl(HttpServletRequest request) {
+    	LoggerUtils.fmtDebug(getClass(), "支付宝支付回调.........");
         return paymentInterfaceService.aliPayNotifyUrl(request);
     }
 
