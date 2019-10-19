@@ -73,13 +73,16 @@
         writeDoc.write( docType() + "<html>" + getHead() + getBody( $(this) ) + "</html>" );
         writeDoc.close();
 
-        $(writeDoc).ready(function(){
-            printWindow.focus();
-            printWindow.print();
+        //这里加计时器，防止某些浏览器不显示打印明细，才延迟加载
+        setTimeout(function(){
+            $(writeDoc).ready(function(){
+                printWindow.focus();
+                printWindow.print();
 
-            if ( settings.mode == modes.popup && settings.popClose )
-                setTimeout(function() { printWindow.close(); }, 2000);
-        });
+                if ( settings.mode == modes.popup && settings.popClose )
+                    setTimeout(function() { printWindow.close(); }, 2000);
+            });
+        },100);
     }
 
     function docType()
